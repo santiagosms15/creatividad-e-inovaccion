@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - Financiación</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        min-height: 100vh;
+        background: linear-gradient(
+          135deg,
+          #2c5f5d 0%,
+          #1a3d3b 50%,
+          #0d2726 100%
+        );
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      .background-shapes {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 0;
+      }
+
+      .shape {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.15;
+      }
+
+      .shape1 {
+        width: 600px;
+        height: 600px;
+        background: #4a8886;
+        bottom: -200px;
+        left: -100px;
+        border-radius: 40% 60% 50% 50%;
+        animation: float 15s ease-in-out infinite;
+      }
+
+      .shape2 {
+        width: 400px;
+        height: 400px;
+        background: #5a9896;
+        top: -100px;
+        right: -50px;
+        border-radius: 50% 50% 40% 60%;
+        animation: float 12s ease-in-out infinite reverse;
+      }
+
+      .shape3 {
+        width: 800px;
+        height: 800px;
+        background: #3d7573;
+        bottom: -300px;
+        right: -200px;
+        border-radius: 60% 40% 50% 50%;
+        animation: float 18s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-20px) rotate(5deg);
+        }
+      }
+
+      /* Header */
+      .header {
+        position: relative;
+        z-index: 10;
+        padding: 30px 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .welcome-text {
+        color: #fff;
+        font-size: 1.5rem;
+        font-weight: 300;
+        letter-spacing: 1px;
+      }
+
+      .welcome-text span {
+        font-weight: 500;
+        color: #a8d5d3;
+      }
+
+      .logout-btn {
+        padding: 12px 30px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        color: #fff;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .logout-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: translateY(-2px);
+      }
+
+      /* Main Container */
+      .main-container {
+        position: relative;
+        z-index: 10;
+        padding: 80px 50px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .page-title {
+        color: #fff;
+        font-size: 3rem;
+        text-align: center;
+        margin-bottom: 80px;
+        font-weight: 300;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+
+      /* Cards Grid */
+      .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 40px;
+        padding: 20px;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 30px;
+        padding: 50px 40px;
+        transition: all 0.4s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        min-height: 320px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          135deg,
+          rgba(168, 213, 211, 0.1),
+          rgba(90, 152, 150, 0.1)
+        );
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-15px);
+        border-color: rgba(255, 255, 255, 0.4);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      .card:hover::before {
+        opacity: 1;
+      }
+
+      .card-icon {
+        font-size: 4.5rem;
+        margin-bottom: 30px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .card-title {
+        color: #fff;
+        font-size: 1.8rem;
+        font-weight: 400;
+        text-align: center;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        position: relative;
+        z-index: 1;
+      }
+
+      .card-description {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1rem;
+        text-align: center;
+        line-height: 1.6;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Animaciones de entrada */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .header {
+        animation: fadeInUp 0.6s ease-out;
+      }
+
+      .page-title {
+        animation: fadeInUp 0.8s ease-out;
+      }
+
+      .card:nth-child(1) {
+        animation: fadeInUp 1s ease-out;
+      }
+
+      .card:nth-child(2) {
+        animation: fadeInUp 1.2s ease-out;
+      }
+
+      .card:nth-child(3) {
+        animation: fadeInUp 1.4s ease-out;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .header {
+          flex-direction: column;
+          gap: 20px;
+          padding: 20px;
+        }
+
+        .main-container {
+          padding: 40px 20px;
+        }
+
+        .page-title {
+          font-size: 2rem;
+          margin-bottom: 40px;
+        }
+
+        .cards-grid {
+          grid-template-columns: 1fr;
+          gap: 30px;
+        }
+
+        .card {
+          min-height: 280px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="background-shapes">
+      <div class="shape shape1"></div>
+      <div class="shape shape2"></div>
+      <div class="shape shape3"></div>
+    </div>
+
+    <header class="header">
+      <div class="welcome-text">
+        Bienvenido, <span id="userName">Usuario</span>
+      </div>
+      <a href="inicio.html" class="logout-btn" id="logoutBtn">Cerrar Sesión</a>
+    </header>
+
+    <div class="main-container">
+      <h1 class="page-title">Panel de Control</h1>
+
+      <div class="cards-grid">
+        <a href="finanzas.html" class="card">
+          <div class="card-icon">💰</div>
+          <h2 class="card-title">Administrar Finanzas</h2>
+          <p class="card-description">
+            Gestiona tus ingresos, gastos y mantén el control total de tu
+            presupuesto personal
+          </p>
+        </a>
+
+        <a href="metas.html" class="card">
+          <div class="card-icon">🎯</div>
+          <h2 class="card-title">Mis Metas</h2>
+          <p class="card-description">
+            Define tus objetivos financieros y da seguimiento a tu progreso
+            hacia ellos
+          </p>
+        </a>
+
+        <a href="objetivos.html" class="card">
+          <div class="card-icon">✅</div>
+          <h2 class="card-title">Objetivos Cumplidos</h2>
+          <p class="card-description">
+            Celebra tus logros y revisa todas las metas que has alcanzado
+            exitosamente
+          </p>
+        </a>
+      </div>
+    </div>
+
+    <script>
+      // Obtener información del usuario de sessionStorage
+      const usuario = JSON.parse(sessionStorage.getItem("usuario"));
+
+      if (usuario) {
+        document.getElementById("userName").textContent = usuario.nombre;
+      } else {
+        // Si no hay sesión, redirigir al login
+        window.location.href = "inicio.html";
+      }
+
+      // Cerrar sesión
+      document
+        .getElementById("logoutBtn")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          sessionStorage.removeItem("usuario");
+          window.location.href = "inicio.html";
+        });
+
+      // Efecto parallax con el mouse
+      document.addEventListener("mousemove", function (e) {
+        const shapes = document.querySelectorAll(".shape");
+        const x = e.clientX / window.innerWidth;
+        const y = e.clientY / window.innerHeight;
+
+        shapes.forEach((shape, index) => {
+          const speed = (index + 1) * 15;
+          const xMove = (x - 0.5) * speed;
+          const yMove = (y - 0.5) * speed;
+          shape.style.transform = `translate(${xMove}px, ${yMove}px)`;
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro - Nombre de la Página</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        height: 100vh;
+        overflow: hidden;
+        background: linear-gradient(
+          135deg,
+          #2c5f5d 0%,
+          #1a3d3b 50%,
+          #0d2726 100%
+        );
+        position: relative;
+      }
+
+      .background-shapes {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .shape {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.15;
+      }
+
+      .shape1 {
+        width: 600px;
+        height: 600px;
+        background: #4a8886;
+        bottom: -200px;
+        left: -100px;
+        border-radius: 40% 60% 50% 50%;
+      }
+
+      .shape2 {
+        width: 400px;
+        height: 400px;
+        background: #5a9896;
+        top: -100px;
+        right: -50px;
+        border-radius: 50% 50% 40% 60%;
+      }
+
+      .shape3 {
+        width: 800px;
+        height: 800px;
+        background: #3d7573;
+        bottom: -300px;
+        right: -200px;
+        border-radius: 60% 40% 50% 50%;
+      }
+
+      .container {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        padding: 20px;
+      }
+
+      h1 {
+        color: #fff;
+        font-size: 2.5rem;
+        margin-bottom: 60px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        font-weight: 300;
+        text-align: center;
+      }
+
+      .form-container {
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .input-group {
+        margin-bottom: 25px;
+        position: relative;
+      }
+
+      input {
+        width: 100%;
+        padding: 18px 25px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        color: #fff;
+        font-size: 1rem;
+        outline: none;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+      }
+
+      input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+      }
+
+      input:focus {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: translateY(-2px);
+      }
+
+      .btn-submit {
+        width: 100%;
+        padding: 18px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        border-radius: 50px;
+        color: #fff;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+        backdrop-filter: blur(10px);
+        font-weight: 300;
+      }
+
+      .btn-submit:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.6);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .btn-submit:active {
+        transform: translateY(0);
+      }
+
+      .login-link {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.7);
+        margin-top: 20px;
+        font-size: 0.95rem;
+      }
+
+      .login-link a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: 500;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        transition: all 0.3s ease;
+      }
+
+      .login-link a:hover {
+        color: #a8d5d3;
+        border-bottom-color: #a8d5d3;
+      }
+
+      .footer-text {
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: 40px;
+        font-size: 0.95rem;
+        text-align: center;
+        letter-spacing: 1px;
+      }
+
+      /* Animaciones */
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-20px) rotate(5deg);
+        }
+      }
+
+      .shape1 {
+        animation: float 15s ease-in-out infinite;
+      }
+
+      .shape2 {
+        animation: float 12s ease-in-out infinite reverse;
+      }
+
+      .shape3 {
+        animation: float 18s ease-in-out infinite;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .container > * {
+        animation: fadeIn 0.8s ease-out forwards;
+      }
+
+      .container > *:nth-child(2) {
+        animation-delay: 0.1s;
+      }
+
+      .container > *:nth-child(3) {
+        animation-delay: 0.2s;
+      }
+
+      .error-message {
+        color: #ff6b6b;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        padding-left: 25px;
+        display: none;
+      }
+
+      .input-group.error input {
+        border-color: #ff6b6b;
+      }
+
+      .input-group.error .error-message {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="background-shapes">
+      <div class="shape shape1"></div>
+      <div class="shape shape2"></div>
+      <div class="shape shape3"></div>
+    </div>
+
+    <div class="container">
+      <h1>Crear Cuenta</h1>
+
+      <div class="form-container">
+        <form id="registerForm">
+          <div class="input-group" id="nombreGroup">
+            <input
+              type="text"
+              id="nombre"
+              placeholder="Nombre Completo"
+              required
+            />
+            <div class="error-message">
+              Por favor ingresa tu nombre completo
+            </div>
+          </div>
+
+          <div class="input-group" id="emailGroup">
+            <input
+              type="email"
+              id="email"
+              placeholder="Correo Electrónico"
+              required
+            />
+            <div class="error-message">Por favor ingresa un correo válido</div>
+          </div>
+
+          <div class="input-group" id="usuarioGroup">
+            <input type="text" id="usuario" placeholder="Usuario" required />
+            <div class="error-message">
+              El usuario debe tener al menos 4 caracteres
+            </div>
+          </div>
+
+          <div class="input-group" id="contrasenaGroup">
+            <input
+              type="password"
+              id="contrasena"
+              placeholder="Contraseña"
+              required
+            />
+            <div class="error-message">
+              La contraseña debe tener al menos 6 caracteres
+            </div>
+          </div>
+
+          <div class="input-group" id="confirmarGroup">
+            <input
+              type="password"
+              id="confirmarContrasena"
+              placeholder="Confirmar Contraseña"
+              required
+            />
+            <div class="error-message">Las contraseñas no coinciden</div>
+          </div>
+
+          <button type="submit" class="btn-submit">Registrarme</button>
+        </form>
+
+        <p class="login-link">
+          ¿Ya tienes cuenta?
+          <a href="inicio.html" id="loginLink">Inicia sesión aquí</a>
+        </p>
+      </div>
+
+      <p class="footer-text">¡Únete a nuestra comunidad hoy!</p>
+    </div>
+
+    <script>
+      const form = document.getElementById("registerForm");
+      const nombreInput = document.getElementById("nombre");
+      const emailInput = document.getElementById("email");
+      const usuarioInput = document.getElementById("usuario");
+      const contrasenaInput = document.getElementById("contrasena");
+      const confirmarInput = document.getElementById("confirmarContrasena");
+
+      // Función para validar email
+      function validarEmail(email) {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
+      }
+
+      // Función para mostrar error
+      function mostrarError(inputGroup) {
+        inputGroup.classList.add("error");
+      }
+
+      // Función para limpiar error
+      function limpiarError(inputGroup) {
+        inputGroup.classList.remove("error");
+      }
+
+      // Limpiar errores al escribir
+      [
+        nombreInput,
+        emailInput,
+        usuarioInput,
+        contrasenaInput,
+        confirmarInput,
+      ].forEach((input) => {
+        input.addEventListener("input", function () {
+          limpiarError(this.parentElement);
+        });
+      });
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        // Limpiar errores previos
+        document.querySelectorAll(".input-group").forEach((group) => {
+          limpiarError(group);
+        });
+
+        let valido = true;
+
+        // Validar nombre
+        if (nombreInput.value.trim().length < 3) {
+          mostrarError(document.getElementById("nombreGroup"));
+          valido = false;
+        }
+
+        // Validar email
+        if (!validarEmail(emailInput.value.trim())) {
+          mostrarError(document.getElementById("emailGroup"));
+          valido = false;
+        }
+
+        // Validar usuario
+        if (usuarioInput.value.trim().length < 4) {
+          mostrarError(document.getElementById("usuarioGroup"));
+          valido = false;
+        }
+
+        // Validar contraseña
+        if (contrasenaInput.value.length < 6) {
+          mostrarError(document.getElementById("contrasenaGroup"));
+          valido = false;
+        }
+
+        // Validar confirmación de contraseña
+        if (contrasenaInput.value !== confirmarInput.value) {
+          mostrarError(document.getElementById("confirmarGroup"));
+          valido = false;
+        }
+
+        if (!valido) {
+          return;
+        }
+
+        // Enviar datos al backend
+        const datosUsuario = {
+          nombre: nombreInput.value.trim(),
+          email: emailInput.value.trim(),
+          usuario: usuarioInput.value.trim(),
+          contrasena: contrasenaInput.value,
+        };
+
+        // Hacer petición al servidor
+        fetch("http://localhost:3000/api/registro", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(datosUsuario),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              // Animación de éxito
+              form.style.transform = "scale(0.95)";
+              setTimeout(() => {
+                form.style.transform = "scale(1)";
+                alert("¡Registro exitoso! Bienvenido, " + datosUsuario.nombre);
+                // Redirigir al inicio de sesión
+                window.location.href = "inicio.html";
+              }, 100);
+            } else {
+              alert("Error: " + data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert(
+              "Error al conectar con el servidor. Asegúrate de que esté corriendo."
+            );
+          });
+      });
+
+      // Efecto de partículas al mover el mouse
+      document.addEventListener("mousemove", function (e) {
+        const shapes = document.querySelectorAll(".shape");
+        const x = e.clientX / window.innerWidth;
+        const y = e.clientY / window.innerHeight;
+
+        shapes.forEach((shape, index) => {
+          const speed = (index + 1) * 20;
+          const xMove = (x - 0.5) * speed;
+          const yMove = (y - 0.5) * speed;
+          shape.style.transform = `translate(${xMove}px, ${yMove}px)`;
+        });
+      });
+    </script>
+  </body>
+</html>
