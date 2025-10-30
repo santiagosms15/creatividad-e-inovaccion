@@ -1,0 +1,1226 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mis Metas - Panel de Control</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, sans-serif;
+        background: linear-gradient(
+          135deg,
+          #2c7a7b 0%,
+          #319795 50%,
+          #2c7a7b 100%
+        );
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        margin-bottom: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .header-text h1 {
+        color: white;
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .header-text p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.1rem;
+      }
+
+      .btn-nueva-meta {
+        background: white;
+        color: #2c7a7b;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 12px;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+      }
+
+      .btn-nueva-meta:hover {
+        background: #f0fdfa;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 40px;
+      }
+
+      .stat-card {
+        padding: 30px;
+        border-radius: 20px;
+        color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .stat-card.teal {
+        background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+      }
+
+      .stat-card.green {
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+      }
+
+      .stat-card.purple {
+        background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+      }
+
+      .stat-card .icon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 15px;
+        opacity: 0.8;
+      }
+
+      .stat-card .value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .stat-card .label {
+        opacity: 0.9;
+        font-size: 0.95rem;
+      }
+
+      .metas-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .meta-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+        cursor: pointer;
+      }
+
+      .meta-card:hover {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        transform: translateY(-4px);
+      }
+
+      .meta-card .progress-bar-top {
+        height: 8px;
+      }
+
+      .meta-card .content {
+        padding: 30px;
+      }
+
+      .meta-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 25px;
+      }
+
+      .meta-info h3 {
+        font-size: 1.5rem;
+        color: #1f2937;
+        margin-bottom: 10px;
+      }
+
+      .categoria {
+        display: inline-block;
+        background: #f3f4f6;
+        color: #6b7280;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+      }
+
+      .chevron {
+        color: #9ca3af;
+        width: 24px;
+        height: 24px;
+      }
+
+      .progress-section {
+        margin-bottom: 20px;
+      }
+
+      .progress-labels {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 0.95rem;
+      }
+
+      .progress-labels .actual {
+        font-weight: bold;
+        color: #1f2937;
+      }
+
+      .progress-labels .objetivo {
+        color: #6b7280;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 12px;
+        background: #e5e7eb;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 8px;
+      }
+
+      .progress-fill {
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.5s ease;
+      }
+
+      .progress-percentage {
+        text-align: right;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #1f2937;
+      }
+
+      .meta-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      .stat-item {
+        text-align: center;
+      }
+
+      .stat-item.bordered {
+        border-left: 1px solid #e5e7eb;
+        border-right: 1px solid #e5e7eb;
+      }
+
+      .stat-item .label {
+        color: #6b7280;
+        font-size: 0.85rem;
+        margin-bottom: 5px;
+      }
+
+      .stat-item .value {
+        font-weight: bold;
+        color: #1f2937;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      /* Detalle de Meta */
+      .detalle-meta {
+        animation: fadeIn 0.3s;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .btn-volver {
+        background: none;
+        border: none;
+        color: #0d9488;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 30px;
+        padding: 10px;
+        border-radius: 8px;
+        transition: all 0.2s;
+      }
+
+      .btn-volver:hover {
+        background: rgba(13, 148, 136, 0.1);
+      }
+
+      .detalle-header {
+        background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+        border-radius: 20px;
+        padding: 50px;
+        color: white;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .detalle-header-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 30px;
+      }
+
+      .detalle-header h2 {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+      }
+
+      .btn-agregar-aporte {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+
+      .btn-agregar-aporte:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .progreso-grande {
+        font-size: 4rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .progreso-texto {
+        opacity: 0.9;
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+      }
+
+      .progress-bar-detalle {
+        height: 16px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 30px;
+      }
+
+      .progress-fill-detalle {
+        height: 100%;
+        background: white;
+        border-radius: 10px;
+        transition: width 0.5s ease;
+      }
+
+      .montos-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+      }
+
+      .monto-item .label {
+        opacity: 0.8;
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+      }
+
+      .monto-item .valor {
+        font-size: 2rem;
+        font-weight: bold;
+      }
+
+      .plan-ahorro {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .plan-ahorro h3 {
+        font-size: 1.5rem;
+        color: #1f2937;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .plan-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .plan-item {
+        padding: 25px;
+        border-radius: 15px;
+      }
+
+      .plan-item.teal {
+        background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+      }
+
+      .plan-item.blue {
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      }
+
+      .plan-item .label {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+      }
+
+      .plan-item.teal .label {
+        color: #0f766e;
+      }
+
+      .plan-item.blue .label {
+        color: #1e40af;
+      }
+
+      .plan-item .valor {
+        font-size: 1.8rem;
+        font-weight: bold;
+      }
+
+      .plan-item.teal .valor {
+        color: #115e59;
+      }
+
+      .plan-item.blue .valor {
+        color: #1e3a8a;
+      }
+
+      .proyeccion {
+        background: linear-gradient(135deg, #faf5ff 0%, #fce7f3 100%);
+        border: 1px solid #e9d5ff;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+      }
+
+      .proyeccion h3 {
+        font-size: 1.3rem;
+        color: #1f2937;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .proyeccion p {
+        color: #374151;
+        line-height: 1.6;
+        margin-bottom: 10px;
+      }
+
+      .fecha-proyectada {
+        font-weight: bold;
+        color: #7c3aed;
+      }
+
+      .proyeccion .dias-info {
+        font-size: 0.9rem;
+        color: #6b7280;
+      }
+
+      .historial {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .historial h3 {
+        font-size: 1.5rem;
+        color: #1f2937;
+        margin-bottom: 20px;
+      }
+
+      .aporte-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+        background: #f9fafb;
+        border-radius: 15px;
+        margin-bottom: 12px;
+        transition: all 0.2s;
+      }
+
+      .aporte-item:hover {
+        background: #f3f4f6;
+      }
+
+      .aporte-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .aporte-icon {
+        width: 45px;
+        height: 45px;
+        background: #d1fae5;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #059669;
+      }
+
+      .aporte-info .monto {
+        font-weight: bold;
+        color: #1f2937;
+        font-size: 1.1rem;
+        margin-bottom: 4px;
+      }
+
+      .aporte-info .fecha {
+        color: #6b7280;
+        font-size: 0.9rem;
+      }
+
+      .botones-accion {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .btn-accion {
+        padding: 20px;
+        border: none;
+        border-radius: 15px;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        color: white;
+        transition: all 0.3s;
+      }
+
+      .btn-accion.teal {
+        background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+      }
+
+      .btn-accion.green {
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+      }
+
+      .btn-accion:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      @media (max-width: 768px) {
+        .header-text h1 {
+          font-size: 2rem;
+        }
+
+        .meta-stats {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        .stat-item.bordered {
+          border: none;
+          border-top: 1px solid #e5e7eb;
+          border-bottom: 1px solid #e5e7eb;
+          padding: 10px 0;
+        }
+
+        .plan-grid,
+        .montos-grid,
+        .botones-accion {
+          grid-template-columns: 1fr;
+        }
+
+        .detalle-header {
+          padding: 30px 20px;
+        }
+
+        .progreso-grande {
+          font-size: 3rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Dashboard -->
+      <div id="dashboard">
+        <div class="header">
+          <div class="header-text">
+            <h1>Mis Metas</h1>
+            <p>Sigue el progreso de tus objetivos financieros</p>
+          </div>
+          <button class="btn-nueva-meta">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Nueva Meta
+          </button>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card teal">
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 6v6l4 2"></path>
+            </svg>
+            <div class="value">3</div>
+            <div class="label">Metas Activas</div>
+          </div>
+
+          <div class="stat-card green">
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+              <polyline points="17 6 23 6 23 12"></polyline>
+            </svg>
+            <div class="value">58%</div>
+            <div class="label">Progreso Promedio</div>
+          </div>
+
+          <div class="stat-card purple">
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path
+                d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+              ></path>
+            </svg>
+            <div class="value">$7.250.000</div>
+            <div class="label">Total Ahorrado</div>
+          </div>
+        </div>
+
+        <div class="metas-grid">
+          <!-- Meta 1: Laptop Nueva -->
+          <div class="meta-card" onclick="mostrarDetalle(0)">
+            <div
+              class="progress-bar-top"
+              style="
+                background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%);
+                width: 66%;
+              "
+            ></div>
+            <div class="content">
+              <div class="meta-header">
+                <div class="meta-info">
+                  <h3>Laptop Nueva</h3>
+                  <span class="categoria">Tecnología</span>
+                </div>
+                <svg
+                  class="chevron"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </div>
+
+              <div class="progress-section">
+                <div class="progress-labels">
+                  <span class="actual">$1.650.000</span>
+                  <span class="objetivo">$2.500.000</span>
+                </div>
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    style="
+                      background: linear-gradient(
+                        90deg,
+                        #3b82f6 0%,
+                        #06b6d4 100%
+                      );
+                      width: 66%;
+                    "
+                  ></div>
+                </div>
+                <div class="progress-percentage">66.0%</div>
+              </div>
+
+              <div class="meta-stats">
+                <div class="stat-item">
+                  <div class="label">Falta</div>
+                  <div class="value">$850.000</div>
+                </div>
+                <div class="stat-item bordered">
+                  <div class="label">Días restantes</div>
+                  <div class="value">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    427
+                  </div>
+                </div>
+                <div class="stat-item">
+                  <div class="label">Ahorro/mes</div>
+                  <div class="value">$59.648</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Meta 2: Fondo de Emergencia -->
+          <div class="meta-card" onclick="mostrarDetalle(1)">
+            <div
+              class="progress-bar-top"
+              style="
+                background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+                width: 64%;
+              "
+            ></div>
+            <div class="content">
+              <div class="meta-header">
+                <div class="meta-info">
+                  <h3>Fondo de Emergencia</h3>
+                  <span class="categoria">Seguridad</span>
+                </div>
+                <svg
+                  class="chevron"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </div>
+
+              <div class="progress-section">
+                <div class="progress-labels">
+                  <span class="actual">$3.200.000</span>
+                  <span class="objetivo">$5.000.000</span>
+                </div>
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    style="
+                      background: linear-gradient(
+                        90deg,
+                        #10b981 0%,
+                        #059669 100%
+                      );
+                      width: 64%;
+                    "
+                  ></div>
+                </div>
+                <div class="progress-percentage">64.0%</div>
+              </div>
+
+              <div class="meta-stats">
+                <div class="stat-item">
+                  <div class="label">Falta</div>
+                  <div class="value">$1.800.000</div>
+                </div>
+                <div class="stat-item bordered">
+                  <div class="label">Días restantes</div>
+                  <div class="value">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    608
+                  </div>
+                </div>
+                <div class="stat-item">
+                  <div class="label">Ahorro/mes</div>
+                  <div class="value">$88.816</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Meta 3: Vacaciones Europa -->
+          <div class="meta-card" onclick="mostrarDetalle(2)">
+            <div
+              class="progress-bar-top"
+              style="
+                background: linear-gradient(90deg, #a855f7 0%, #ec4899 100%);
+                width: 30%;
+              "
+            ></div>
+            <div class="content">
+              <div class="meta-header">
+                <div class="meta-info">
+                  <h3>Vacaciones Europa</h3>
+                  <span class="categoria">Viajes</span>
+                </div>
+                <svg
+                  class="chevron"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </div>
+
+              <div class="progress-section">
+                <div class="progress-labels">
+                  <span class="actual">$2.400.000</span>
+                  <span class="objetivo">$8.000.000</span>
+                </div>
+                <div class="progress-bar">
+                  <div
+                    class="progress-fill"
+                    style="
+                      background: linear-gradient(
+                        90deg,
+                        #a855f7 0%,
+                        #ec4899 100%
+                      );
+                      width: 30%;
+                    "
+                  ></div>
+                </div>
+                <div class="progress-percentage">30.0%</div>
+              </div>
+
+              <div class="meta-stats">
+                <div class="stat-item">
+                  <div class="label">Falta</div>
+                  <div class="value">$5.600.000</div>
+                </div>
+                <div class="stat-item bordered">
+                  <div class="label">Días restantes</div>
+                  <div class="value">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    654
+                  </div>
+                </div>
+                <div class="stat-item">
+                  <div class="label">Ahorro/mes</div>
+                  <div class="value">$257.143</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detalle de Meta -->
+      <div id="detalle" class="detalle-meta hidden">
+        <button class="btn-volver" onclick="volverDashboard()">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          Volver a mis metas
+        </button>
+
+        <div class="detalle-header" id="detalleHeader">
+          <div class="detalle-header-top">
+            <div>
+              <h2 id="detalleTitulo">Laptop Nueva</h2>
+              <span class="categoria" id="detalleCategoria">Tecnología</span>
+            </div>
+            <button class="btn-agregar-aporte">
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+          </div>
+
+          <div class="progreso-grande" id="detalleProgreso">66.0%</div>
+          <div class="progreso-texto">de tu objetivo completado</div>
+
+          <div class="progress-bar-detalle">
+            <div
+              class="progress-fill-detalle"
+              id="detalleProgressFill"
+              style="width: 66%"
+            ></div>
+          </div>
+
+          <div class="montos-grid">
+            <div class="monto-item">
+              <div class="label">Actual</div>
+              <div class="valor" id="detalleActual">$1.650.000</div>
+            </div>
+            <div class="monto-item">
+              <div class="label">Objetivo</div>
+              <div class="valor" id="detalleObjetivo">$2.500.000</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="plan-ahorro">
+          <h3>
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#0d9488"
+              stroke-width="2"
+            >
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            Plan de Ahorro Sugerido
+          </h3>
+          <div class="plan-grid">
+            <div class="plan-item teal">
+              <div class="label">Por Semana</div>
+              <div class="valor" id="ahorroSemanal">$14.912</div>
+            </div>
+            <div class="plan-item blue">
+              <div class="label">Por Mes</div>
+              <div class="valor" id="ahorroMensual">$59.648</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="proyeccion">
+          <h3>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#7c3aed"
+              stroke-width="2"
+            >
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+              <polyline points="17 6 23 6 23 12"></polyline>
+            </svg>
+            Proyección
+          </h3>
+          <p>
+            Si continúas ahorrando a este ritmo, completarás tu meta el
+            <span class="fecha-proyectada" id="fechaProyectada"
+              >15 de enero de 2026</span
+            >
+          </p>
+          <div class="dias-info" id="diasInfo">
+            Faltan aproximadamente 427 días para tu fecha límite
+          </div>
+        </div>
+
+        <div class="historial">
+          <h3>Historial de Aportes</h3>
+          <div id="historialAportes">
+            <div class="aporte-item">
+              <div class="aporte-left">
+                <div class="aporte-icon">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                </div>
+                <div class="aporte-info">
+                  <div class="monto">$400.000</div>
+                  <div class="fecha">15 de octubre de 2025</div>
+                </div>
+              </div>
+            </div>
+            <div class="aporte-item">
+              <div class="aporte-left">
+                <div class="aporte-icon">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                </div>
+                <div class="aporte-info">
+                  <div class="monto">$350.000</div>
+                  <div class="fecha">20 de septiembre de 2025</div>
+                </div>
+              </div>
+            </div>
+            <div class="aporte-item">
+              <div class="aporte-left">
+                <div class="aporte-icon">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                </div>
+                <div class="aporte-info">
+                  <div class="monto">$450.000</div>
+                  <div class="fecha">25 de agosto de 2025</div>
+                </div>
+              </div>
+            </div>
+            <div class="aporte-item">
+              <div class="aporte-left">
+                <div class="aporte-icon">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                </div>
+                <div class="aporte-info">
+                  <div class="monto">$450.000</div>
+                  <div class="fecha">30 de julio de 2025</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="botones-accion">
+          <button class="btn-accion teal">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Agregar Aporte
+          </button>
+          <button class="btn-accion green">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Marcar Completada
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const metas = [
+        {
+          nombre: "Laptop Nueva",
+          categoria: "Tecnología",
+          actual: 1650000,
+          objetivo: 2500000,
+          progreso: 66,
+          diasRestantes: 427,
+          color: "linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)",
+          ahorroSemanal: 14912,
+          ahorroMensual: 59648,
+          fechaProyectada: "15 de enero de 2026",
+        },
+        {
+          nombre: "Fondo de Emergencia",
+          categoria: "Seguridad",
+          actual: 3200000,
+          objetivo: 5000000,
+          progreso: 64,
+          diasRestantes: 608,
+          color: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+          ahorroSemanal: 22204,
+          ahorroMensual: 88816,
+          fechaProyectada: "30 de junio de 2027",
+        },
+        {
+          nombre: "Vacaciones Europa",
+          categoria: "Viajes",
+          actual: 2400000,
+          objetivo: 8000000,
+          progreso: 30,
+          diasRestantes: 654,
+          color: "linear-gradient(135deg, #a855f7 0%, #ec4899 100%)",
+          ahorroSemanal: 64286,
+          ahorroMensual: 257143,
+          fechaProyectada: "15 de agosto de 2027",
+        },
+      ];
+
+      function formatearMoneda(valor) {
+        return new Intl.NumberFormat("es-CO", {
+          style: "currency",
+          currency: "COP",
+          minimumFractionDigits: 0,
+        }).format(valor);
+      }
+
+      function mostrarDetalle(index) {
+        const meta = metas[index];
+
+        document.getElementById("dashboard").classList.add("hidden");
+        document.getElementById("detalle").classList.remove("hidden");
+
+        document.getElementById("detalleHeader").style.background = meta.color;
+        document.getElementById("detalleTitulo").textContent = meta.nombre;
+        document.getElementById("detalleCategoria").textContent =
+          meta.categoria;
+        document.getElementById("detalleProgreso").textContent =
+          meta.progreso.toFixed(1) + "%";
+        document.getElementById("detalleProgressFill").style.width =
+          meta.progreso + "%";
+        document.getElementById("detalleActual").textContent = formatearMoneda(
+          meta.actual
+        );
+        document.getElementById("detalleObjetivo").textContent =
+          formatearMoneda(meta.objetivo);
+        document.getElementById("ahorroSemanal").textContent = formatearMoneda(
+          meta.ahorroSemanal
+        );
+        document.getElementById("ahorroMensual").textContent = formatearMoneda(
+          meta.ahorroMensual
+        );
+        document.getElementById("fechaProyectada").textContent =
+          meta.fechaProyectada;
+        document.getElementById("diasInfo").textContent =
+          `Faltan aproximadamente ${meta.diasRestantes} días para tu fecha límite`;
+
+        window.scrollTo(0, 0);
+      }
+
+      function volverDashboard() {
+        document.getElementById("detalle").classList.add("hidden");
+        document.getElementById("dashboard").classList.remove("hidden");
+        window.scrollTo(0, 0);
+      }
+    </script>
+  </body>
+</html>
