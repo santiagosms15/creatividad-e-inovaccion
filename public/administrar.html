@@ -36,6 +36,32 @@
         font-size: 2em;
       }
 
+      .header-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .btn-logros {
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn-logros:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+      }
+
       .tabs {
         display: flex;
         gap: 10px;
@@ -135,6 +161,17 @@
 
       .btn-delete:hover {
         background: #c0392b;
+      }
+
+      .btn-completar {
+        background: #27ae60;
+        padding: 8px 16px;
+        font-size: 0.9em;
+        margin-right: 5px;
+      }
+
+      .btn-completar:hover {
+        background: #229954;
       }
 
       .expense-item,
@@ -289,12 +326,77 @@
         content: "💡 ";
         margin-right: 10px;
       }
+
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        animation: fadeIn 0.3s;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .modal-content {
+        background: white;
+        margin: 10% auto;
+        padding: 30px;
+        border-radius: 15px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        animation: slideDown 0.3s;
+      }
+
+      @keyframes slideDown {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .modal-header {
+        color: #667eea;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+        text-align: center;
+      }
+
+      .modal-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .modal-buttons button {
+        flex: 1;
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <div class="header">
-        <h1>💰 Administrar Finanzas</h1>
+        <div class="header-actions">
+          <h1>💰 Administrar Finanzas</h1>
+          <a href="objetivos.html" class="btn-logros" target="_blank">
+            🏆 Ver Mis Logros
+          </a>
+        </div>
         <div class="tabs">
           <button class="tab active" onclick="showTab('gastos')">
             Registro de Gastos
@@ -488,11 +590,101 @@
       </div>
     </div>
 
+    <!-- Modal de completar objetivo -->
+    <div id="modalCompletar" class="modal">
+      <div class="modal-content">
+        <h2 class="modal-header">🎉 ¡Felicidades!</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 20px">
+          ¿Has completado este objetivo?
+        </p>
+        <div class="form-group">
+          <label>Agrega una nota sobre este logro (opcional):</label>
+          <input
+            type="text"
+            id="notaLogro"
+            placeholder="Ej: ¡Finalmente lo logré después de mucho esfuerzo!"
+          />
+        </div>
+        <div class="modal-buttons">
+          <button class="btn btn-delete" onclick="cerrarModal()">
+            Cancelar
+          </button>
+          <button class="btn btn-completar" onclick="confirmarCompletado()">
+            Marcar como Completado
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script>
       // Datos en memoria
       let gastos = [];
       let presupuestos = {};
       let objetivos = [];
+      let objetivoACompletar = null;
+
+      // Cargar datos al iniciar
+      async function cargarDatos() {
+        try {
+          // Cargar gastos
+          const resultGastos = await window.storage.get("finanzas:gastos");
+          if (resultGastos) {
+            gastos = JSON.parse(resultGastos.value);
+          }
+
+          // Cargar presupuestos
+          const resultPresupuestos = await window.storage.get(
+            "finanzas:presupuestos"
+          );
+          if (resultPresupuestos) {
+            presupuestos = JSON.parse(resultPresupuestos.value);
+          }
+
+          // Cargar objetivos
+          const resultObjetivos =
+            await window.storage.get("finanzas:objetivos");
+          if (resultObjetivos) {
+            objetivos = JSON.parse(resultObjetivos.value);
+          }
+
+          mostrarGastos();
+          mostrarObjetivos();
+          actualizarEstadoPresupuesto();
+        } catch (error) {
+          console.log("Primera vez usando la app, iniciando con datos vacíos");
+        }
+      }
+
+      // Guardar datos
+      async function guardarGastos() {
+        try {
+          await window.storage.set("finanzas:gastos", JSON.stringify(gastos));
+        } catch (error) {
+          console.error("Error guardando gastos:", error);
+        }
+      }
+
+      async function guardarPresupuestos() {
+        try {
+          await window.storage.set(
+            "finanzas:presupuestos",
+            JSON.stringify(presupuestos)
+          );
+        } catch (error) {
+          console.error("Error guardando presupuestos:", error);
+        }
+      }
+
+      async function guardarObjetivos() {
+        try {
+          await window.storage.set(
+            "finanzas:objetivos",
+            JSON.stringify(objetivos)
+          );
+        } catch (error) {
+          console.error("Error guardando objetivos:", error);
+        }
+      }
 
       // Inicializar fecha actual
       document.getElementById("gastoFecha").valueAsDate = new Date();
@@ -518,7 +710,7 @@
       }
 
       // Funciones de Gastos
-      function agregarGasto() {
+      async function agregarGasto() {
         const desc = document.getElementById("gastoDesc").value;
         const monto = parseFloat(document.getElementById("gastoMonto").value);
         const categoria = document.getElementById("gastoCategoria").value;
@@ -531,6 +723,7 @@
 
         const gasto = { desc, monto, categoria, fecha, id: Date.now() };
         gastos.push(gasto);
+        await guardarGastos();
 
         document.getElementById("gastoDesc").value = "";
         document.getElementById("gastoMonto").value = "";
@@ -566,14 +759,15 @@
           .join("");
       }
 
-      function eliminarGasto(id) {
+      async function eliminarGasto(id) {
         gastos = gastos.filter((g) => g.id !== id);
+        await guardarGastos();
         mostrarGastos();
         actualizarEstadoPresupuesto();
       }
 
       // Funciones de Presupuesto
-      function establecerPresupuesto() {
+      async function establecerPresupuesto() {
         const categoria = document.getElementById("presupuestoCategoria").value;
         const limite = parseFloat(
           document.getElementById("presupuestoLimite").value
@@ -585,6 +779,7 @@
         }
 
         presupuestos[categoria] = limite;
+        await guardarPresupuestos();
         document.getElementById("presupuestoLimite").value = "";
         actualizarEstadoPresupuesto();
       }
@@ -626,12 +821,6 @@
               .filter((g) => g.categoria === cat)
               .reduce((sum, g) => sum + g.monto, 0);
             const porcentaje = (gastado / limite) * 100;
-            const alerta =
-              porcentaje > 90
-                ? "alert-warning"
-                : porcentaje > 100
-                  ? "alert-warning"
-                  : "";
 
             return `
                     <div class="budget-item">
@@ -677,7 +866,7 @@
       }
 
       // Funciones de Objetivos
-      function agregarObjetivo() {
+      async function agregarObjetivo() {
         const nombre = document.getElementById("objetivoNombre").value;
         const monto = parseFloat(
           document.getElementById("objetivoMonto").value
@@ -700,8 +889,10 @@
           fecha,
           prioridad,
           id: Date.now(),
+          fechaInicio: new Date().toISOString().split("T")[0],
         };
         objetivos.push(objetivo);
+        await guardarObjetivos();
 
         document.getElementById("objetivoNombre").value = "";
         document.getElementById("objetivoMonto").value = "";
@@ -742,7 +933,7 @@
                                 </div>
                             </div>
                             <div style="display: flex; justify-content: space-between; font-size: 0.9em; color: #666; margin-top: 5px;">
-                                <span>Ahorrado: $${obj.actual.toFixed(2)} / $${obj.monto.toFixed(2)}</span>
+                                <span>Ahorrado: ${obj.actual.toFixed(2)} / ${obj.monto.toFixed(2)}</span>
                                 <span>Fecha: ${obj.fecha}</span>
                             </div>
                             <div style="margin-top: 10px;">
@@ -751,7 +942,8 @@
                             </div>
                         </div>
                         <div>
-                            <div class="goal-amount">Faltan: $${(obj.monto - obj.actual).toFixed(2)}</div>
+                            <div class="goal-amount">Faltan: ${(obj.monto - obj.actual).toFixed(2)}</div>
+                            <button class="btn btn-completar" onclick="abrirModalCompletar(${obj.id})">✓ Completar</button>
                             <button class="btn btn-delete" onclick="eliminarObjetivo(${obj.id})">Eliminar</button>
                         </div>
                     </div>
@@ -760,7 +952,7 @@
           .join("");
       }
 
-      function agregarAporte(id) {
+      async function agregarAporte(id) {
         const input = document.getElementById(`aporte-${id}`);
         const aporte = parseFloat(input.value);
 
@@ -773,13 +965,117 @@
         if (objetivo) {
           objetivo.actual += aporte;
           input.value = "";
+
+          // Si alcanzó o superó la meta, preguntar si desea completarlo
+          if (objetivo.actual >= objetivo.monto) {
+            if (
+              confirm(
+                `🎉 ¡Felicidades! Has alcanzado tu objetivo "${objetivo.nombre}". ¿Deseas marcarlo como completado?`
+              )
+            ) {
+              abrirModalCompletar(id);
+            }
+          }
+
+          await guardarObjetivos();
           mostrarObjetivos();
         }
       }
 
-      function eliminarObjetivo(id) {
-        objetivos = objetivos.filter((o) => o.id !== id);
-        mostrarObjetivos();
+      async function eliminarObjetivo(id) {
+        if (confirm("¿Estás seguro de eliminar este objetivo?")) {
+          objetivos = objetivos.filter((o) => o.id !== id);
+          await guardarObjetivos();
+          mostrarObjetivos();
+        }
+      }
+
+      // Funciones del modal
+      function abrirModalCompletar(id) {
+        objetivoACompletar = id;
+        document.getElementById("modalCompletar").style.display = "block";
+      }
+
+      function cerrarModal() {
+        document.getElementById("modalCompletar").style.display = "none";
+        document.getElementById("notaLogro").value = "";
+        objetivoACompletar = null;
+      }
+
+      async function confirmarCompletado() {
+        if (!objetivoACompletar) return;
+
+        const objetivo = objetivos.find((o) => o.id === objetivoACompletar);
+        if (!objetivo) return;
+
+        const nota = document.getElementById("notaLogro").value;
+
+        // Crear objeto de logro
+        const logro = {
+          id: objetivo.id,
+          nombre: objetivo.nombre,
+          monto: objetivo.monto,
+          fechaInicio:
+            objetivo.fechaInicio || new Date().toISOString().split("T")[0],
+          fechaCumplida: new Date().toISOString().split("T")[0],
+          prioridad: objetivo.prioridad,
+          nota: nota || `Objetivo cumplido: ${objetivo.nombre}`,
+          tiempoMeses: calcularMeses(
+            objetivo.fechaInicio || new Date().toISOString().split("T")[0],
+            new Date().toISOString().split("T")[0]
+          ),
+        };
+
+        try {
+          // Obtener lista de IDs de logros
+          let listaLogros = [];
+          const resultLista = await window.appStorage.get("logros:lista", true);
+          if (resultLista && resultLista.value) {
+            listaLogros = JSON.parse(resultLista.value);
+          }
+
+          // Agregar nuevo ID si no existe
+          if (!listaLogros.includes(logro.id)) {
+            listaLogros.push(logro.id);
+          }
+
+          // Guardar el logro individual
+          const keyLogro = `logro:${logro.id}`;
+          await window.appStorage.set(keyLogro, JSON.stringify(logro), true);
+
+          // Guardar la lista actualizada
+          await window.appStorage.set(
+            "logros:lista",
+            JSON.stringify(listaLogros),
+            true
+          );
+
+          // Eliminar de objetivos activos
+          objetivos = objetivos.filter((o) => o.id !== objetivoACompletar);
+          await guardarObjetivos();
+
+          cerrarModal();
+          mostrarObjetivos();
+
+          alert(
+            '🎉 ¡Felicidades! Tu logro ha sido guardado. Puedes verlo en la página de "Objetivos Cumplidos".'
+          );
+        } catch (error) {
+          console.error("Error guardando logro:", error);
+          alert(
+            "Hubo un error al guardar el logro. Por favor intenta de nuevo. Error: " +
+              error.message
+          );
+        }
+      }
+
+      function calcularMeses(fechaInicio, fechaFin) {
+        const inicio = new Date(fechaInicio);
+        const fin = new Date(fechaFin);
+        const meses =
+          (fin.getFullYear() - inicio.getFullYear()) * 12 +
+          (fin.getMonth() - inicio.getMonth());
+        return Math.max(0.5, meses || 0.5);
       }
 
       // Funciones de Análisis
@@ -817,7 +1113,7 @@
                     <div class="category-bar">
                         <div class="category-label">
                             <span>${cat}</span>
-                            <span>$${monto.toFixed(2)} (${porcentaje.toFixed(1)}%)</span>
+                            <span>${monto.toFixed(2)} (${porcentaje.toFixed(1)}%)</span>
                         </div>
                         <div class="bar">
                             <div class="bar-fill" style="width: ${porcentaje}%">
@@ -859,7 +1155,7 @@
 
         let html = `
                 <div class="alert alert-success">
-                    <strong>Dinero Libre Mensual:</strong> $${libre.toFixed(2)}
+                    <strong>Dinero Libre Mensual:</strong> ${libre.toFixed(2)}
                 </div>
             `;
 
@@ -1003,10 +1299,16 @@
           .join("");
       }
 
+      // Cerrar modal al hacer clic fuera
+      window.onclick = function (event) {
+        const modal = document.getElementById("modalCompletar");
+        if (event.target === modal) {
+          cerrarModal();
+        }
+      };
+
       // Inicializar
-      mostrarGastos();
-      mostrarObjetivos();
-      actualizarEstadoPresupuesto();
+      cargarDatos();
     </script>
   </body>
 </html>

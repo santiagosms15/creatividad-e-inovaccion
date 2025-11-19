@@ -1,0 +1,929 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Objetivos Cumplidos</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      .header {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        margin-bottom: 30px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .header::before {
+        content: "🎉";
+        position: absolute;
+        font-size: 15em;
+        opacity: 0.05;
+        top: -50px;
+        right: -50px;
+        transform: rotate(-15deg);
+      }
+
+      .header h1 {
+        color: #667eea;
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        position: relative;
+      }
+
+      .header p {
+        color: #666;
+        font-size: 1.1em;
+        position: relative;
+      }
+
+      .btn-volver {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        padding: 10px 20px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s;
+      }
+
+      .btn-volver:hover {
+        background: #5568d3;
+        transform: translateY(-2px);
+      }
+
+      .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: transform 0.3s;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .stat-card .icon {
+        font-size: 3em;
+        margin-bottom: 10px;
+      }
+
+      .stat-card .value {
+        font-size: 2em;
+        font-weight: bold;
+        color: #667eea;
+        margin: 10px 0;
+      }
+
+      .stat-card .label {
+        color: #666;
+        font-size: 0.9em;
+      }
+
+      .medals-section {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+      }
+
+      .medals-section h2 {
+        color: #667eea;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+      }
+
+      .medals-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+      }
+
+      .medal {
+        text-align: center;
+        padding: 20px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 12px;
+        transition: all 0.3s;
+        position: relative;
+      }
+
+      .medal.unlocked {
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+      }
+
+      .medal.locked {
+        opacity: 0.4;
+        filter: grayscale(100%);
+      }
+
+      .medal:hover.unlocked {
+        transform: scale(1.05);
+      }
+
+      .medal-icon {
+        font-size: 3.5em;
+        margin-bottom: 10px;
+      }
+
+      .medal-name {
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+      }
+
+      .medal-desc {
+        font-size: 0.85em;
+        color: #666;
+      }
+
+      .timeline {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+      }
+
+      .timeline h2 {
+        color: #667eea;
+        margin-bottom: 30px;
+        font-size: 1.8em;
+      }
+
+      .timeline-item {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+        position: relative;
+      }
+
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: 27px;
+        top: 60px;
+        bottom: -30px;
+        width: 2px;
+        background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+      }
+
+      .timeline-item:last-child::before {
+        display: none;
+      }
+
+      .timeline-date {
+        min-width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 0.9em;
+        text-align: center;
+        padding: 10px;
+        box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+        z-index: 1;
+        flex-shrink: 0;
+      }
+
+      .timeline-content {
+        flex: 1;
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 12px;
+        border-left: 4px solid #667eea;
+      }
+
+      .timeline-content h3 {
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 1.3em;
+      }
+
+      .timeline-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .timeline-stat {
+        background: white;
+        padding: 10px;
+        border-radius: 8px;
+        text-align: center;
+      }
+
+      .timeline-stat-value {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #27ae60;
+      }
+
+      .timeline-stat-label {
+        font-size: 0.85em;
+        color: #666;
+        margin-top: 5px;
+      }
+
+      .analisis-section {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+      }
+
+      .analisis-section h2 {
+        color: #667eea;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+      }
+
+      .analisis-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+      }
+
+      .analisis-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 20px;
+        border-radius: 12px;
+        border-left: 4px solid #667eea;
+      }
+
+      .analisis-card h3 {
+        color: #667eea;
+        margin-bottom: 10px;
+        font-size: 1em;
+      }
+
+      .analisis-card .value {
+        font-size: 1.8em;
+        font-weight: bold;
+        color: #333;
+        margin: 10px 0;
+      }
+
+      .analisis-card .description {
+        color: #666;
+        font-size: 0.9em;
+      }
+
+      .galeria-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 25px;
+      }
+
+      .logro-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+      }
+
+      .logro-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+
+      .logro-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 25px;
+        color: white;
+        position: relative;
+      }
+
+      .logro-header::after {
+        content: "✨";
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 2em;
+        opacity: 0.3;
+      }
+
+      .logro-fecha {
+        font-size: 0.9em;
+        opacity: 0.9;
+        margin-bottom: 10px;
+      }
+
+      .logro-nombre {
+        font-size: 1.5em;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .logro-monto {
+        font-size: 1.8em;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+
+      .logro-body {
+        padding: 20px;
+      }
+
+      .logro-detalles {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+
+      .detalle-item {
+        text-align: center;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 8px;
+      }
+
+      .detalle-label {
+        font-size: 0.85em;
+        color: #666;
+        margin-bottom: 5px;
+      }
+
+      .detalle-value {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #667eea;
+      }
+
+      .logro-nota {
+        background: #e8f4f8;
+        padding: 12px;
+        border-radius: 8px;
+        border-left: 4px solid #3498db;
+        font-size: 0.9em;
+        color: #2c3e50;
+        margin-top: 15px;
+      }
+
+      .btn-compartir {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1em;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        margin-top: 15px;
+      }
+
+      .btn-compartir:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .empty-state .icon {
+        font-size: 6em;
+        margin-bottom: 20px;
+        opacity: 0.5;
+      }
+
+      .empty-state h3 {
+        color: #667eea;
+        font-size: 1.8em;
+        margin-bottom: 15px;
+      }
+
+      .empty-state p {
+        color: #666;
+        margin-bottom: 25px;
+        font-size: 1.1em;
+      }
+
+      .btn-nueva-meta {
+        padding: 15px 35px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1em;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn-nueva-meta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+      }
+
+      .racha-card {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 5px 20px rgba(255, 107, 107, 0.3);
+      }
+
+      .racha-icon {
+        font-size: 4em;
+        margin-bottom: 10px;
+      }
+
+      .racha-numero {
+        font-size: 3em;
+        font-weight: bold;
+        margin: 10px 0;
+      }
+
+      .racha-texto {
+        font-size: 1.1em;
+        opacity: 0.9;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+      }
+
+      @media (max-width: 768px) {
+        .galeria-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .stats-container {
+          grid-template-columns: 1fr;
+        }
+
+        .medals-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .btn-volver {
+          position: static;
+          display: block;
+          margin-bottom: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <a href="index.html" class="btn-volver">← Volver a Finanzas</a>
+        <h1>🎉 Objetivos Cumplidos</h1>
+        <p>Celebra tus logros y mantén la motivación</p>
+      </div>
+
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="icon">🏆</div>
+          <div class="value" id="totalLogros">0</div>
+          <div class="label">Objetivos Cumplidos</div>
+        </div>
+        <div class="stat-card">
+          <div class="icon">💰</div>
+          <div class="value" id="totalAhorrado">$0</div>
+          <div class="label">Total Ahorrado</div>
+        </div>
+        <div class="stat-card">
+          <div class="icon">⏱️</div>
+          <div class="value" id="tiempoPromedio">0</div>
+          <div class="label">Meses Promedio</div>
+        </div>
+        <div class="stat-card racha-card">
+          <div class="racha-icon">🔥</div>
+          <div class="racha-numero" id="rachaActual">0</div>
+          <div class="racha-texto">Racha de Cumplimiento</div>
+        </div>
+      </div>
+
+      <div class="medals-section">
+        <h2>🏅 Medallas e Insignias</h2>
+        <div class="medals-grid" id="medallas"></div>
+      </div>
+
+      <div class="analisis-section">
+        <h2>📊 Análisis de Rendimiento</h2>
+        <div class="analisis-grid">
+          <div class="analisis-card">
+            <h3>Tiempo de Cumplimiento</h3>
+            <div class="value" id="tiempoMasRapido">0 días</div>
+            <div class="description">Tu objetivo más rápido de cumplir</div>
+          </div>
+          <div class="analisis-card">
+            <h3>Mayor Ahorro</h3>
+            <div class="value" id="mayorAhorro">$0</div>
+            <div class="description">Tu objetivo de mayor valor</div>
+          </div>
+          <div class="analisis-card">
+            <h3>Tasa de Éxito</h3>
+            <div class="value" id="tasaExito">100%</div>
+            <div class="description">Objetivos cumplidos vs. totales</div>
+          </div>
+          <div class="analisis-card">
+            <h3>Ahorro Mensual Promedio</h3>
+            <div class="value" id="ahorroMensual">$0</div>
+            <div class="description">Tu capacidad de ahorro promedio</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <h2>📅 Línea de Tiempo de Logros</h2>
+        <div id="timelineContainer"></div>
+      </div>
+
+      <div class="medals-section">
+        <h2>🎯 Galería de Logros</h2>
+        <div class="galeria-grid" id="galeriaLogros"></div>
+      </div>
+    </div>
+
+    <script>
+      let objetivosCumplidos = [];
+
+      async function cargarLogros() {
+        try {
+          // Obtener lista de IDs de logros
+          let resultLista;
+          try {
+            resultLista = await window.storage.get("logros:lista", true);
+          } catch (e) {
+            // La lista no existe aún
+            console.log("No hay logros guardados aún");
+            mostrarEstadoVacio();
+            return;
+          }
+
+          const listaIds = JSON.parse(resultLista.value);
+
+          if (listaIds.length === 0) {
+            mostrarEstadoVacio();
+            return;
+          }
+
+          // Cargar cada logro
+          objetivosCumplidos = [];
+          for (const id of listaIds) {
+            try {
+              const resultLogro = await window.storage.get(`logro:${id}`, true);
+              if (resultLogro) {
+                objetivosCumplidos.push(JSON.parse(resultLogro.value));
+              }
+            } catch (e) {
+              console.log("Error cargando logro:", id, e);
+            }
+          }
+
+          if (objetivosCumplidos.length === 0) {
+            mostrarEstadoVacio();
+            return;
+          }
+
+          calcularEstadisticas();
+          actualizarMedallas();
+          mostrarTimeline();
+          mostrarGaleria();
+        } catch (error) {
+          console.log("Primera vez usando la app:", error);
+          mostrarEstadoVacio();
+        }
+      }
+
+      function mostrarEstadoVacio() {
+        document.getElementById("galeriaLogros").innerHTML = `
+                <div class="empty-state">
+                    <div class="icon">🎯</div>
+                    <h3>Aún no has cumplido ningún objetivo</h3>
+                    <p>¡Comienza ahora y celebra tus primeros logros!</p>
+                    <a href="index.html" class="btn-nueva-meta">
+                        Crear Nueva Meta
+                    </a>
+                </div>
+            `;
+        document.getElementById("timelineContainer").innerHTML =
+          '<p style="color: #999;">No hay logros para mostrar</p>';
+      }
+
+      function calcularEstadisticas() {
+        const total = objetivosCumplidos.length;
+        const totalAhorrado = objetivosCumplidos.reduce(
+          (sum, obj) => sum + obj.monto,
+          0
+        );
+        const tiempoPromedio =
+          objetivosCumplidos.reduce((sum, obj) => sum + obj.tiempoMeses, 0) /
+          total;
+
+        const tiempos = objetivosCumplidos.map((obj) => {
+          const inicio = new Date(obj.fechaInicio);
+          const fin = new Date(obj.fechaCumplida);
+          return Math.ceil((fin - inicio) / (1000 * 60 * 60 * 24));
+        });
+        const tiempoMasRapido = Math.min(...tiempos);
+        const mayorAhorro = Math.max(
+          ...objetivosCumplidos.map((obj) => obj.monto)
+        );
+
+        // Calcular racha (objetivos cumplidos en los últimos 3 meses)
+        const tresMesesAtras = new Date();
+        tresMesesAtras.setMonth(tresMesesAtras.getMonth() - 3);
+        const racha = objetivosCumplidos.filter(
+          (obj) => new Date(obj.fechaCumplida) >= tresMesesAtras
+        ).length;
+
+        // Calcular ahorro mensual promedio
+        const ahorroMensual =
+          totalAhorrado /
+          objetivosCumplidos.reduce((sum, obj) => sum + obj.tiempoMeses, 0);
+
+        document.getElementById("totalLogros").textContent = total;
+        document.getElementById("totalAhorrado").textContent =
+          `$${totalAhorrado.toLocaleString()}`;
+        document.getElementById("tiempoPromedio").textContent =
+          tiempoPromedio.toFixed(1);
+        document.getElementById("rachaActual").textContent = racha;
+        document.getElementById("tiempoMasRapido").textContent =
+          `${tiempoMasRapido} días`;
+        document.getElementById("mayorAhorro").textContent =
+          `$${mayorAhorro.toLocaleString()}`;
+        document.getElementById("tasaExito").textContent = "100%";
+        document.getElementById("ahorroMensual").textContent =
+          `$${ahorroMensual.toFixed(0)}`;
+      }
+
+      function actualizarMedallas() {
+        const total = objetivosCumplidos.length;
+        const totalAhorrado = objetivosCumplidos.reduce(
+          (sum, obj) => sum + obj.monto,
+          0
+        );
+
+        const tiempos = objetivosCumplidos.map((obj) => {
+          const inicio = new Date(obj.fechaInicio);
+          const fin = new Date(obj.fechaCumplida);
+          return Math.ceil((fin - inicio) / (1000 * 60 * 60 * 24));
+        });
+        const tieneRapido = tiempos.some((t) => t < 90);
+
+        const medallas = [
+          {
+            icon: "🥇",
+            nombre: "Primera Meta",
+            desc: "Completaste tu primer objetivo",
+            desbloqueada: total >= 1,
+          },
+          {
+            icon: "💪",
+            nombre: "Persistente",
+            desc: "5 objetivos cumplidos",
+            desbloqueada: total >= 5,
+          },
+          {
+            icon: "⚡",
+            nombre: "Rápido",
+            desc: "Meta cumplida en menos de 3 meses",
+            desbloqueada: tieneRapido,
+          },
+          {
+            icon: "🌟",
+            nombre: "Maestro",
+            desc: "10 objetivos cumplidos",
+            desbloqueada: total >= 10,
+          },
+          {
+            icon: "💎",
+            nombre: "Diamante",
+            desc: "Ahorra $50,000 en total",
+            desbloqueada: totalAhorrado >= 50000,
+          },
+          {
+            icon: "👑",
+            nombre: "Leyenda",
+            desc: "20 objetivos cumplidos",
+            desbloqueada: total >= 20,
+          },
+        ];
+
+        document.getElementById("medallas").innerHTML = medallas
+          .map(
+            (m) => `
+                <div class="medal ${m.desbloqueada ? "unlocked" : "locked"}" title="${m.desbloqueada ? "Desbloqueada" : "Bloqueada"}">
+                    <div class="medal-icon">${m.icon}</div>
+                    <div class="medal-name">${m.nombre}</div>
+                    <div class="medal-desc">${m.desc}</div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      function formatearFecha(fecha) {
+        const opciones = { year: "numeric", month: "long", day: "numeric" };
+        return new Date(fecha).toLocaleDateString("es-ES", opciones);
+      }
+
+      function calcularDuracion(fechaInicio, fechaFin) {
+        const inicio = new Date(fechaInicio);
+        const fin = new Date(fechaFin);
+        const diferencia = fin - inicio;
+        return Math.ceil(diferencia / (1000 * 60 * 60 * 24));
+      }
+
+      function mostrarTimeline() {
+        const container = document.getElementById("timelineContainer");
+
+        if (objetivosCumplidos.length === 0) {
+          container.innerHTML =
+            '<p style="color: #999;">Aún no hay objetivos cumplidos</p>';
+          return;
+        }
+
+        // Ordenar por fecha de cumplimiento (más reciente primero)
+        const ordenados = [...objetivosCumplidos].sort(
+          (a, b) => new Date(b.fechaCumplida) - new Date(a.fechaCumplida)
+        );
+
+        container.innerHTML = ordenados
+          .map((obj) => {
+            const dias = calcularDuracion(obj.fechaInicio, obj.fechaCumplida);
+            const fecha = new Date(obj.fechaCumplida);
+            const fechaCorta = `${fecha.getDate()}/${fecha.getMonth() + 1}`;
+
+            return `
+                    <div class="timeline-item">
+                        <div class="timeline-date">${fechaCorta}</div>
+                        <div class="timeline-content">
+                            <h3>✅ ${obj.nombre}</h3>
+                            <p style="color: #666; margin: 10px 0;">${formatearFecha(obj.fechaCumplida)}</p>
+                            <div class="timeline-stats">
+                                <div class="timeline-stat">
+                                    <div class="timeline-stat-value">$${obj.monto.toLocaleString()}</div>
+                                    <div class="timeline-stat-label">Monto Ahorrado</div>
+                                </div>
+                                <div class="timeline-stat">
+                                    <div class="timeline-stat-value">${dias} días</div>
+                                    <div class="timeline-stat-label">Tiempo Invertido</div>
+                                </div>
+                                <div class="timeline-stat">
+                                    <div class="timeline-stat-value">$${(obj.monto / obj.tiempoMeses).toFixed(0)}</div>
+                                    <div class="timeline-stat-label">Ahorro/Mes</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+          })
+          .join("");
+      }
+
+      function mostrarGaleria() {
+        const container = document.getElementById("galeriaLogros");
+
+        if (objetivosCumplidos.length === 0) {
+          mostrarEstadoVacio();
+          return;
+        }
+
+        // Ordenar por fecha de cumplimiento (más reciente primero)
+        const ordenados = [...objetivosCumplidos].sort(
+          (a, b) => new Date(b.fechaCumplida) - new Date(a.fechaCumplida)
+        );
+
+        container.innerHTML = ordenados
+          .map((obj) => {
+            const dias = calcularDuracion(obj.fechaInicio, obj.fechaCumplida);
+            const ahorroMensual = obj.monto / obj.tiempoMeses;
+            const ahorroDiario = obj.monto / dias;
+
+            return `
+                    <div class="logro-card">
+                        <div class="logro-header">
+                            <div class="logro-fecha">
+                                ${formatearFecha(obj.fechaCumplida)}
+                            </div>
+                            <div class="logro-nombre">${obj.nombre}</div>
+                            <div class="logro-monto">$${obj.monto.toLocaleString()}</div>
+                        </div>
+                        <div class="logro-body">
+                            <div class="logro-detalles">
+                                <div class="detalle-item">
+                                    <div class="detalle-label">Duración</div>
+                                    <div class="detalle-value">${dias} días</div>
+                                </div>
+                                <div class="detalle-item">
+                                    <div class="detalle-label">Prioridad</div>
+                                    <div class="detalle-value">${obj.prioridad}</div>
+                                </div>
+                                <div class="detalle-item">
+                                    <div class="detalle-label">Ahorro/Mes</div>
+                                    <div class="detalle-value">$${ahorroMensual.toFixed(0)}</div>
+                                </div>
+                                <div class="detalle-item">
+                                    <div class="detalle-label">Ahorro/Día</div>
+                                    <div class="detalle-value">$${ahorroDiario.toFixed(0)}</div>
+                                </div>
+                            </div>
+                            ${
+                              obj.nota
+                                ? `
+                                <div class="logro-nota">
+                                    <strong>📝 Nota:</strong> ${obj.nota}
+                                </div>
+                            `
+                                : ""
+                            }
+                            <button class="btn-compartir" onclick="compartirLogro(${obj.id})">
+                                📤 Compartir Logro
+                            </button>
+                        </div>
+                    </div>
+                `;
+          })
+          .join("");
+      }
+
+      function compartirLogro(id) {
+        const objetivo = objetivosCumplidos.find((obj) => obj.id === id);
+        const texto = `🎉 ¡Logré mi objetivo "${objetivo.nombre}"!\n💰 Ahorré ${objetivo.monto.toLocaleString()} en ${calcularDuracion(objetivo.fechaInicio, objetivo.fechaCumplida)} días.\n\n¡Tú también puedes lograrlo! 💪`;
+
+        if (navigator.share) {
+          navigator
+            .share({
+              title: "Mi Logro Financiero",
+              text: texto,
+            })
+            .catch((err) => console.log("Error al compartir:", err));
+        } else {
+          // Fallback: copiar al portapapeles
+          navigator.clipboard
+            .writeText(texto)
+            .then(() => {
+              alert(
+                "✅ Texto copiado al portapapeles. ¡Compártelo donde quieras!"
+              );
+            })
+            .catch(() => {
+              alert("Texto para compartir:\n\n" + texto);
+            });
+        }
+      }
+
+      // Cargar logros al iniciar
+      cargarLogros();
+    </script>
+  </body>
+</html>
