@@ -12,9 +12,13 @@
       }
 
       body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         min-height: 100vh;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background-image: url("img/fondo3.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         overflow-x: hidden;
       }
 
@@ -26,7 +30,7 @@
 
       .header {
         text-align: center;
-        color: white;
+        color: rgb(7, 7, 7);
         padding: 40px 20px;
         margin-bottom: 40px;
       }
@@ -140,7 +144,7 @@
         margin-bottom: 10px;
       }
 
-      /* Juego 1: Desafío Presupuesto */
+      /* Juego 1: Desafío Presupuesto (MANTENIDO COMO ESTABA) */
       .scenario {
         background: #f8f9fa;
         padding: 25px;
@@ -214,55 +218,349 @@
         border-color: #e74c3c;
       }
 
-      /* Juego 2: Ruleta del Ahorro */
-      .trivia-container {
-        max-width: 800px;
+      /* Juego 2: Ruleta del Ahorro - INTERFAZ MEJORADA */
+      .savings-wheel-container {
+        max-width: 1000px;
         margin: 0 auto;
       }
 
-      .score-board {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 30px;
-        padding: 20px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 15px;
-        color: white;
-      }
-
-      .score-item {
+      .wheel-header {
         text-align: center;
+        margin-bottom: 30px;
+        position: relative;
       }
 
-      .score-item h3 {
-        font-size: 0.9rem;
+      .wheel-title {
+        font-size: 2.8rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+
+      .wheel-subtitle {
+        font-size: 1.2rem;
+        color: #7f8c8d;
+        margin-bottom: 20px;
+      }
+
+      .wheel-game-area {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        align-items: start;
+      }
+
+      .wheel-section {
+        background: #f8f9fa;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .wheel-visual {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .wheel-container {
+        position: relative;
+        width: 280px;
+        height: 280px;
+        margin: 0 auto 30px;
+      }
+
+      .wheel {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: conic-gradient(
+          #ff9a9e 0% 10%,
+          #fad0c4 10% 20%,
+          #a1c4fd 20% 30%,
+          #c2e9fb 30% 40%,
+          #ffecd2 40% 50%,
+          #fcb69f 50% 60%,
+          #84fab0 60% 70%,
+          #8fd3f4 70% 80%,
+          #d4fc79 80% 90%,
+          #96e6a1 90% 100%
+        );
+        position: relative;
+        transition: transform 3s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .wheel-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60px;
+        height: 60px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 10;
+      }
+
+      .wheel-pointer {
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 30px;
+        height: 40px;
+        background: #e74c3c;
+        clip-path: polygon(50% 100%, 0 0, 100% 0);
+        z-index: 5;
+      }
+
+      .wheel-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .wheel-stat {
+        background: white;
+        padding: 15px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .stat-icon {
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+      }
+
+      .stat-label {
+        font-size: 0.8rem;
+        color: #7f8c8d;
         margin-bottom: 5px;
-        opacity: 0.9;
       }
 
-      .score-item .value {
-        font-size: 2rem;
+      .stat-value {
+        font-size: 1.5rem;
         font-weight: bold;
+        color: #2c3e50;
+      }
+
+      .question-section {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
       }
 
       .question-card {
-        background: #f8f9fa;
-        padding: 30px;
+        background: white;
+        padding: 25px;
         border-radius: 15px;
         margin-bottom: 25px;
-        border-left: 5px solid #667eea;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
       }
 
-      .question-card h3 {
-        color: #333;
-        font-size: 1.5rem;
-        margin-bottom: 25px;
+      .question-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .question-number {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      .question-text {
+        font-size: 1.3rem;
+        line-height: 1.6;
+        color: #2c3e50;
+        margin-bottom: 20px;
+      }
+
+      .wheel-options {
+        display: grid;
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .wheel-option {
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        padding: 18px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        text-align: left;
+      }
+
+      .wheel-option:hover {
+        border-color: #667eea;
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+      }
+
+      .option-letter {
+        background: #f8f9fa;
+        color: #667eea;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 15px;
+        flex-shrink: 0;
+        font-size: 1.1rem;
+      }
+
+      .option-text {
+        font-size: 1.1rem;
+        color: #2c3e50;
+      }
+
+      .wheel-option.correct {
+        background: #d4f8e8;
+        border-color: #27ae60;
+      }
+
+      .wheel-option.incorrect {
+        background: #fde8e8;
+        border-color: #e74c3c;
+      }
+
+      .wheel-feedback {
+        padding: 20px;
+        border-radius: 12px;
+        margin-top: 20px;
+        text-align: center;
+        font-size: 1.1rem;
+        font-weight: 600;
+        display: none;
+        animation: slideIn 0.5s ease;
+      }
+
+      .wheel-feedback.show {
+        display: block;
+      }
+
+      .wheel-feedback.correct {
+        background: #d4f8e8;
+        color: #155724;
+        border: 2px solid #27ae60;
+      }
+
+      .wheel-feedback.incorrect {
+        background: #fde8e8;
+        color: #721c24;
+        border: 2px solid #e74c3c;
+      }
+
+      .wheel-action {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .spin-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+      }
+
+      .spin-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+      }
+
+      .spin-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .wheel-game-over {
+        text-align: center;
+        padding: 40px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .wheel-game-over h2 {
+        font-size: 2.5rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+      }
+
+      .final-wheel-score {
+        font-size: 4rem;
+        color: #764ba2;
+        margin: 30px 0;
+        font-weight: bold;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .wheel-message {
+        font-size: 1.3rem;
+        color: #666;
+        margin-bottom: 30px;
         line-height: 1.6;
       }
 
-      .trivia-options {
-        display: grid;
+      .wheel-badges {
+        display: flex;
+        justify-content: center;
         gap: 15px;
+        margin: 20px 0;
+      }
+
+      .wheel-badge {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
 
       .feedback {
@@ -292,17 +590,6 @@
         border: 2px solid #dc3545;
       }
 
-      @keyframes slideIn {
-        from {
-          opacity: 0;
-          transform: translateY(-10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
       .game-over {
         text-align: center;
         padding: 40px;
@@ -326,19 +613,46 @@
         color: #666;
         margin-bottom: 30px;
       }
+      .game-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 15px;
+        margin-bottom: 20px;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .wheel-game-area {
+          grid-template-columns: 1fr;
+        }
+
+        .wheel-container {
+          width: 220px;
+          height: 220px;
+        }
+
+        .wheel-stats {
+          grid-template-columns: 1fr;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <div class="header">
-        <h1>🎮 FinanSYS Games</h1>
+        <h1>FinanSYS Games</h1>
         <p>Aprende finanzas mientras te diviertes</p>
       </div>
 
       <!-- Menú de Juegos -->
       <div id="gamesMenu" class="games-menu">
         <div class="game-card">
-          <div class="icon">💰</div>
+          <img
+            src="img/finanzas1.jpg"
+            alt="Desafío Presupuesto"
+            class="game-image"
+          />
           <h2>Desafío Presupuesto</h2>
           <p>
             Toma decisiones financieras inteligentes con un presupuesto
@@ -348,7 +662,11 @@
         </div>
 
         <div class="game-card">
-          <div class="icon">🎯</div>
+          <img
+            src="img/finanzas2.jpg"
+            alt="Ruleta del Ahorro"
+            class="game-image"
+          />
           <h2>Ruleta del Ahorro</h2>
           <p>
             Responde preguntas sobre finanzas personales y acumula puntos.
@@ -358,7 +676,7 @@
         </div>
       </div>
 
-      <!-- Juego 1: Desafío Presupuesto -->
+      <!-- Juego 1: Desafío Presupuesto (MANTENIDO COMO ESTABA) -->
       <div id="game1" class="game-screen">
         <button class="btn back-btn" onclick="backToMenu()">
           ← Volver al Menú
@@ -391,53 +709,107 @@
         <div id="feedback1" class="feedback"></div>
       </div>
 
-      <!-- Juego 2: Ruleta del Ahorro -->
+      <!-- Juego 2: Ruleta del Ahorro - INTERFAZ MEJORADA -->
       <div id="game2" class="game-screen">
         <button class="btn back-btn" onclick="backToMenu()">
           ← Volver al Menú
         </button>
-        <div class="game-header">
-          <h2>🎯 Ruleta del Ahorro</h2>
-        </div>
 
-        <div class="trivia-container">
-          <div class="score-board">
-            <div class="score-item">
-              <h3>Pregunta</h3>
-              <div class="value"><span id="questionNum">1</span>/10</div>
-            </div>
-            <div class="score-item">
-              <h3>Puntuación</h3>
-              <div class="value"><span id="score">0</span></div>
-            </div>
-            <div class="score-item">
-              <h3>Racha</h3>
-              <div class="value"><span id="streak">0</span>🔥</div>
-            </div>
+        <div class="savings-wheel-container">
+          <div class="wheel-header">
+            <h2 class="wheel-title">🎯 Ruleta del Ahorro</h2>
+            <p class="wheel-subtitle">
+              Gira la ruleta y responde preguntas para ganar puntos
+            </p>
           </div>
 
-          <div id="triviaContent">
-            <div class="question-card">
-              <h3 id="question"></h3>
-            </div>
-            <div id="triviaOptions" class="trivia-options"></div>
-            <div id="feedback2" class="feedback"></div>
-          </div>
+          <div class="wheel-game-area">
+            <div class="wheel-section wheel-visual">
+              <div class="wheel-container">
+                <div class="wheel" id="savingsWheel"></div>
+                <div class="wheel-center">
+                  <span>🎯</span>
+                </div>
+                <div class="wheel-pointer"></div>
+              </div>
 
-          <div id="gameOver" class="game-over" style="display: none">
-            <h2>🎉 ¡Juego Terminado!</h2>
-            <div class="final-score"><span id="finalScore">0</span> puntos</div>
-            <div class="message" id="finalMessage"></div>
-            <button class="btn" onclick="restartTrivia()">
-              Jugar de Nuevo
-            </button>
+              <div class="wheel-stats">
+                <div class="wheel-stat">
+                  <div class="stat-icon">❓</div>
+                  <div class="stat-label">PREGUNTA</div>
+                  <div class="stat-value">
+                    <span id="questionNum">1</span>/10
+                  </div>
+                </div>
+                <div class="wheel-stat">
+                  <div class="stat-icon">⭐</div>
+                  <div class="stat-label">PUNTUACIÓN</div>
+                  <div class="stat-value"><span id="score">0</span></div>
+                </div>
+                <div class="wheel-stat">
+                  <div class="stat-icon">🔥</div>
+                  <div class="stat-label">RACHA</div>
+                  <div class="stat-value"><span id="streak">0</span></div>
+                </div>
+              </div>
+
+              <div class="wheel-action">
+                <button class="spin-btn" id="spinButton" onclick="spinWheel()">
+                  Girar Ruleta
+                </button>
+              </div>
+            </div>
+
+            <div class="wheel-section question-section">
+              <div id="triviaContent">
+                <div class="question-card">
+                  <div class="question-header">
+                    <div class="question-number">
+                      Pregunta <span id="currentQuestionNum">1</span>
+                    </div>
+                    <div class="question-points">
+                      +<span id="questionPoints">100</span> pts
+                    </div>
+                  </div>
+                  <h3 class="question-text" id="question"></h3>
+                </div>
+
+                <div id="wheelOptions" class="wheel-options"></div>
+                <div id="wheelFeedback" class="wheel-feedback"></div>
+              </div>
+
+              <div
+                id="wheelGameOver"
+                class="wheel-game-over"
+                style="display: none"
+              >
+                <h2>🎉 ¡Juego Terminado!</h2>
+                <div class="final-wheel-score">
+                  <span id="finalWheelScore">0</span>
+                </div>
+                <div class="wheel-message" id="finalWheelMessage"></div>
+
+                <div class="wheel-badges">
+                  <div class="wheel-badge" id="correctBadge">
+                    ✅ <span id="correctCount">0</span> correctas
+                  </div>
+                  <div class="wheel-badge" id="streakBadge">
+                    🔥 Racha: <span id="finalStreak">0</span>
+                  </div>
+                </div>
+
+                <button class="spin-btn" onclick="restartWheelGame()">
+                  Jugar de Nuevo
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <script>
-      // JUEGO 1: DESAFÍO PRESUPUESTO
+      // JUEGO 1: DESAFÍO PRESUPUESTO (MANTENIDO COMO ESTABA)
       let game1State = {
         level: 1,
         points: 0,
@@ -601,7 +973,7 @@
         if (gameNum === 1) {
           loadScenario();
         } else {
-          loadTriviaQuestion();
+          initializeWheelGame();
         }
       }
 
@@ -622,9 +994,10 @@
           currentScenario: 0,
         };
 
-        triviaState.currentQuestion = 0;
-        triviaState.score = 0;
-        triviaState.streak = 0;
+        wheelState.currentQuestion = 0;
+        wheelState.score = 0;
+        wheelState.streak = 0;
+        wheelState.correctAnswers = 0;
       }
 
       function loadScenario() {
@@ -702,11 +1075,13 @@
         document.getElementById("feedback1").classList.remove("show");
       }
 
-      // JUEGO 2: RULETA DEL AHORRO
-      let triviaState = {
+      // JUEGO 2: RULETA DEL AHORRO - INTERFAZ MEJORADA
+      let wheelState = {
         currentQuestion: 0,
         score: 0,
         streak: 0,
+        correctAnswers: 0,
+        isSpinning: false,
         questions: [
           {
             q: "¿Cuál es la regla 50/30/20 para administrar tu dinero?",
@@ -811,100 +1186,179 @@
         ],
       };
 
-      function loadTriviaQuestion() {
-        if (triviaState.currentQuestion >= triviaState.questions.length) {
-          showGameOver();
-          return;
-        }
-
-        const q = triviaState.questions[triviaState.currentQuestion];
-
-        document.getElementById("questionNum").textContent =
-          triviaState.currentQuestion + 1;
-        document.getElementById("score").textContent = triviaState.score;
-        document.getElementById("streak").textContent = triviaState.streak;
-        document.getElementById("question").textContent = q.q;
-        document.getElementById("gameOver").style.display = "none";
+      function initializeWheelGame() {
+        updateWheelStats();
         document.getElementById("triviaContent").style.display = "block";
-
-        const optionsContainer = document.getElementById("triviaOptions");
-        optionsContainer.innerHTML = "";
-
-        q.options.forEach((option, index) => {
-          const btn = document.createElement("button");
-          btn.className = "option-btn";
-          btn.innerHTML = `<strong>${String.fromCharCode(65 + index)})</strong> ${option}`;
-          btn.onclick = () => answerTrivia(index);
-          optionsContainer.appendChild(btn);
-        });
-
-        document.getElementById("feedback2").classList.remove("show");
+        document.getElementById("wheelGameOver").style.display = "none";
+        document.getElementById("spinButton").disabled = false;
+        loadWheelQuestion();
       }
 
-      function answerTrivia(index) {
-        const q = triviaState.questions[triviaState.currentQuestion];
-        const isCorrect = index === q.correct;
+      function spinWheel() {
+        if (wheelState.isSpinning) return;
 
-        const buttons = document.querySelectorAll("#triviaOptions .option-btn");
-        buttons.forEach((btn, i) => {
-          btn.disabled = true;
-          if (i === index) {
-            btn.classList.add(isCorrect ? "correct" : "incorrect");
-          }
-          if (i === q.correct) {
-            btn.classList.add("correct");
-          }
-        });
+        wheelState.isSpinning = true;
+        document.getElementById("spinButton").disabled = true;
 
-        if (isCorrect) {
-          triviaState.streak++;
-          const points = 100 + triviaState.streak * 10;
-          triviaState.score += points;
-          document.getElementById("feedback2").textContent =
-            `¡Correcto! +${points} puntos 🎉`;
-          document.getElementById("feedback2").className =
-            "feedback show correct";
-        } else {
-          triviaState.streak = 0;
-          document.getElementById("feedback2").textContent =
-            `Incorrecto. La respuesta correcta era: ${q.options[q.correct]}`;
-          document.getElementById("feedback2").className =
-            "feedback show incorrect";
-        }
+        const wheel = document.getElementById("savingsWheel");
+        const degrees = 1800 + Math.floor(Math.random() * 360); // Entre 5 y 6 vueltas
+
+        wheel.style.transform = `rotate(${degrees}deg)`;
 
         setTimeout(() => {
-          triviaState.currentQuestion++;
-          loadTriviaQuestion();
+          wheelState.isSpinning = false;
+          // Después de girar, habilitar las opciones de respuesta
+          enableAnswerOptions();
         }, 3000);
       }
 
-      function showGameOver() {
-        document.getElementById("triviaContent").style.display = "none";
-        document.getElementById("gameOver").style.display = "block";
-        document.getElementById("finalScore").textContent = triviaState.score;
-
-        let message = "";
-        if (triviaState.score >= 900) {
-          message =
-            "🏆 ¡Experto en Finanzas! Tienes un conocimiento excepcional.";
-        } else if (triviaState.score >= 700) {
-          message =
-            "🌟 ¡Muy Bien! Tienes una base sólida en finanzas personales.";
-        } else if (triviaState.score >= 500) {
-          message = "💪 ¡Buen Trabajo! Vas por buen camino, sigue aprendiendo.";
-        } else {
-          message =
-            "📚 ¡Sigue Practicando! Cada intento te hace más sabio financieramente.";
-        }
-
-        document.getElementById("finalMessage").textContent = message;
+      function enableAnswerOptions() {
+        const options = document.querySelectorAll(".wheel-option");
+        options.forEach((option) => {
+          option.style.pointerEvents = "auto";
+          option.style.opacity = "1";
+        });
       }
 
-      function restartTrivia() {
-        triviaState.currentQuestion = 0;
-        triviaState.score = 0;
-        triviaState.streak = 0;
-        loadTriviaQuestion();
+      function disableAnswerOptions() {
+        const options = document.querySelectorAll(".wheel-option");
+        options.forEach((option) => {
+          option.style.pointerEvents = "none";
+        });
+      }
+
+      function loadWheelQuestion() {
+        if (wheelState.currentQuestion >= wheelState.questions.length) {
+          showWheelGameOver();
+          return;
+        }
+
+        const q = wheelState.questions[wheelState.currentQuestion];
+
+        // Calcular puntos basados en la racha
+        const basePoints = 100;
+        const streakBonus = wheelState.streak * 10;
+        const questionPoints = basePoints + streakBonus;
+
+        document.getElementById("currentQuestionNum").textContent =
+          wheelState.currentQuestion + 1;
+        document.getElementById("questionPoints").textContent = questionPoints;
+        document.getElementById("question").textContent = q.q;
+
+        const optionsContainer = document.getElementById("wheelOptions");
+        optionsContainer.innerHTML = "";
+
+        q.options.forEach((option, index) => {
+          const optionElement = document.createElement("div");
+          optionElement.className = "wheel-option";
+          optionElement.innerHTML = `
+            <div class="option-letter">${String.fromCharCode(65 + index)}</div>
+            <div class="option-text">${option}</div>
+          `;
+          optionElement.onclick = () => answerWheelQuestion(index);
+          optionElement.style.pointerEvents = "none";
+          optionElement.style.opacity = "0.7";
+          optionsContainer.appendChild(optionElement);
+        });
+
+        document.getElementById("wheelFeedback").classList.remove("show");
+        updateWheelStats();
+      }
+
+      function answerWheelQuestion(index) {
+        const q = wheelState.questions[wheelState.currentQuestion];
+        const isCorrect = index === q.correct;
+
+        disableAnswerOptions();
+
+        const options = document.querySelectorAll(
+          "#wheelOptions .wheel-option"
+        );
+        options.forEach((option, i) => {
+          if (i === index) {
+            option.classList.add(isCorrect ? "correct" : "incorrect");
+          }
+          if (i === q.correct) {
+            option.classList.add("correct");
+          }
+        });
+
+        // Calcular puntos
+        const basePoints = 100;
+        const streakBonus = wheelState.streak * 10;
+        const questionPoints = basePoints + streakBonus;
+
+        if (isCorrect) {
+          wheelState.streak++;
+          wheelState.correctAnswers++;
+          wheelState.score += questionPoints;
+
+          document.getElementById("wheelFeedback").textContent =
+            `¡Correcto! +${questionPoints} puntos 🎉`;
+          document.getElementById("wheelFeedback").className =
+            "wheel-feedback show correct";
+        } else {
+          wheelState.streak = 0;
+          document.getElementById("wheelFeedback").textContent =
+            `Incorrecto. La respuesta correcta era: ${q.options[q.correct]}`;
+          document.getElementById("wheelFeedback").className =
+            "wheel-feedback show incorrect";
+        }
+
+        updateWheelStats();
+
+        setTimeout(() => {
+          wheelState.currentQuestion++;
+          document.getElementById("spinButton").disabled = false;
+          loadWheelQuestion();
+        }, 3000);
+      }
+
+      function updateWheelStats() {
+        document.getElementById("questionNum").textContent =
+          wheelState.currentQuestion + 1;
+        document.getElementById("score").textContent = wheelState.score;
+        document.getElementById("streak").textContent = wheelState.streak;
+      }
+
+      function showWheelGameOver() {
+        document.getElementById("triviaContent").style.display = "none";
+        document.getElementById("wheelGameOver").style.display = "block";
+        document.getElementById("finalWheelScore").textContent =
+          wheelState.score;
+        document.getElementById("correctCount").textContent =
+          wheelState.correctAnswers;
+        document.getElementById("finalStreak").textContent = wheelState.streak;
+
+        let message = "";
+        if (wheelState.score >= 900) {
+          message =
+            "🏆 ¡Experto en Finanzas! Tienes un conocimiento excepcional sobre finanzas personales.";
+        } else if (wheelState.score >= 700) {
+          message =
+            "🌟 ¡Muy Bien! Tienes una base sólida en finanzas personales y sabes tomar decisiones inteligentes.";
+        } else if (wheelState.score >= 500) {
+          message =
+            "💪 ¡Buen Trabajo! Vas por buen camino, sigue aprendiendo y mejorando tus habilidades financieras.";
+        } else {
+          message =
+            "📚 ¡Sigue Practicando! Cada intento te hace más sabio financieramente. No te rindas.";
+        }
+
+        document.getElementById("finalWheelMessage").textContent = message;
+      }
+
+      function restartWheelGame() {
+        wheelState.currentQuestion = 0;
+        wheelState.score = 0;
+        wheelState.streak = 0;
+        wheelState.correctAnswers = 0;
+
+        // Resetear la ruleta
+        const wheel = document.getElementById("savingsWheel");
+        wheel.style.transform = `rotate(0deg)`;
+
+        initializeWheelGame();
       }
     </script>
   </body>

@@ -159,6 +159,32 @@
         .page-title {
           font-size: 1.9rem;
         }
+        .btn-games {
+          width: 100%;
+          background: white;
+          border-radius: 20px;
+          border: 2px solid transparent;
+          padding: 25px;
+          margin-top: 40px;
+          color: #0033a0;
+          font-size: 1.3rem;
+          font-weight: 600;
+          text-decoration: none;
+          text-align: center;
+          cursor: pointer;
+          display: block;
+
+          /* SOMBRA igual a card */
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+
+          transition: 0.25s ease;
+        }
+
+        .btn-games:hover {
+          transform: translateY(-8px);
+          border-color: #ffc600;
+          box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
       }
     </style>
   </head>
@@ -212,6 +238,16 @@
             <div class="card-title">Objetivos Cumplidos</div>
             <div class="card-description">
               Revisa y celebra tus logros alcanzados.
+            </div>
+          </div>
+        </a>
+        <a href="juegos.html" class="card">
+          <img src="img/juegos.jpg" class="card-img" alt="Minijuegos" />
+          <div class="card-content">
+            <div class="card-title">Jugar Minijuegos</div>
+            <div class="card-description">
+              Diviértete mientras aprendes sobre finanzas con juegos
+              interactivos.
             </div>
           </div>
         </a>
