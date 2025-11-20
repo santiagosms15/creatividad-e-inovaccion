@@ -7,130 +7,123 @@ const path = require("path");
 const app = express();
 const PORT = 3000;
 
-// Middleware
+// Middleware global
 app.use(cors());
 app.use(express.json());
-app.use(express.static("public")); // Carpeta para tus archivos HTML
+app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
 
-// Crear/conectar base de datos
+// ---------- BASE DE DATOS ----------
 const db = new sqlite3.Database("./usuarios.db", (err) => {
   if (err) {
-    console.error("Error al conectar con la base de datos:", err);
+    console.error("❌ Error al conectar a SQLite:", err);
   } else {
-    console.log("Conectado a la base de datos SQLite");
+    console.log("✅ Base de datos SQLite conectada");
     crearTabla();
   }
 });
 
-// Crear tabla de usuarios si no existe
 function crearTabla() {
   const sql = `
-        CREATE TABLE IF NOT EXISTS usuarios (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            usuario TEXT UNIQUE NOT NULL,
-            contrasena TEXT NOT NULL,
-            fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-    `;
+    CREATE TABLE IF NOT EXISTS usuarios (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nombre TEXT NOT NULL,
+      email TEXT UNIQUE NOT NULL,
+      usuario TEXT UNIQUE NOT NULL,
+      contrasena TEXT NOT NULL,
+      fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `;
 
   db.run(sql, (err) => {
-    if (err) {
-      console.error("Error al crear tabla:", err);
-    } else {
-      console.log("Tabla de usuarios lista");
-    }
+    if (err) console.error("❌ Error al crear tabla:", err);
+    else console.log("📌 Tabla 'usuarios' lista");
   });
 }
 
-// RUTA: Registrar nuevo usuario
+// ---------- RUTAS HTML LIMPIAS ----------
+const sendPage = (res, file) =>
+  res.sendFile(path.join(__dirname, "public", file));
+
+app.get("/", (req, res) => sendPage(res, "inicio.html"));
+app.get("/inicio", (req, res) => sendPage(res, "inicio.html"));
+app.get("/dashboard", (req, res) => sendPage(res, "dashboard.html"));
+app.get("/registro", (req, res) => sendPage(res, "registro.html"));
+app.get("/metas", (req, res) => sendPage(res, "metas.html"));
+app.get("/administrar", (req, res) => sendPage(res, "administrar.html"));
+
+// ---------- API: REGISTRO ----------
 app.post("/api/registro", async (req, res) => {
   const { nombre, email, usuario, contrasena } = req.body;
 
-  // Validaciones básicas
   if (!nombre || !email || !usuario || !contrasena) {
-    return res.status(400).json({
-      success: false,
-      message: "Todos los campos son requeridos",
-    });
+    return res
+      .status(400)
+      .json({ success: false, message: "Todos los campos son requeridos" });
   }
 
   try {
-    // Encriptar contraseña
-    const contrasenaHash = await bcrypt.hash(contrasena, 10);
+    const hash = await bcrypt.hash(contrasena, 10);
 
-    // Insertar usuario en la base de datos
-    const sql = `INSERT INTO usuarios (nombre, email, usuario, contrasena) VALUES (?, ?, ?, ?)`;
+    const sql = `
+      INSERT INTO usuarios (nombre, email, usuario, contrasena)
+      VALUES (?, ?, ?, ?)
+    `;
 
-    db.run(sql, [nombre, email, usuario, contrasenaHash], function (err) {
+    db.run(sql, [nombre, email, usuario, hash], function (err) {
       if (err) {
         if (err.message.includes("UNIQUE")) {
           return res.status(400).json({
             success: false,
-            message: "El email o usuario ya existe",
+            message: "El email o usuario ya está registrado",
           });
         }
-        return res.status(500).json({
-          success: false,
-          message: "Error al registrar usuario",
-        });
+        return res
+          .status(500)
+          .json({ success: false, message: "Error al registrar usuario" });
       }
 
       res.status(201).json({
         success: true,
-        message: "Usuario registrado exitosamente",
-        userId: this.lastID,
+        message: "Usuario registrado con éxito",
+        id: this.lastID,
       });
     });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: "Error en el servidor",
-    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Error en el servidor" });
   }
 });
 
-// RUTA: Iniciar sesión
+// ---------- API: LOGIN ----------
 app.post("/api/login", (req, res) => {
   const { usuario, contrasena } = req.body;
 
   if (!usuario || !contrasena) {
-    return res.status(400).json({
-      success: false,
-      message: "Usuario y contraseña son requeridos",
-    });
+    return res.status(400).json({ success: false, message: "Faltan datos" });
   }
 
-  // Buscar usuario en la base de datos
   const sql = `SELECT * FROM usuarios WHERE usuario = ? OR email = ?`;
 
   db.get(sql, [usuario, usuario], async (err, row) => {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        message: "Error en el servidor",
-      });
-    }
+    if (err)
+      return res
+        .status(500)
+        .json({ success: false, message: "Error en el servidor" });
 
     if (!row) {
-      return res.status(401).json({
-        success: false,
-        message: "Usuario o contraseña incorrectos",
-      });
+      return res
+        .status(401)
+        .json({ success: false, message: "Credenciales incorrectas" });
     }
 
-    // Verificar contraseña
-    const contrasenaValida = await bcrypt.compare(contrasena, row.contrasena);
+    const valida = await bcrypt.compare(contrasena, row.contrasena);
 
-    if (!contrasenaValida) {
-      return res.status(401).json({
-        success: false,
-        message: "Usuario o contraseña incorrectos",
-      });
+    if (!valida) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Usuario o contraseña incorrectos" });
     }
 
-    // Login exitoso
     res.json({
       success: true,
       message: "Inicio de sesión exitoso",
@@ -144,34 +137,27 @@ app.post("/api/login", (req, res) => {
   });
 });
 
-// RUTA: Obtener todos los usuarios (para testing)
+// ---------- OBTENER USUARIOS (solo pruebas) ----------
 app.get("/api/usuarios", (req, res) => {
   const sql = `SELECT id, nombre, email, usuario, fecha_registro FROM usuarios`;
 
   db.all(sql, [], (err, rows) => {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        message: "Error al obtener usuarios",
-      });
-    }
+    if (err)
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al consultar usuarios" });
+
     res.json({ success: true, usuarios: rows });
   });
 });
 
-// Iniciar servidor
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-  console.log("Base de datos: usuarios.db");
+// ---------- MANEJO DE RUTAS INVÁLIDAS ----------
+app.use((req, res) => {
+  res.status(404).sendFile(path.join(__dirname, "public", "404.html"));
 });
 
-// Cerrar base de datos al terminar
-process.on("SIGINT", () => {
-  db.close((err) => {
-    if (err) {
-      console.error(err.message);
-    }
-    console.log("Base de datos cerrada");
-    process.exit(0);
-  });
+// ---------- INICIO DEL SERVIDOR ----------
+app.listen(PORT, () => {
+  console.log(`🚀 Servidor en ejecución: http://localhost:${PORT}`);
+  console.log("📂 Archivos estáticos desde: /public");
 });

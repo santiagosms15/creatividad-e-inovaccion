@@ -23,14 +23,25 @@
 
       body {
         font-family: "Montserrat", sans-serif;
-        background: #f5f6f7;
+        background-image: url("img/fondo-dashboard.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
         min-height: 100vh;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.6); /* aclarar */
+        backdrop-filter: blur(2px);
+        z-index: -1;
       }
 
       /* Header estilo corporativo */
       .header {
         width: 100%;
-        background: #0033a0;
+        background: #0a380e;
         padding: 15px 40px;
         display: flex;
         justify-content: space-between;
@@ -155,7 +166,7 @@
   <body>
     <!-- Header -->
     <header class="header">
-      <div class="logo">Finan<span>Plus</span></div>
+      <div class="logo">Finan<span>Sys</span></div>
 
       <div class="welcome-text">Hola, <span id="userName">Usuario</span></div>
 

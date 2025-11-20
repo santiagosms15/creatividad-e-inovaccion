@@ -15,12 +15,10 @@
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         height: 100vh;
         overflow: hidden;
-        background: linear-gradient(
-          135deg,
-          #2c5f5d 0%,
-          #1a3d3b 50%,
-          #0d2726 100%
-        );
+        background-image: url("img/fondo.jpg"); /* ← tu imagen */
+        background-size: cover; /* La imagen cubre toda la pantalla */
+        background-position: center; /* Centrada */
+        background-repeat: no-repeat; /* Sin repetición */
         position: relative;
       }
 
@@ -186,6 +184,11 @@
         color: #a8d5d3;
         border-bottom-color: #a8d5d3;
       }
+      .logo-img {
+        width: 250px;
+        margin-bottom: 80px;
+        filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+      }
 
       /* Animaciones */
       @keyframes float {
@@ -242,8 +245,7 @@
     </div>
 
     <div class="container">
-      <h1>finansys</h1>
-
+      <img src="img/LogoFinanSYS.png" class="logo-img" alt="logo" />
       <div class="form-container">
         <form id="registerForm">
           <div class="input-group">
