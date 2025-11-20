@@ -1,0 +1,911 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FinanSYS - Juegos</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        overflow-x: hidden;
+      }
+
+      .container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        text-align: center;
+        color: white;
+        padding: 40px 20px;
+        margin-bottom: 40px;
+      }
+
+      .header h1 {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      .games-menu {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+      }
+
+      .game-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+      }
+
+      .game-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+      }
+
+      .game-card h2 {
+        color: #667eea;
+        margin-bottom: 15px;
+        font-size: 1.8rem;
+      }
+
+      .game-card p {
+        color: #666;
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+
+      .game-card .icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+      }
+
+      .btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+      }
+
+      .btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .game-screen {
+        display: none;
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        animation: fadeIn 0.5s ease;
+      }
+
+      .game-screen.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .back-btn {
+        background: #e74c3c;
+        margin-bottom: 20px;
+      }
+
+      .game-header {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #667eea;
+      }
+
+      .game-header h2 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+
+      /* Juego 1: Desafío Presupuesto */
+      .scenario {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 15px;
+        margin-bottom: 25px;
+        border-left: 5px solid #667eea;
+      }
+
+      .budget-info {
+        display: flex;
+        justify-content: space-around;
+        margin: 25px 0;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+
+      .budget-item {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        flex: 1;
+        min-width: 150px;
+      }
+
+      .budget-item h3 {
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+        opacity: 0.9;
+      }
+
+      .budget-item .amount {
+        font-size: 2rem;
+        font-weight: bold;
+      }
+
+      .options {
+        display: grid;
+        gap: 15px;
+        margin-top: 25px;
+      }
+
+      .option-btn {
+        background: white;
+        border: 3px solid #667eea;
+        color: #667eea;
+        padding: 20px;
+        border-radius: 15px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: left;
+      }
+
+      .option-btn:hover {
+        background: #667eea;
+        color: white;
+        transform: translateX(10px);
+      }
+
+      .option-btn.correct {
+        background: #2ecc71;
+        color: white;
+        border-color: #2ecc71;
+      }
+
+      .option-btn.incorrect {
+        background: #e74c3c;
+        color: white;
+        border-color: #e74c3c;
+      }
+
+      /* Juego 2: Ruleta del Ahorro */
+      .trivia-container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .score-board {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 15px;
+        color: white;
+      }
+
+      .score-item {
+        text-align: center;
+      }
+
+      .score-item h3 {
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+        opacity: 0.9;
+      }
+
+      .score-item .value {
+        font-size: 2rem;
+        font-weight: bold;
+      }
+
+      .question-card {
+        background: #f8f9fa;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 25px;
+        border-left: 5px solid #667eea;
+      }
+
+      .question-card h3 {
+        color: #333;
+        font-size: 1.5rem;
+        margin-bottom: 25px;
+        line-height: 1.6;
+      }
+
+      .trivia-options {
+        display: grid;
+        gap: 15px;
+      }
+
+      .feedback {
+        padding: 20px;
+        border-radius: 15px;
+        margin-top: 20px;
+        text-align: center;
+        font-size: 1.2rem;
+        font-weight: 600;
+        display: none;
+      }
+
+      .feedback.show {
+        display: block;
+        animation: slideIn 0.5s ease;
+      }
+
+      .feedback.correct {
+        background: #d4edda;
+        color: #155724;
+        border: 2px solid #28a745;
+      }
+
+      .feedback.incorrect {
+        background: #f8d7da;
+        color: #721c24;
+        border: 2px solid #dc3545;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .game-over {
+        text-align: center;
+        padding: 40px;
+      }
+
+      .game-over h2 {
+        color: #667eea;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+      }
+
+      .game-over .final-score {
+        font-size: 3rem;
+        color: #764ba2;
+        margin: 30px 0;
+        font-weight: bold;
+      }
+
+      .game-over .message {
+        font-size: 1.3rem;
+        color: #666;
+        margin-bottom: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🎮 FinanSYS Games</h1>
+        <p>Aprende finanzas mientras te diviertes</p>
+      </div>
+
+      <!-- Menú de Juegos -->
+      <div id="gamesMenu" class="games-menu">
+        <div class="game-card">
+          <div class="icon">💰</div>
+          <h2>Desafío Presupuesto</h2>
+          <p>
+            Toma decisiones financieras inteligentes con un presupuesto
+            limitado. ¿Podrás alcanzar tus metas?
+          </p>
+          <button class="btn" onclick="startGame(1)">Jugar Ahora</button>
+        </div>
+
+        <div class="game-card">
+          <div class="icon">🎯</div>
+          <h2>Ruleta del Ahorro</h2>
+          <p>
+            Responde preguntas sobre finanzas personales y acumula puntos.
+            ¡Demuestra tu conocimiento!
+          </p>
+          <button class="btn" onclick="startGame(2)">Jugar Ahora</button>
+        </div>
+      </div>
+
+      <!-- Juego 1: Desafío Presupuesto -->
+      <div id="game1" class="game-screen">
+        <button class="btn back-btn" onclick="backToMenu()">
+          ← Volver al Menú
+        </button>
+        <div class="game-header">
+          <h2>💰 Desafío Presupuesto</h2>
+          <p>
+            Nivel: <span id="level">1</span> | Puntos:
+            <span id="points">0</span>
+          </p>
+        </div>
+
+        <div class="budget-info">
+          <div class="budget-item">
+            <h3>Ingreso Mensual</h3>
+            <div class="amount">$<span id="income">0</span></div>
+          </div>
+          <div class="budget-item">
+            <h3>Presupuesto Restante</h3>
+            <div class="amount">$<span id="remaining">0</span></div>
+          </div>
+          <div class="budget-item">
+            <h3>Meta de Ahorro</h3>
+            <div class="amount">$<span id="savingGoal">0</span></div>
+          </div>
+        </div>
+
+        <div id="scenario" class="scenario"></div>
+        <div id="options" class="options"></div>
+        <div id="feedback1" class="feedback"></div>
+      </div>
+
+      <!-- Juego 2: Ruleta del Ahorro -->
+      <div id="game2" class="game-screen">
+        <button class="btn back-btn" onclick="backToMenu()">
+          ← Volver al Menú
+        </button>
+        <div class="game-header">
+          <h2>🎯 Ruleta del Ahorro</h2>
+        </div>
+
+        <div class="trivia-container">
+          <div class="score-board">
+            <div class="score-item">
+              <h3>Pregunta</h3>
+              <div class="value"><span id="questionNum">1</span>/10</div>
+            </div>
+            <div class="score-item">
+              <h3>Puntuación</h3>
+              <div class="value"><span id="score">0</span></div>
+            </div>
+            <div class="score-item">
+              <h3>Racha</h3>
+              <div class="value"><span id="streak">0</span>🔥</div>
+            </div>
+          </div>
+
+          <div id="triviaContent">
+            <div class="question-card">
+              <h3 id="question"></h3>
+            </div>
+            <div id="triviaOptions" class="trivia-options"></div>
+            <div id="feedback2" class="feedback"></div>
+          </div>
+
+          <div id="gameOver" class="game-over" style="display: none">
+            <h2>🎉 ¡Juego Terminado!</h2>
+            <div class="final-score"><span id="finalScore">0</span> puntos</div>
+            <div class="message" id="finalMessage"></div>
+            <button class="btn" onclick="restartTrivia()">
+              Jugar de Nuevo
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // JUEGO 1: DESAFÍO PRESUPUESTO
+      let game1State = {
+        level: 1,
+        points: 0,
+        income: 3000,
+        remaining: 3000,
+        savingGoal: 500,
+        scenarios: [
+          {
+            text: "Es inicio de mes y acabas de recibir tu salario. Tienes que pagar tus gastos fijos: renta ($800), servicios ($200), comida ($400). ¿Qué decisión tomas primero?",
+            options: [
+              {
+                text: "Pagar todos los gastos fijos inmediatamente",
+                cost: 1400,
+                correct: true,
+                points: 100,
+                feedback:
+                  "¡Excelente! Siempre paga tus gastos fijos primero. Es la base de un presupuesto saludable.",
+              },
+              {
+                text: "Comprar ese celular que tanto quieres ($600)",
+                cost: 600,
+                correct: false,
+                points: 0,
+                feedback:
+                  "Los gastos fijos son prioridad. Comprar lujos antes de cubrirlos puede llevarte a problemas financieros.",
+              },
+              {
+                text: "Guardar todo el dinero y ver después",
+                cost: 0,
+                correct: false,
+                points: 0,
+                feedback:
+                  "Guardar está bien, pero los gastos fijos tienen fechas límite. ¡Evita cargos por mora!",
+              },
+            ],
+          },
+          {
+            text: "Te quedan $1,600. Tus amigos te invitan a un viaje de fin de semana ($400). También quieres comprar ropa nueva ($200). ¿Qué haces?",
+            options: [
+              {
+                text: "Ir al viaje Y comprar la ropa",
+                cost: 600,
+                correct: false,
+                points: 0,
+                feedback:
+                  "¡Cuidado! Esto reduce mucho tu capacidad de ahorro. Prioriza una cosa a la vez.",
+              },
+              {
+                text: "Rechazar ambos y ahorrar todo",
+                cost: 0,
+                correct: false,
+                points: 50,
+                feedback:
+                  "Ahorrar es bueno, pero también es importante disfrutar con moderación. Busca el equilibrio.",
+              },
+              {
+                text: "Ir al viaje ($400) y seguir tu meta de ahorro",
+                cost: 400,
+                correct: true,
+                points: 100,
+                feedback:
+                  "¡Balance perfecto! Disfrutas la vida mientras mantienes tus metas financieras.",
+              },
+            ],
+          },
+          {
+            text: "¡Emergencia! Se descompuso tu laptop que necesitas para trabajar. La reparación cuesta $300. ¿Qué haces?",
+            options: [
+              {
+                text: "Pagar la reparación de tu fondo de emergencia",
+                cost: 300,
+                correct: true,
+                points: 150,
+                feedback:
+                  "¡Perfecto! Para esto existe el fondo de emergencias. Es una necesidad real.",
+              },
+              {
+                text: "Pedir un préstamo con intereses altos",
+                cost: 350,
+                correct: false,
+                points: 0,
+                feedback:
+                  "Los préstamos de emergencia suelen tener intereses muy altos. Mejor tener un fondo de emergencias.",
+              },
+              {
+                text: "No repararla y seguir trabajando",
+                cost: 0,
+                correct: false,
+                points: 0,
+                feedback:
+                  "Tu herramienta de trabajo es una inversión. No repararla puede afectar tus ingresos futuros.",
+              },
+            ],
+          },
+          {
+            text: "Hay una oferta de gimnasio: 3 meses por $150 (normalmente $300). Quieres mejorar tu salud. ¿Es buen momento?",
+            options: [
+              {
+                text: "Sí, es una inversión en salud y está en oferta",
+                cost: 150,
+                correct: true,
+                points: 100,
+                feedback:
+                  "¡Bien pensado! La salud es inversión y aprovechaste una oferta. Solo asegúrate de usarlo.",
+              },
+              {
+                text: "No, mejor hago ejercicio gratis en casa",
+                cost: 0,
+                correct: false,
+                points: 50,
+                feedback:
+                  "Es válido, pero a veces una inversión en salud vale la pena. Evalúa tus prioridades.",
+              },
+              {
+                text: "Sí, y además compro ropa deportiva cara ($200)",
+                cost: 350,
+                correct: false,
+                points: 0,
+                feedback:
+                  "La ropa cara no es necesaria para empezar. Empieza simple y ve si lo mantienes.",
+              },
+            ],
+          },
+          {
+            text: "Fin de mes: Lograste ahorrar $600. ¿Qué haces con este dinero?",
+            options: [
+              {
+                text: "Dejarlo en cuenta de ahorros básica (0.5% anual)",
+                cost: 0,
+                correct: false,
+                points: 50,
+                feedback:
+                  "Ahorrar está bien, pero tu dinero puede trabajar mejor para ti con inversiones.",
+              },
+              {
+                text: "Gastarlo todo en una fiesta para celebrar",
+                cost: 600,
+                correct: false,
+                points: 0,
+                feedback:
+                  "Celebrar está bien, pero gastar todos tus ahorros no te acerca a tus metas.",
+              },
+              {
+                text: "Invertir $400 y guardar $200 de emergencia",
+                cost: 0,
+                correct: true,
+                points: 200,
+                feedback:
+                  "¡Estrategia maestra! Combinas fondo de emergencia con inversión para el futuro.",
+              },
+            ],
+          },
+        ],
+        currentScenario: 0,
+      };
+
+      function startGame(gameNum) {
+        document.getElementById("gamesMenu").style.display = "none";
+        document.getElementById("game" + gameNum).classList.add("active");
+
+        if (gameNum === 1) {
+          loadScenario();
+        } else {
+          loadTriviaQuestion();
+        }
+      }
+
+      function backToMenu() {
+        document.querySelectorAll(".game-screen").forEach((screen) => {
+          screen.classList.remove("active");
+        });
+        document.getElementById("gamesMenu").style.display = "grid";
+
+        // Reset games
+        game1State = {
+          level: 1,
+          points: 0,
+          income: 3000,
+          remaining: 3000,
+          savingGoal: 500,
+          scenarios: game1State.scenarios,
+          currentScenario: 0,
+        };
+
+        triviaState.currentQuestion = 0;
+        triviaState.score = 0;
+        triviaState.streak = 0;
+      }
+
+      function loadScenario() {
+        const scenario = game1State.scenarios[game1State.currentScenario];
+
+        document.getElementById("level").textContent =
+          game1State.currentScenario + 1;
+        document.getElementById("points").textContent = game1State.points;
+        document.getElementById("income").textContent = game1State.income;
+        document.getElementById("remaining").textContent = game1State.remaining;
+        document.getElementById("savingGoal").textContent =
+          game1State.savingGoal;
+
+        document.getElementById("scenario").innerHTML =
+          `<h3>📋 Situación ${game1State.currentScenario + 1}</h3><p>${scenario.text}</p>`;
+
+        const optionsContainer = document.getElementById("options");
+        optionsContainer.innerHTML = "";
+
+        scenario.options.forEach((option, index) => {
+          const btn = document.createElement("button");
+          btn.className = "option-btn";
+          btn.innerHTML = `<strong>${String.fromCharCode(65 + index)})</strong> ${option.text} ${option.cost > 0 ? `<br><small>Costo: $${option.cost}</small>` : ""}`;
+          btn.onclick = () => selectOption(index);
+          optionsContainer.appendChild(btn);
+        });
+
+        document.getElementById("feedback1").classList.remove("show");
+      }
+
+      function selectOption(index) {
+        const scenario = game1State.scenarios[game1State.currentScenario];
+        const option = scenario.options[index];
+
+        game1State.remaining -= option.cost;
+        game1State.points += option.points;
+
+        const buttons = document.querySelectorAll("#options .option-btn");
+        buttons.forEach((btn, i) => {
+          btn.disabled = true;
+          if (i === index) {
+            btn.classList.add(option.correct ? "correct" : "incorrect");
+          }
+        });
+
+        const feedback = document.getElementById("feedback1");
+        feedback.textContent = option.feedback;
+        feedback.className = `feedback show ${option.correct ? "correct" : "incorrect"}`;
+
+        setTimeout(() => {
+          game1State.currentScenario++;
+          if (game1State.currentScenario < game1State.scenarios.length) {
+            loadScenario();
+          } else {
+            endGame1();
+          }
+        }, 3000);
+      }
+
+      function endGame1() {
+        const savingAchieved = game1State.remaining >= game1State.savingGoal;
+        let message = savingAchieved
+          ? `¡Felicitaciones! Alcanzaste tu meta de ahorro con $${game1State.remaining} restantes.`
+          : `Terminaste con $${game1State.remaining}. Tu meta era $${game1State.savingGoal}. ¡Sigue practicando!`;
+
+        document.getElementById("scenario").innerHTML = `
+        <div class="game-over">
+          <h2>🎮 ¡Juego Completado!</h2>
+          <div class="final-score">${game1State.points} puntos</div>
+          <div class="message">${message}</div>
+          <button class="btn" onclick="backToMenu()">Volver al Menú</button>
+        </div>
+      `;
+        document.getElementById("options").innerHTML = "";
+        document.getElementById("feedback1").classList.remove("show");
+      }
+
+      // JUEGO 2: RULETA DEL AHORRO
+      let triviaState = {
+        currentQuestion: 0,
+        score: 0,
+        streak: 0,
+        questions: [
+          {
+            q: "¿Cuál es la regla 50/30/20 para administrar tu dinero?",
+            options: [
+              "50% necesidades, 30% deseos, 20% ahorro",
+              "50% ahorro, 30% necesidades, 20% deseos",
+              "50% deseos, 30% ahorro, 20% necesidades",
+              "50% inversión, 30% gastos, 20% ahorro",
+            ],
+            correct: 0,
+          },
+          {
+            q: "¿Qué es un fondo de emergencia?",
+            options: [
+              "Dinero para vacaciones",
+              "Dinero guardado para imprevistos (3-6 meses de gastos)",
+              "Dinero para inversiones riesgosas",
+              "Dinero para compras impulsivas",
+            ],
+            correct: 1,
+          },
+          {
+            q: "¿Cuál es la mejor práctica al recibir tu salario?",
+            options: [
+              "Gastar todo en lo que quieras",
+              "Guardarlo todo sin plan",
+              "Pagar gastos fijos primero, luego ahorrar",
+              "Prestar dinero a amigos",
+            ],
+            correct: 2,
+          },
+          {
+            q: "¿Qué significa tener 'deudas buenas'?",
+            options: [
+              "No existen deudas buenas",
+              "Deudas que generan valor (educación, vivienda)",
+              "Deudas de tarjetas de crédito",
+              "Préstamos para fiestas",
+            ],
+            correct: 1,
+          },
+          {
+            q: "¿Cuánto deberías ahorrar mensualmente como mínimo?",
+            options: [
+              "Nada, vivir al día",
+              "Todo tu salario",
+              "Al menos 10-20% de tus ingresos",
+              "Solo lo que sobre",
+            ],
+            correct: 2,
+          },
+          {
+            q: "¿Qué es mejor para compras grandes?",
+            options: [
+              "Comprar con tarjeta de crédito sin plan",
+              "Ahorrar y comprar en efectivo",
+              "Pedir prestado a agiotistas",
+              "Usar todos tus ahorros de emergencia",
+            ],
+            correct: 1,
+          },
+          {
+            q: "¿Cuál es el interés compuesto?",
+            options: [
+              "Interés que se paga solo una vez",
+              "Interés sobre el interés ganado previamente",
+              "Tipo de tarjeta de crédito",
+              "Una deuda impagable",
+            ],
+            correct: 1,
+          },
+          {
+            q: "¿Qué debes hacer ANTES de pedir un préstamo?",
+            options: [
+              "Firmarlo rápido",
+              "Comparar tasas, leer términos y evaluar tu capacidad de pago",
+              "Pedir el monto máximo disponible",
+              "No leer el contrato",
+            ],
+            correct: 1,
+          },
+          {
+            q: "¿Cuál NO es un gasto fijo?",
+            options: [
+              "Renta",
+              "Servicios (luz, agua)",
+              "Salidas a restaurantes",
+              "Transporte al trabajo",
+            ],
+            correct: 2,
+          },
+          {
+            q: "¿Qué es la inflación y cómo te afecta?",
+            options: [
+              "Aumento de precios que reduce el poder adquisitivo",
+              "Descuento en productos",
+              "Tipo de inversión",
+              "Bono del gobierno",
+            ],
+            correct: 0,
+          },
+        ],
+      };
+
+      function loadTriviaQuestion() {
+        if (triviaState.currentQuestion >= triviaState.questions.length) {
+          showGameOver();
+          return;
+        }
+
+        const q = triviaState.questions[triviaState.currentQuestion];
+
+        document.getElementById("questionNum").textContent =
+          triviaState.currentQuestion + 1;
+        document.getElementById("score").textContent = triviaState.score;
+        document.getElementById("streak").textContent = triviaState.streak;
+        document.getElementById("question").textContent = q.q;
+        document.getElementById("gameOver").style.display = "none";
+        document.getElementById("triviaContent").style.display = "block";
+
+        const optionsContainer = document.getElementById("triviaOptions");
+        optionsContainer.innerHTML = "";
+
+        q.options.forEach((option, index) => {
+          const btn = document.createElement("button");
+          btn.className = "option-btn";
+          btn.innerHTML = `<strong>${String.fromCharCode(65 + index)})</strong> ${option}`;
+          btn.onclick = () => answerTrivia(index);
+          optionsContainer.appendChild(btn);
+        });
+
+        document.getElementById("feedback2").classList.remove("show");
+      }
+
+      function answerTrivia(index) {
+        const q = triviaState.questions[triviaState.currentQuestion];
+        const isCorrect = index === q.correct;
+
+        const buttons = document.querySelectorAll("#triviaOptions .option-btn");
+        buttons.forEach((btn, i) => {
+          btn.disabled = true;
+          if (i === index) {
+            btn.classList.add(isCorrect ? "correct" : "incorrect");
+          }
+          if (i === q.correct) {
+            btn.classList.add("correct");
+          }
+        });
+
+        if (isCorrect) {
+          triviaState.streak++;
+          const points = 100 + triviaState.streak * 10;
+          triviaState.score += points;
+          document.getElementById("feedback2").textContent =
+            `¡Correcto! +${points} puntos 🎉`;
+          document.getElementById("feedback2").className =
+            "feedback show correct";
+        } else {
+          triviaState.streak = 0;
+          document.getElementById("feedback2").textContent =
+            `Incorrecto. La respuesta correcta era: ${q.options[q.correct]}`;
+          document.getElementById("feedback2").className =
+            "feedback show incorrect";
+        }
+
+        setTimeout(() => {
+          triviaState.currentQuestion++;
+          loadTriviaQuestion();
+        }, 3000);
+      }
+
+      function showGameOver() {
+        document.getElementById("triviaContent").style.display = "none";
+        document.getElementById("gameOver").style.display = "block";
+        document.getElementById("finalScore").textContent = triviaState.score;
+
+        let message = "";
+        if (triviaState.score >= 900) {
+          message =
+            "🏆 ¡Experto en Finanzas! Tienes un conocimiento excepcional.";
+        } else if (triviaState.score >= 700) {
+          message =
+            "🌟 ¡Muy Bien! Tienes una base sólida en finanzas personales.";
+        } else if (triviaState.score >= 500) {
+          message = "💪 ¡Buen Trabajo! Vas por buen camino, sigue aprendiendo.";
+        } else {
+          message =
+            "📚 ¡Sigue Practicando! Cada intento te hace más sabio financieramente.";
+        }
+
+        document.getElementById("finalMessage").textContent = message;
+      }
+
+      function restartTrivia() {
+        triviaState.currentQuestion = 0;
+        triviaState.score = 0;
+        triviaState.streak = 0;
+        loadTriviaQuestion();
+      }
+    </script>
+  </body>
+</html>
