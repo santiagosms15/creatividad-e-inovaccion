@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asistente IA - FinanSYS</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+      :root {
+        --primary: #0f172a;
+        --secondary: #1e293b;
+        --accent: #3b82f6;
+        --text-primary: #f8fafc;
+        --text-secondary: #cbd5e1;
+        --border: #334155;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-image: url("img/fondoAI.jpg");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 800px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .card {
+        background: rgba(30, 41, 59, 0.85);
+        backdrop-filter: blur(12px);
+        padding: 32px;
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        border: 1px solid var(--border);
+      }
+
+      .card h1 {
+        color: var(--text-primary);
+        margin-bottom: 24px;
+        font-size: 2em;
+        font-weight: 700;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .chat-window {
+        height: 50vh;
+        min-height: 400px;
+        background-color: var(--primary);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+        overflow-y: auto;
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .chat-message {
+        padding: 12px 18px;
+        border-radius: 18px;
+        max-width: 80%;
+        line-height: 1.5;
+        animation: fadeIn 0.3s ease;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .user-message {
+        background-color: var(--accent);
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 4px;
+      }
+
+      .ai-message {
+        background-color: var(--secondary);
+        color: var(--text-secondary);
+        align-self: flex-start;
+        border-bottom-left-radius: 4px;
+      }
+
+      .chat-input-area {
+        display: flex;
+        gap: 10px;
+      }
+
+      #chatInput {
+        flex-grow: 1;
+        background: var(--primary);
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        padding: 14px 16px;
+        color: var(--text-primary);
+        font-size: 1em;
+      }
+
+      #chatInput:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+
+      .btn {
+        padding: 14px 32px;
+        background: linear-gradient(135deg, var(--accent), #2563eb);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1em;
+        font-weight: 600;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <h1>Asistente Financiero Virtual</h1>
+        <div class="chat-window" id="chatWindow">
+          <div class="chat-message ai-message">
+            ¡Hola! Soy tu asistente financiero. Estoy analizando tus datos para
+            ayudarte mejor. ¿En qué puedo asistirte hoy?
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <input
+            type="text"
+            id="chatInput"
+            placeholder="Escribe tu mensaje..."
+            onkeydown="if(event.key === 'Enter') enviarMensajeIA()"
+          />
+          <button class="btn" onclick="enviarMensajeIA()">Enviar</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let gastos = [];
+      let objetivos = [];
+      let usuario = null;
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const usuarioGuardado = sessionStorage.getItem("usuario");
+        if (!usuarioGuardado) {
+          alert("No has iniciado sesión. Serás redirigido.");
+          window.location.href = "/inicio";
+          return;
+        }
+        usuario = JSON.parse(usuarioGuardado);
+        cargarContextoFinanciero();
+      });
+
+      async function cargarContextoFinanciero() {
+        if (!usuario) return;
+        try {
+          // NOTA: Estas rutas de API deben existir y funcionar
+          const [gastosRes, objetivosRes] = await Promise.all([
+            fetch(`/api/transacciones?usuarioId=${usuario.id}`),
+            fetch(`/api/objetivos?usuarioId=${usuario.id}`),
+          ]);
+
+          const gastosData = await gastosRes.json();
+          const objetivosData = await objetivosRes.json();
+
+          if (gastosData.success) gastos = gastosData.gastos;
+          if (objetivosData.success) objetivos = objetivosData.objetivos;
+
+        } catch (error) {
+          console.error("Error al cargar el contexto financiero:", error);
+        }
+      }
+
+      async function enviarMensajeIA() {
+        const input = document.getElementById("chatInput");
+        const message = input.value.trim();
+        if (!message) return;
+
+        const chatWindow = document.getElementById("chatWindow");
+
+        const userMessageDiv = document.createElement("div");
+        userMessageDiv.className = "chat-message user-message";
+        userMessageDiv.textContent = message;
+        chatWindow.appendChild(userMessageDiv);
+
+        input.value = "";
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        const thinkingDiv = document.createElement("div");
+        thinkingDiv.className = "chat-message ai-message";
+        thinkingDiv.textContent = "Pensando...";
+        chatWindow.appendChild(thinkingDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        try {
+          const response = await fetch("/api/chat-ia", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message, gastos, objetivos }),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            thinkingDiv.textContent = data.reply;
+          } else {
+            thinkingDiv.textContent = "Lo siento, hubo un error.";
+          }
+        } catch (error) {
+          console.error("Error al contactar al asistente IA:", error);
+          thinkingDiv.textContent = "No pude conectarme. Revisa tu conexión.";
+        } finally {
+          chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+      }
+    </script>
+  </body>
+</html>
