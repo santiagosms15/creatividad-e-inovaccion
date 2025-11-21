@@ -665,7 +665,7 @@
       <div class="card">
         <h2>Historial de Gastos</h2>
         <div id="listaGastos"></div>
-      </a>
+      </div>
     </div>
 
     <!-- Presupuesto Mensual -->
@@ -712,7 +712,7 @@
       <div class="card">
         <h2>Estado del Presupuesto</h2>
         <div id="estadoPresupuesto"></div>
-      </a>
+      </div>
     </div>
 
     <!-- Objetivos de Ahorro -->
@@ -823,6 +823,25 @@
   </div>
 
   <script>
+    // --- Implementación de Storage para el navegador ---
+    if (!window.storage) {
+      window.storage = {
+        get: (key) => {
+          const value = localStorage.getItem(key);
+          return Promise.resolve(value ? { value } : null);
+        },
+        set: (key, value) => {
+          localStorage.setItem(key, value);
+          return Promise.resolve();
+        },
+      };
+    }
+    if (!window.appStorage) {
+      // Asumimos que appStorage funciona igual que storage
+      window.appStorage = window.storage;
+    }
+    // --- Fin de la implementación de Storage ---
+
     // Datos en memoria
     let gastos = [];
     let presupuestos = {};
