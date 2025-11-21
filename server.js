@@ -80,8 +80,247 @@ function crearTablas() {
     if (err) console.error("❌ Error al crear tabla aportes:", err);
     else console.log("📌 Tabla 'aportes' lista");
   });
+
+  // ✅ LLAMAR A LA FUNCIÓN PARA CREAR LAS TABLAS DE FINANZAS
+  crearTablasFinanzas();
 }
 
+function crearTablasFinanzas() {
+  // Tabla gastos
+  const sqlGastos = `
+    CREATE TABLE IF NOT EXISTS gastos (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      usuario_id INTEGER NOT NULL,
+      descripcion TEXT NOT NULL,
+      monto REAL NOT NULL,
+      categoria TEXT NOT NULL,
+      fecha DATE NOT NULL,
+      FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+    )
+  `;
+
+  // Tabla presupuestos
+  const sqlPresupuestos = `
+    CREATE TABLE IF NOT EXISTS presupuestos (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      usuario_id INTEGER NOT NULL,
+      categoria TEXT NOT NULL,
+      limite REAL NOT NULL,
+      UNIQUE(usuario_id, categoria),
+      FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+    )
+  `;
+
+  // Tabla objetivos_ahorro
+  const sqlObjetivos = `
+    CREATE TABLE IF NOT EXISTS objetivos_ahorro (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      usuario_id INTEGER NOT NULL,
+      nombre TEXT NOT NULL,
+      monto REAL NOT NULL,
+      actual REAL DEFAULT 0,
+      fecha DATE NOT NULL,
+      prioridad TEXT NOT NULL,
+      fecha_inicio DATE NOT NULL,
+      FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+    )
+  `;
+
+  db.run(sqlGastos, (err) => {
+    if (err) console.error("❌ Error al crear tabla gastos:", err);
+    else console.log("📌 Tabla 'gastos' lista");
+  });
+
+  db.run(sqlPresupuestos, (err) => {
+    if (err) console.error("❌ Error al crear tabla presupuestos:", err);
+    else console.log("📌 Tabla 'presupuestos' lista");
+  });
+
+  db.run(sqlObjetivos, (err) => {
+    if (err) console.error("❌ Error al crear tabla objetivos_ahorro:", err);
+    else console.log("📌 Tabla 'objetivos_ahorro' lista");
+  });
+}
+// ========== API GASTOS ==========
+
+// Obtener todos los gastos de un usuario
+app.get("/api/gastos/:usuarioId", (req, res) => {
+  const { usuarioId } = req.params;
+  const sql = `SELECT * FROM gastos WHERE usuario_id = ? ORDER BY fecha DESC`;
+
+  db.all(sql, [usuarioId], (err, gastos) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al obtener gastos" });
+    }
+    res.json({ success: true, gastos: gastos || [] });
+  });
+});
+
+// Crear un nuevo gasto
+app.post("/api/gastos", (req, res) => {
+  const { usuarioId, descripcion, monto, categoria, fecha } = req.body;
+
+  if (!usuarioId || !descripcion || !monto || !categoria || !fecha) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Faltan campos requeridos" });
+  }
+
+  const sql = `INSERT INTO gastos (usuario_id, descripcion, monto, categoria, fecha) VALUES (?, ?, ?, ?, ?)`;
+
+  db.run(
+    sql,
+    [usuarioId, descripcion, monto, categoria, fecha],
+    function (err) {
+      if (err) {
+        return res
+          .status(500)
+          .json({ success: false, message: "Error al crear gasto" });
+      }
+      res
+        .status(201)
+        .json({ success: true, message: "Gasto registrado", id: this.lastID });
+    }
+  );
+});
+
+// Eliminar un gasto
+app.delete("/api/gastos/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = `DELETE FROM gastos WHERE id = ?`;
+
+  db.run(sql, [id], function (err) {
+    if (err) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al eliminar gasto" });
+    }
+    res.json({ success: true, message: "Gasto eliminado" });
+  });
+});
+
+// ========== API PRESUPUESTOS ==========
+
+// Obtener presupuestos de un usuario
+app.get("/api/presupuestos/:usuarioId", (req, res) => {
+  const { usuarioId } = req.params;
+  const sql = `SELECT * FROM presupuestos WHERE usuario_id = ?`;
+
+  db.all(sql, [usuarioId], (err, presupuestos) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al obtener presupuestos" });
+    }
+    res.json({ success: true, presupuestos: presupuestos || [] });
+  });
+});
+
+// Establecer o actualizar presupuesto
+app.post("/api/presupuestos", (req, res) => {
+  const { usuarioId, categoria, limite } = req.body;
+
+  if (!usuarioId || !categoria || !limite) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Faltan campos requeridos" });
+  }
+
+  const sql = `INSERT INTO presupuestos (usuario_id, categoria, limite) 
+               VALUES (?, ?, ?) 
+               ON CONFLICT(usuario_id, categoria) 
+               DO UPDATE SET limite = excluded.limite`;
+
+  db.run(sql, [usuarioId, categoria, limite], function (err) {
+    if (err) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al establecer presupuesto" });
+    }
+    res.json({ success: true, message: "Presupuesto establecido" });
+  });
+});
+
+// ========== API OBJETIVOS DE AHORRO ==========
+
+// Obtener objetivos de ahorro de un usuario
+app.get("/api/objetivos-ahorro/:usuarioId", (req, res) => {
+  const { usuarioId } = req.params;
+  const sql = `SELECT * FROM objetivos_ahorro WHERE usuario_id = ? ORDER BY fecha ASC`;
+
+  db.all(sql, [usuarioId], (err, objetivos) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al obtener objetivos" });
+    }
+    res.json({ success: true, objetivos: objetivos || [] });
+  });
+});
+
+// Crear un nuevo objetivo de ahorro
+app.post("/api/objetivos-ahorro", (req, res) => {
+  const { usuarioId, nombre, monto, actual, fecha, prioridad, fechaInicio } =
+    req.body;
+
+  if (!usuarioId || !nombre || !monto || !fecha || !prioridad) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Faltan campos requeridos" });
+  }
+
+  const sql = `INSERT INTO objetivos_ahorro (usuario_id, nombre, monto, actual, fecha, prioridad, fecha_inicio) 
+               VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+  db.run(
+    sql,
+    [usuarioId, nombre, monto, actual || 0, fecha, prioridad, fechaInicio],
+    function (err) {
+      if (err) {
+        return res
+          .status(500)
+          .json({ success: false, message: "Error al crear objetivo" });
+      }
+      res
+        .status(201)
+        .json({ success: true, message: "Objetivo creado", id: this.lastID });
+    }
+  );
+});
+
+// Actualizar monto actual de un objetivo
+app.put("/api/objetivos-ahorro/:id", (req, res) => {
+  const { id } = req.params;
+  const { actual } = req.body;
+
+  const sql = `UPDATE objetivos_ahorro SET actual = ? WHERE id = ?`;
+
+  db.run(sql, [actual, id], function (err) {
+    if (err) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al actualizar objetivo" });
+    }
+    res.json({ success: true, message: "Objetivo actualizado" });
+  });
+});
+
+// Eliminar un objetivo de ahorro
+app.delete("/api/objetivos-ahorro/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = `DELETE FROM objetivos_ahorro WHERE id = ?`;
+
+  db.run(sql, [id], function (err) {
+    if (err) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al eliminar objetivo" });
+    }
+    res.json({ success: true, message: "Objetivo eliminado" });
+  });
+});
 // ========== RUTAS HTML LIMPIAS ==========
 const sendPage = (res, file) =>
   res.sendFile(path.join(__dirname, "public", file));

@@ -842,24 +842,32 @@
     </div>
 
     <script>
-      // --- Implementación de Storage para el navegador ---
-      if (!window.storage) {
-        window.storage = {
-          get: (key) => {
-            const value = localStorage.getItem(key);
-            return Promise.resolve(value ? { value } : null);
-          },
-          set: (key, value) => {
-            localStorage.setItem(key, value);
-            return Promise.resolve();
-          },
-        };
+      // Obtener usuario actual
+      let usuarioActual = null;
+
+      function cargarUsuario() {
+        // Intentar cargar desde localStorage primero, luego sessionStorage
+        let userData = localStorage.getItem("usuario");
+
+        if (!userData) {
+          userData = sessionStorage.getItem("usuario");
+        }
+
+        if (!userData) {
+          alert("Debes iniciar sesión primero");
+          window.location.href = "/inicio";
+          return;
+        }
+
+        try {
+          usuarioActual = JSON.parse(userData);
+          console.log("Usuario cargado:", usuarioActual); // Para debug
+        } catch (error) {
+          console.error("Error al parsear usuario:", error);
+          alert("Error al cargar datos de usuario");
+          window.location.href = "/inicio";
+        }
       }
-      if (!window.appStorage) {
-        // Asumimos que appStorage funciona igual que storage
-        window.appStorage = window.storage;
-      }
-      // --- Fin de la implementación de Storage ---
 
       // Datos en memoria
       let gastos = [];
@@ -869,69 +877,150 @@
 
       // Cargar datos al iniciar
       async function cargarDatos() {
+        if (!usuarioActual) return;
+
         try {
           // Cargar gastos
-          const resultGastos = await window.storage.get("finanzas:gastos");
-          if (resultGastos) {
-            gastos = JSON.parse(resultGastos.value);
+          const resGastos = await fetch(`/api/gastos/${usuarioActual.id}`);
+          const dataGastos = await resGastos.json();
+          if (dataGastos.success) {
+            gastos = dataGastos.gastos.map((g) => ({
+              id: g.id,
+              desc: g.descripcion,
+              monto: g.monto,
+              categoria: g.categoria,
+              fecha: g.fecha,
+            }));
           }
 
           // Cargar presupuestos
-          const resultPresupuestos = await window.storage.get(
-            "finanzas:presupuestos"
-          );
-          if (resultPresupuestos) {
-            presupuestos = JSON.parse(resultPresupuestos.value);
+          const resPres = await fetch(`/api/presupuestos/${usuarioActual.id}`);
+          const dataPres = await resPres.json();
+          if (dataPres.success) {
+            presupuestos = {};
+            dataPres.presupuestos.forEach((p) => {
+              presupuestos[p.categoria] = p.limite;
+            });
           }
 
           // Cargar objetivos
-          const resultObjetivos =
-            await window.storage.get("finanzas:objetivos");
-          if (resultObjetivos) {
-            objetivos = JSON.parse(resultObjetivos.value);
+          const resObj = await fetch(
+            `/api/objetivos-ahorro/${usuarioActual.id}`
+          );
+          const dataObj = await resObj.json();
+          if (dataObj.success) {
+            objetivos = dataObj.objetivos.map((o) => ({
+              id: o.id,
+              nombre: o.nombre,
+              monto: o.monto,
+              actual: o.actual,
+              fecha: o.fecha,
+              prioridad: o.prioridad,
+              fechaInicio: o.fecha_inicio,
+            }));
           }
 
           mostrarGastos();
           mostrarObjetivos();
           actualizarEstadoPresupuesto();
         } catch (error) {
-          console.log("Primera vez usando la app, iniciando con datos vacíos");
+          console.error("Error cargando datos:", error);
         }
       }
 
       // Guardar datos
-      async function guardarGastos() {
+      async function guardarGasto(gasto) {
         try {
-          await window.storage.set("finanzas:gastos", JSON.stringify(gastos));
+          const res = await fetch("/api/gastos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              usuarioId: usuarioActual.id,
+              descripcion: gasto.desc,
+              monto: gasto.monto,
+              categoria: gasto.categoria,
+              fecha: gasto.fecha,
+            }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            gasto.id = data.id;
+            return true;
+          }
+          return false;
         } catch (error) {
-          console.error("Error guardando gastos:", error);
+          console.error("Error guardando gasto:", error);
+          return false;
         }
       }
 
-      async function guardarPresupuestos() {
+      async function guardarPresupuesto(categoria, limite) {
         try {
-          await window.storage.set(
-            "finanzas:presupuestos",
-            JSON.stringify(presupuestos)
-          );
+          const res = await fetch("/api/presupuestos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              usuarioId: usuarioActual.id,
+              categoria: categoria,
+              limite: limite,
+            }),
+          });
+          const data = await res.json();
+          return data.success;
         } catch (error) {
-          console.error("Error guardando presupuestos:", error);
+          console.error("Error guardando presupuesto:", error);
+          return false;
         }
       }
 
-      async function guardarObjetivos() {
+      async function guardarObjetivo(objetivo) {
         try {
-          await window.storage.set(
-            "finanzas:objetivos",
-            JSON.stringify(objetivos)
-          );
+          const res = await fetch("/api/objetivos-ahorro", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              usuarioId: usuarioActual.id,
+              nombre: objetivo.nombre,
+              monto: objetivo.monto,
+              actual: objetivo.actual,
+              fecha: objetivo.fecha,
+              prioridad: objetivo.prioridad,
+              fechaInicio: objetivo.fechaInicio,
+            }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            objetivo.id = data.id;
+            return true;
+          }
+          return false;
         } catch (error) {
-          console.error("Error guardando objetivos:", error);
+          console.error("Error guardando objetivo:", error);
+          return false;
+        }
+      }
+
+      async function actualizarObjetivo(id, actual) {
+        try {
+          const res = await fetch(`/api/objetivos-ahorro/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ actual: actual }),
+          });
+          const data = await res.json();
+          return data.success;
+        } catch (error) {
+          console.error("Error actualizando objetivo:", error);
+          return false;
         }
       }
 
       // Inicializar fecha actual
-      document.getElementById("gastoFecha").valueAsDate = new Date();
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("gastoFecha").valueAsDate = new Date();
+        cargarUsuario();
+        cargarDatos();
+      });
 
       // Funciones para tabs
       function showTab(tabName) {
@@ -966,8 +1055,14 @@
         }
 
         const gasto = { desc, monto, categoria, fecha, id: Date.now() };
+
+        const guardado = await guardarGasto(gasto);
+        if (!guardado) {
+          alert("Error al guardar el gasto");
+          return;
+        }
+
         gastos.push(gasto);
-        await guardarGastos();
 
         document.getElementById("gastoDesc").value = "";
         document.getElementById("gastoMonto").value = "";
@@ -987,27 +1082,34 @@
         lista.innerHTML = gastos
           .map(
             (gasto) => `
-                <div class="expense-item">
-                    <div class="expense-info">
-                        <span class="expense-category">${gasto.categoria}</span>
-                        <strong>${gasto.desc}</strong>
-                        <div style="color: #666; font-size: 0.9em; margin-top: 5px;">${gasto.fecha}</div>
-                    </div>
-                    <div>
-                        <div class="expense-amount">$${gasto.monto.toFixed(2)}</div>
-                        <button class="btn btn-delete" onclick="eliminarGasto(${gasto.id})">Eliminar</button>
-                    </div>
+            <div class="expense-item">
+                <div class="expense-info">
+                    <span class="expense-category">${gasto.categoria}</span>
+                    <strong>${gasto.desc}</strong>
+                    <div style="color: #666; font-size: 0.9em; margin-top: 5px;">${gasto.fecha}</div>
                 </div>
-            `
+                <div>
+                    <div class="expense-amount">$${gasto.monto.toFixed(2)}</div>
+                    <button class="btn btn-delete" onclick="eliminarGasto(${gasto.id})">Eliminar</button>
+                </div>
+            </div>
+        `
           )
           .join("");
       }
 
       async function eliminarGasto(id) {
-        gastos = gastos.filter((g) => g.id !== id);
-        await guardarGastos();
-        mostrarGastos();
-        actualizarEstadoPresupuesto();
+        try {
+          const res = await fetch(`/api/gastos/${id}`, { method: "DELETE" });
+          const data = await res.json();
+          if (data.success) {
+            gastos = gastos.filter((g) => g.id !== id);
+            mostrarGastos();
+            actualizarEstadoPresupuesto();
+          }
+        } catch (error) {
+          console.error("Error eliminando gasto:", error);
+        }
       }
 
       // Funciones de Presupuesto
@@ -1022,8 +1124,13 @@
           return;
         }
 
+        const guardado = await guardarPresupuesto(categoria, limite);
+        if (!guardado) {
+          alert("Error al guardar el presupuesto");
+          return;
+        }
+
         presupuestos[categoria] = limite;
-        await guardarPresupuestos();
         document.getElementById("presupuestoLimite").value = "";
         actualizarEstadoPresupuesto();
       }
@@ -1067,22 +1174,22 @@
             const porcentaje = (gastado / limite) * 100;
 
             return `
-                    <div class="budget-item">
-                        <div style="flex: 1;">
-                            <strong>${cat}</strong>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: ${Math.min(porcentaje, 100)}%">
-                                    ${porcentaje.toFixed(0)}%
-                                </div>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; font-size: 0.9em; color: #666;">
-                                <span>Gastado: $${gastado.toFixed(2)}</span>
-                                <span>Límite: $${limite.toFixed(2)}</span>
+                <div class="budget-item">
+                    <div style="flex: 1;">
+                        <strong>${cat}</strong>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${Math.min(porcentaje, 100)}%">
+                                ${porcentaje.toFixed(0)}%
                             </div>
                         </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9em; color: #666;">
+                            <span>Gastado: $${gastado.toFixed(2)}</span>
+                            <span>Límite: $${limite.toFixed(2)}</span>
+                        </div>
                     </div>
-                    ${porcentaje > 90 ? `<div class="alert alert-warning" style="margin-top: 10px;">⚠️ Te estás acercando al límite en ${cat}</div>` : ""}
-                `;
+                </div>
+                ${porcentaje > 90 ? `<div class="alert alert-warning" style="margin-top: 10px;">⚠️ Te estás acercando al límite en ${cat}</div>` : ""}
+            `;
           })
           .join("");
       }
@@ -1135,8 +1242,14 @@
           id: Date.now(),
           fechaInicio: new Date().toISOString().split("T")[0],
         };
+
+        const guardado = await guardarObjetivo(objetivo);
+        if (!guardado) {
+          alert("Error al guardar el objetivo");
+          return;
+        }
+
         objetivos.push(objetivo);
-        await guardarObjetivos();
 
         document.getElementById("objetivoNombre").value = "";
         document.getElementById("objetivoMonto").value = "";
@@ -1165,33 +1278,33 @@
                   : "🟢";
 
             return `
-                    <div class="goal-item">
-                        <div style="flex: 1;">
-                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
-                                <strong style="font-size: 1.1em;">${obj.nombre}</strong>
-                                <span>${prioridadIcon} ${obj.prioridad}</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: ${Math.min(porcentaje, 100)}%">
-                                    ${porcentaje.toFixed(0)}%
-                                </div>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; font-size: 0.9em; color: #666; margin-top: 5px;">
-                                <span>Ahorrado: ${obj.actual.toFixed(2)} / ${obj.monto.toFixed(2)}</span>
-                                <span>Fecha: ${obj.fecha}</span>
-                            </div>
-                            <div style="margin-top: 10px;">
-                                <input type="number" id="aporte-${obj.id}" placeholder="Agregar aporte" style="padding: 8px; border: 2px solid #e0e0e0; border-radius: 5px; width: 150px; margin-right: 10px;">
-                                <button class="btn" style="padding: 8px 16px;" onclick="agregarAporte(${obj.id})">Agregar</button>
+                <div class="goal-item">
+                    <div style="flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <strong style="font-size: 1.1em;">${obj.nombre}</strong>
+                            <span>${prioridadIcon} ${obj.prioridad}</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${Math.min(porcentaje, 100)}%">
+                                ${porcentaje.toFixed(0)}%
                             </div>
                         </div>
-                        <div>
-                            <div class="goal-amount">Faltan: ${(obj.monto - obj.actual).toFixed(2)}</div>
-                            <button class="btn btn-completar" onclick="abrirModalCompletar(${obj.id})">✓ Completar</button>
-                            <button class="btn btn-delete" onclick="eliminarObjetivo(${obj.id})">Eliminar</button>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9em; color: #666; margin-top: 5px;">
+                            <span>Ahorrado: ${obj.actual.toFixed(2)} / ${obj.monto.toFixed(2)}</span>
+                            <span>Fecha: ${obj.fecha}</span>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <input type="number" id="aporte-${obj.id}" placeholder="Agregar aporte" style="padding: 8px; border: 2px solid #e0e0e0; border-radius: 5px; width: 150px; margin-right: 10px;">
+                            <button class="btn" style="padding: 8px 16px;" onclick="agregarAporte(${obj.id})">Agregar</button>
                         </div>
                     </div>
-                `;
+                    <div>
+                        <div class="goal-amount">Faltan: ${(obj.monto - obj.actual).toFixed(2)}</div>
+                        <button class="btn btn-completar" onclick="abrirModalCompletar(${obj.id})">✓ Completar</button>
+                        <button class="btn btn-delete" onclick="eliminarObjetivo(${obj.id})">Eliminar</button>
+                    </div>
+                </div>
+            `;
           })
           .join("");
       }
@@ -1208,9 +1321,16 @@
         const objetivo = objetivos.find((o) => o.id === id);
         if (objetivo) {
           objetivo.actual += aporte;
+
+          const actualizado = await actualizarObjetivo(id, objetivo.actual);
+          if (!actualizado) {
+            alert("Error al actualizar el objetivo");
+            objetivo.actual -= aporte; // Revertir
+            return;
+          }
+
           input.value = "";
 
-          // Si alcanzó o superó la meta, preguntar si desea completarlo
           if (objetivo.actual >= objetivo.monto) {
             if (
               confirm(
@@ -1221,16 +1341,24 @@
             }
           }
 
-          await guardarObjetivos();
           mostrarObjetivos();
         }
       }
 
       async function eliminarObjetivo(id) {
         if (confirm("¿Estás seguro de eliminar este objetivo?")) {
-          objetivos = objetivos.filter((o) => o.id !== id);
-          await guardarObjetivos();
-          mostrarObjetivos();
+          try {
+            const res = await fetch(`/api/objetivos-ahorro/${id}`, {
+              method: "DELETE",
+            });
+            const data = await res.json();
+            if (data.success) {
+              objetivos = objetivos.filter((o) => o.id !== id);
+              mostrarObjetivos();
+            }
+          } catch (error) {
+            console.error("Error eliminando objetivo:", error);
+          }
         }
       }
 
@@ -1254,7 +1382,6 @@
 
         const nota = document.getElementById("notaLogro").value;
 
-        // Crear objeto de logro
         const logro = {
           id: objetivo.id,
           nombre: objetivo.nombre,
@@ -1271,44 +1398,52 @@
         };
 
         try {
-          // Obtener lista de IDs de logros
+          // Guardar usando window.appStorage (sistema de logros compartido)
           let listaLogros = [];
-          const resultLista = await window.appStorage.get("logros:lista", true);
-          if (resultLista && resultLista.value) {
-            listaLogros = JSON.parse(resultLista.value);
+          try {
+            const resultLista = await window.appStorage.get(
+              "logros:lista",
+              true
+            );
+            if (resultLista && resultLista.value) {
+              listaLogros = JSON.parse(resultLista.value);
+            }
+          } catch (e) {
+            listaLogros = [];
           }
 
-          // Agregar nuevo ID si no existe
           if (!listaLogros.includes(logro.id)) {
             listaLogros.push(logro.id);
           }
 
-          // Guardar el logro individual
           const keyLogro = `logro:${logro.id}`;
           await window.appStorage.set(keyLogro, JSON.stringify(logro), true);
-
-          // Guardar la lista actualizada
           await window.appStorage.set(
             "logros:lista",
             JSON.stringify(listaLogros),
             true
           );
 
-          // Eliminar de objetivos activos
-          objetivos = objetivos.filter((o) => o.id !== objetivoACompletar);
-          await guardarObjetivos();
-
-          cerrarModal();
-          mostrarObjetivos();
-
-          alert(
-            '🎉 ¡Felicidades! Tu logro ha sido guardado. Puedes verlo en la página de "Objetivos Cumplidos".'
+          // Eliminar de objetivos activos en la BD
+          const res = await fetch(
+            `/api/objetivos-ahorro/${objetivoACompletar}`,
+            {
+              method: "DELETE",
+            }
           );
+
+          if (res.ok) {
+            objetivos = objetivos.filter((o) => o.id !== objetivoACompletar);
+            cerrarModal();
+            mostrarObjetivos();
+            alert(
+              '🎉 ¡Felicidades! Tu logro ha sido guardado. Puedes verlo en la página de "Objetivos Cumplidos".'
+            );
+          }
         } catch (error) {
           console.error("Error guardando logro:", error);
           alert(
-            "Hubo un error al guardar el logro. Por favor intenta de nuevo. Error: " +
-              error.message
+            "Hubo un error al guardar el logro. Por favor intenta de nuevo."
           );
         }
       }
@@ -1354,18 +1489,18 @@
           .map(([cat, monto]) => {
             const porcentaje = (monto / total) * 100;
             return `
-                    <div class="category-bar">
-                        <div class="category-label">
-                            <span>${cat}</span>
-                            <span>${monto.toFixed(2)} (${porcentaje.toFixed(1)}%)</span>
-                        </div>
-                        <div class="bar">
-                            <div class="bar-fill" style="width: ${porcentaje}%">
-                                ${porcentaje.toFixed(0)}%
-                            </div>
+                <div class="category-bar">
+                    <div class="category-label">
+                        <span>${cat}</span>
+                        <span>${monto.toFixed(2)} (${porcentaje.toFixed(1)}%)</span>
+                    </div>
+                    <div class="bar">
+                        <div class="bar-fill" style="width: ${porcentaje}%">
+                            ${porcentaje.toFixed(0)}%
                         </div>
                     </div>
-                `;
+                </div>
+            `;
           })
           .join("");
       }
@@ -1398,10 +1533,10 @@
         const libre = disponible - totalGastosVariables;
 
         let html = `
-                <div class="alert alert-success">
-                    <strong>Dinero Libre Mensual:</strong> ${libre.toFixed(2)}
-                </div>
-            `;
+            <div class="alert alert-success">
+                <strong>Dinero Libre Mensual:</strong> ${libre.toFixed(2)}
+            </div>
+        `;
 
         if (objetivos.length > 0) {
           html +=
@@ -1422,17 +1557,17 @@
             const icono = viable ? "✅" : "⚠️";
 
             html += `
-                        <div class="alert ${clase}" style="margin-top: 10px;">
-                            <strong>${icono} ${obj.nombre}</strong><br>
-                            Necesitas ahorrar: ${necesitaMes.toFixed(2)}/mes durante ${mesesRestantes} meses<br>
-                            Esto representa el ${porcentajeIngreso.toFixed(1)}% de tu ingreso<br>
-                            ${
-                              viable
-                                ? "¡Este objetivo es alcanzable con tu ingreso actual!"
-                                : "Considera extender el plazo o reducir otros gastos para alcanzar este objetivo."
-                            }
-                        </div>
-                    `;
+                    <div class="alert ${clase}" style="margin-top: 10px;">
+                        <strong>${icono} ${obj.nombre}</strong><br>
+                        Necesitas ahorrar: ${necesitaMes.toFixed(2)}/mes durante ${mesesRestantes} meses<br>
+                        Esto representa el ${porcentajeIngreso.toFixed(1)}% de tu ingreso<br>
+                        ${
+                          viable
+                            ? "¡Este objetivo es alcanzable con tu ingreso actual!"
+                            : "Considera extender el plazo o reducir otros gastos para alcanzar este objetivo."
+                        }
+                    </div>
+                `;
           });
         }
 
@@ -1448,7 +1583,6 @@
       function generarConsejos() {
         const lista = document.getElementById("listaConsejos");
 
-        // Base de consejos generales
         const consejosGenerales = [
           "Registra todos tus gastos diariamente para tener un mejor control.",
           "Establece un presupuesto para cada categoría y respétalo.",
@@ -1494,7 +1628,6 @@
 
         const consejos = [];
 
-        // Analizar gastos para dar consejos personalizados
         if (gastos.length > 0) {
           const mesActual = new Date().getMonth();
           const añoActual = new Date().getFullYear();
@@ -1516,7 +1649,6 @@
             0
           );
 
-          // Consejo por categoría más alta
           if (total > 0) {
             const catMax = Object.entries(categorias).sort(
               (a, b) => b[1] - a[1]
@@ -1529,14 +1661,12 @@
             }
           }
 
-          // Consejo sobre presupuestos
           if (Object.keys(presupuestos).length === 0) {
             consejos.push(
               "💰 Aún no has establecido presupuestos. Configura límites para cada categoría para tener mejor control."
             );
           }
 
-          // Consejo sobre entretenimiento
           if (
             categorias["Entretenimiento"] &&
             categorias["Entretenimiento"] / total > 0.25
@@ -1546,14 +1676,12 @@
             );
           }
 
-          // Consejo sobre comida
           if (categorias["Comida"] && categorias["Comida"] / total > 0.35) {
             consejos.push(
               "🍔 Considera preparar más comidas en casa en lugar de comer fuera para reducir gastos en alimentación."
             );
           }
 
-          // Consejo sobre transporte
           if (
             categorias["Transporte"] &&
             categorias["Transporte"] / total > 0.3
@@ -1564,7 +1692,6 @@
           }
         }
 
-        // Consejos sobre objetivos
         if (objetivos.length === 0) {
           consejos.push(
             "🎯 No tienes objetivos de ahorro definidos. Establecer metas te ayudará a mantener la motivación y el enfoque."
@@ -1575,7 +1702,6 @@
           );
         }
 
-        // Función para mezclar array aleatoriamente
         function mezclarArray(array) {
           const nuevoArray = [...array];
           for (let i = nuevoArray.length - 1; i > 0; i--) {
@@ -1585,19 +1711,15 @@
           return nuevoArray;
         }
 
-        // Mezclar consejos generales y tomar algunos aleatorios
         const consejosAleatorios = mezclarArray(consejosGenerales).slice(0, 8);
-
-        // Combinar consejos personalizados con aleatorios
         const todosLosConsejos = [...consejos, ...consejosAleatorios];
-
-        // Mezclar todos los consejos
         const consejosFinales = mezclarArray(todosLosConsejos);
 
         lista.innerHTML = consejosFinales
           .map((consejo) => `<li>${consejo}</li>`)
           .join("");
       }
+
       // Cerrar modal al hacer clic fuera
       window.onclick = function (event) {
         const modal = document.getElementById("modalCompletar");
@@ -1605,8 +1727,6 @@
           cerrarModal();
         }
       };
-      // Inicializar
-      cargarDatos();
     </script>
   </body>
 </html>
