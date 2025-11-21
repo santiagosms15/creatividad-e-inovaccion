@@ -13,16 +13,14 @@
         box-sizing: border-box;
       }
 
-      body {
-        font-family: "Inter", sans-serif;
-        background: linear-gradient(
-          135deg,
-          #667eea 0%,
-          #764ba2 50%,
-          #f093fb 100%
-        );
+       body {
         min-height: 100vh;
-        position: relative;
+        background-image: url("img/fondometas.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         overflow-x: hidden;
       }
 
@@ -1335,37 +1333,35 @@
           </div>
         </div>
 
-        <div class="actions-grid">
-          <button class="btn-action primary" onclick="alert('Agregar aporte')">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-            >
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            Agregar Aporte
-          </button>
-          <button class="btn-action success" onclick="alert('Meta completada')">
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-            >
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-            Marcar Completada
-          </button>
-        </div>
-      </div>
-    </div>
+       <div class="actions-grid">
+  <button class="btn-action primary" onclick="agregarAporte()">
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.5"
+    >
+      <line x1="12" y1="5" x2="12" y2="19"></line>
+      <line x1="5" y1="12" x2="19" y2="12"></line>
+    </svg>
+    Agregar Aporte
+  </button>
+  <button class="btn-action success" onclick="marcarCompletada()">
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.5"
+    >
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+    Marcar Completada
+  </button>
+</div>
 
     <script>
       function mostrarDetalle() {
@@ -1637,63 +1633,63 @@
           metaCard.onclick = () => mostrarDetalleMeta(meta.id);
 
           metaCard.innerHTML = `
-            <div class="meta-content">
-              <div class="meta-header">
-                <div class="meta-info">
-                  <h3>${meta.nombre}</h3>
-                  <div class="meta-badges">
-                    <span class="badge badge-categoria">${meta.categoria}</span>
-                    <span class="badge badge-prioridad">${meta.prioridad}</span>
-                  </div>
-                </div>
-                <button class="meta-icon-btn">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="9 18 15 12 9 6"></polyline>
-                  </svg>
-                </button>
-              </div>
+  <div class="meta-content">
+    <div class="meta-header">
+      <div class="meta-info">
+        <h3>${meta.nombre}</h3>
+        <div class="meta-badges">
+          <span class="badge badge-categoria">${meta.categoria}</span>
+          <span class="badge badge-prioridad">${meta.prioridad}</span>
+        </div>
+      </div>
+      <button class="meta-icon-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
 
-              <div class="progress-section">
-                <div class="progress-info">
-                  <div class="progress-amounts">
-                    <div class="amount-item">
-                      <span>Actual</span>
-                      <strong>${formatearMoneda(meta.montoActual)}</strong>
-                    </div>
-                    <div class="amount-item">
-                      <span>Objetivo</span>
-                      <strong>${formatearMoneda(meta.montoObjetivo)}</strong>
-                    </div>
-                  </div>
-                  <div class="progress-percentage-big">${porcentaje}%</div>
-                </div>
-                <div class="progress-bar-container">
-                  <div class="progress-bar-fill" style="width: ${porcentaje}%"></div>
-                </div>
-              </div>
+    <div class="progress-section">
+      <div class="progress-info">
+        <div class="progress-amounts">
+          <div class="amount-item">
+            <span>Actual</span>
+            <strong>${formatearMoneda(montoActual)}</strong>
+          </div>
+          <div class="amount-item">
+            <span>Objetivo</span>
+            <strong>${formatearMoneda(montoObjetivo)}</strong>
+          </div>
+        </div>
+        <div class="progress-percentage-big">${porcentaje}%</div>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" style="width: ${porcentaje}%"></div>
+      </div>
+    </div>
 
-              <div class="meta-stats">
-                <div class="stat-box">
-                  <div class="stat-box-label">Falta</div>
-                  <div class="stat-box-value">${formatearMoneda(falta, true)}</div>
-                </div>
-                <div class="stat-box">
-                  <div class="stat-box-label">Días restantes</div>
-                  <div class="stat-box-value">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <polyline points="12 6 12 12 16 14"></polyline>
-                    </svg>
-                    ${diasRestantes}
-                  </div>
-                </div>
-                <div class="stat-box">
-                  <div class="stat-box-label">Ahorro/mes</div>
-                  <div class="stat-box-value">${formatearMoneda(ahorroMensual, true)}</div>
-                </div>
-              </div>
-            </div>
-          `;
+    <div class="meta-stats">
+      <div class="stat-box">
+        <div class="stat-box-label">Falta</div>
+        <div class="stat-box-value">${formatearMoneda(falta, true)}</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">Días restantes</div>
+        <div class="stat-box-value">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          ${diasRestantes}
+        </div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">Ahorro/mes</div>
+        <div class="stat-box-value">${formatearMoneda(ahorroMensual, true)}</div>
+      </div>
+    </div>
+  </div>
+`;
 
           metasGrid.appendChild(metaCard);
         });
@@ -1718,24 +1714,35 @@
       }
 
       // Función para mostrar detalle de una meta específica
-      function mostrarDetalleMeta(metaId) {
-        const meta = metas.find((m) => m.id === metaId);
-        if (!meta) return;
+function mostrarDetalleMeta(metaId) {
+  const meta = metas.find((m) => m.id === metaId);
+  if (!meta) {
+    console.error("Meta no encontrada:", metaId);
+    return;
+  }
 
-        // Aquí iría el código para cargar los datos específicos de la meta en la vista de detalle
-        mostrarDetalle();
-      }
+  metaActualDetalle = meta;
+  cargarDetalleCompleto(meta);
+  mostrarDetalle();
+}
 
       // Función para actualizar estadísticas del dashboard
       function actualizarEstadisticas() {
         const totalActivas = metas.length;
-        const promedioProgreso = Math.round(
-          metas.reduce(
-            (sum, m) => sum + (m.montoActual / m.montoObjetivo) * 100,
-            0
-          ) / metas.length
+        const promedioProgreso =
+          metas.length > 0
+            ? Math.round(
+                metas.reduce((sum, m) => {
+                  const actual = m.monto_actual || 0;
+                  const objetivo = m.monto_objetivo || 1;
+                  return sum + (actual / objetivo) * 100;
+                }, 0) / metas.length
+              )
+            : 0;
+        const totalAhorrado = metas.reduce(
+          (sum, m) => sum + (m.monto_actual || 0),
+          0
         );
-        const totalAhorrado = metas.reduce((sum, m) => sum + m.montoActual, 0);
 
         document.querySelector(
           ".stat-card:nth-child(1) .stat-value"
@@ -1749,6 +1756,380 @@
       }
 
       // Función para mostrar notificaciones
+      // Variable global para almacenar la meta actual en detalle
+      let metaActualDetalle = null;
+
+      // Función para cargar todos los datos de la meta en la vista de detalle
+      // Función para cargar todos los datos de la meta en la vista de detalle
+      function cargarDetalleCompleto(meta) {
+        const montoActual = meta.monto_actual || 0;
+        const montoObjetivo = meta.monto_objetivo || 0;
+        const fechaObjetivo = meta.fecha_objetivo;
+        const porcentaje =
+          montoObjetivo > 0
+            ? Math.round((montoActual / montoObjetivo) * 100)
+            : 0;
+        const falta = montoObjetivo - montoActual;
+        const diasRestantes = Math.ceil(
+          (new Date(fechaObjetivo) - new Date()) / (1000 * 60 * 60 * 24)
+        );
+
+        // Actualizar título
+        document.querySelector(".detalle-title").innerHTML = meta.nombre;
+
+        // Actualizar badges
+        const badgesContainer = document.querySelector(
+          ".detalle-hero .meta-badges"
+        );
+        badgesContainer.innerHTML = `
+    <span class="badge badge-categoria">${meta.categoria}</span>
+    <span class="badge badge-prioridad">${meta.prioridad}</span>
+  `;
+
+        // Actualizar progreso
+        document.querySelector(".detalle-progress-big").textContent =
+          `${porcentaje}%`;
+        document.querySelector(".detalle-hero .progress-bar-fill").style.width =
+          `${porcentaje}%`;
+
+        // Actualizar montos en el hero - usando un selector más específico
+        const detalleHeroContent = document.querySelector(
+          ".detalle-hero-content"
+        );
+        const montoDivs = detalleHeroContent.querySelectorAll(
+          'div[style*="grid-template-columns"] > div'
+        );
+
+        if (montoDivs.length >= 2) {
+          // Actualizar monto actual
+          const montoActualDiv = montoDivs[0].querySelector(
+            'div[style*="font-size: 2.5rem"]'
+          );
+          if (montoActualDiv) {
+            montoActualDiv.textContent = formatearMoneda(montoActual);
+          }
+
+          // Actualizar monto objetivo
+          const montoObjetivoDiv = montoDivs[1].querySelector(
+            'div[style*="font-size: 2.5rem"]'
+          );
+          if (montoObjetivoDiv) {
+            montoObjetivoDiv.textContent = formatearMoneda(montoObjetivo);
+          }
+        }
+
+        // Actualizar cards de información (ahorro semanal, mensual, etc.)
+        const infoCards = document.querySelectorAll(".info-card-value");
+        if (infoCards.length >= 4) {
+          // Ahorro semanal
+          const ahorroSemanal =
+            diasRestantes > 0 ? Math.ceil(falta / (diasRestantes / 7)) : 0;
+          infoCards[0].textContent = formatearMoneda(ahorroSemanal, true);
+
+          // Ahorro mensual
+          const ahorroMensual =
+            diasRestantes > 0 ? Math.ceil(falta / (diasRestantes / 30)) : 0;
+          infoCards[1].textContent = formatearMoneda(ahorroMensual, true);
+
+          // Fecha proyectada
+          const fechaProyectada = new Date(fechaObjetivo);
+          infoCards[2].textContent = fechaProyectada.toLocaleDateString(
+            "es-CO",
+            {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            }
+          );
+
+          // Total de aportes
+          const totalAportes = meta.aportes ? meta.aportes.length : 0;
+          infoCards[3].textContent = totalAportes;
+        }
+
+        // Actualizar texto de días restantes
+        const infoParagraphs = document.querySelectorAll(".info-card p");
+        if (infoParagraphs.length >= 3) {
+          infoParagraphs[2].textContent = `Faltan aproximadamente ${diasRestantes} días`;
+        }
+
+        // Actualizar historial de aportes
+        actualizarHistorialAportes(meta.aportes || []);
+      }
+
+      // Función para actualizar el historial de aportes
+function actualizarHistorialAportes(aportes) {
+  // Buscar el contenedor del historial - es el div dentro del último info-card
+  const historialCards = document.querySelectorAll('.info-card');
+  if (historialCards.length === 0) {
+    console.error("No se encontró el contenedor de historial");
+    return;
+  }
+  
+  // El último info-card contiene el historial
+  const historialCard = historialCards[historialCards.length - 1];
+  const container = historialCard.querySelector('div[style*="display: flex; flex-direction: column"]');
+  
+  if (!container) {
+    console.error("No se encontró el contenedor específico del historial");
+    return;
+  }
+
+  if (!aportes || aportes.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 40px; color: #6b7280;">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 15px; display: block;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <p>Aún no hay aportes registrados</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = aportes.map((aporte, index) => {
+    const esReciente = index === 0;
+    const fecha = new Date(aporte.fecha).toLocaleDateString('es-CO', { 
+      day: 'numeric', 
+      month: 'long', 
+      year: 'numeric' 
+    });
+
+    return `
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 20px; background: ${esReciente ? 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)' : '#f9fafb'}; border-radius: 18px; margin-bottom: 15px; transition: all 0.3s;" ${!esReciente ? 'onmouseover="this.style.background=\'#f3f4f6\'" onmouseout="this.style.background=\'#f9fafb\'"' : ''}>
+        <div style="display: flex; align-items: center; gap: 15px;">
+          <div style="width: 50px; height: 50px; background: ${esReciente ? 'white' : '#e5e7eb'}; border-radius: 50%; display: flex; align-items: center; justify-content: center; ${esReciente ? 'box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);' : ''}">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${esReciente ? '#059669' : '#6b7280'}" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </div>
+          <div>
+            <div style="font-size: 1.3rem; font-weight: 800; color: ${esReciente ? '#065f46' : '#1f2937'}; margin-bottom: 4px;">
+              ${formatearMoneda(aporte.monto)}
+            </div>
+            <div style="color: ${esReciente ? '#047857' : '#6b7280'}; font-size: 0.95rem; font-weight: 600">
+              ${fecha}
+            </div>
+          </div>
+        </div>
+        ${esReciente ? '<div style="background: white; padding: 8px 16px; border-radius: 50px; color: #059669; font-weight: 700; font-size: 0.85rem;">Reciente</div>' : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+      // Función para agregar un aporte
+      function agregarAporte() {
+        if (!metaActualDetalle) return;
+
+        const modal = document.createElement("div");
+        modal.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+  `;
+
+        const montoFaltante =
+          (metaActualDetalle.monto_objetivo || 0) -
+          (metaActualDetalle.monto_actual || 0);
+
+        modal.innerHTML = `
+    <div style="background: white; border-radius: 30px; padding: 40px; max-width: 500px; width: 90%; box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);">
+      <h2 style="font-size: 2rem; color: #1a1a2e; margin-bottom: 10px; font-weight: 800;">💰 Agregar Aporte</h2>
+      <p style="color: #6b7280; margin-bottom: 30px;">Meta: ${metaActualDetalle.nombre}</p>
+      <div style="background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%); padding: 20px; border-radius: 15px; margin-bottom: 30px;">
+        <p style="color: #6b21a8; font-weight: 600; margin-bottom: 8px;">Te faltan:</p>
+        <p style="color: #6b21a8; font-size: 2rem; font-weight: 800;">${formatearMoneda(montoFaltante)}</p>
+      </div>
+
+      <form id="formAporte" style="display: flex; flex-direction: column; gap: 20px;">
+        <div>
+          <label style="display: block; color: #1a1a2e; font-weight: 600; margin-bottom: 8px;">Monto del aporte ($)</label>
+          <input type="number" id="montoAporte" required min="1" max="${montoFaltante}" placeholder="Ej: 50000" style="width: 100%; padding: 14px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 1rem;">
+        </div>
+
+        <div>
+          <label style="display: block; color: #1a1a2e; font-weight: 600; margin-bottom: 8px;">Fecha del aporte</label>
+          <input type="date" id="fechaAporte" required value="${new Date().toISOString().split("T")[0]}" style="width: 100%; padding: 14px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 1rem;">
+        </div>
+
+        <div style="display: flex; gap: 15px; margin-top: 20px;">
+          <button type="submit" style="flex: 1; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 16px; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer;">
+            Agregar Aporte
+          </button>
+          <button type="button" onclick="this.closest('[style*=fixed]').remove()" style="flex: 0.5; background: #f3f4f6; color: #6b7280; padding: 16px; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer;">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  `;
+
+        document.body.appendChild(modal);
+
+        document
+          .getElementById("formAporte")
+          .addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const monto = parseFloat(
+              document.getElementById("montoAporte").value
+            );
+            const fecha = document.getElementById("fechaAporte").value;
+
+            if (!monto || !fecha) {
+              mostrarNotificacion(
+                "Por favor completa todos los campos",
+                "error"
+              );
+              return;
+            }
+
+            if (monto <= 0) {
+              mostrarNotificacion("El monto debe ser mayor a 0", "error");
+              return;
+            }
+
+            try {
+              const response = await fetch(
+                `/api/metas/${metaActualDetalle.id}/aportes`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ monto, fecha }),
+                }
+              );
+
+              const data = await response.json();
+
+              if (data.success) {
+                modal.remove();
+                await cargarMetas();
+                metaActualDetalle = metas.find(
+                  (m) => m.id === metaActualDetalle.id
+                );
+                if (metaActualDetalle) {
+                  cargarDetalleCompleto(metaActualDetalle);
+                }
+                mostrarNotificacion("¡Aporte agregado exitosamente! 💰");
+              } else {
+                mostrarNotificacion(
+                  data.message || "Error al agregar aporte",
+                  "error"
+                );
+              }
+            } catch (error) {
+              console.error("Error al agregar aporte:", error);
+              mostrarNotificacion("Error al agregar el aporte", "error");
+            }
+          });
+      }
+
+      // Función para marcar meta como completada
+      function marcarCompletada() {
+        if (!metaActualDetalle) return;
+
+        const montoActual = metaActualDetalle.monto_actual || 0;
+        const montoObjetivo = metaActualDetalle.monto_objetivo || 0;
+
+        if (montoActual < montoObjetivo) {
+          mostrarNotificacion(
+            "Aún no has alcanzado el objetivo de esta meta",
+            "error"
+          );
+          return;
+        }
+
+        const modal = document.createElement("div");
+        modal.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+  `;
+
+        modal.innerHTML = `
+    <div style="background: white; border-radius: 30px; padding: 40px; max-width: 500px; width: 90%; box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3); text-align: center;">
+      <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px;">
+        <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <h2 style="font-size: 2rem; color: #1a1a2e; margin-bottom: 15px; font-weight: 800;">🎉 ¡Felicitaciones!</h2>
+      <p style="color: #6b7280; margin-bottom: 30px; font-size: 1.1rem;">¿Deseas marcar esta meta como completada?</p>
+      <p style="color: #1a1a2e; font-weight: 700; font-size: 1.2rem; margin-bottom: 30px;">${metaActualDetalle.nombre}</p>
+
+      <div style="display: flex; gap: 15px;">
+        <button onclick="confirmarCompletada()" style="flex: 1; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 16px; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer;">
+          Sí, completar
+        </button>
+        <button onclick="this.closest('[style*=fixed]').remove()" style="flex: 0.5; background: #f3f4f6; color: #6b7280; padding: 16px; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer;">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  `;
+
+        document.body.appendChild(modal);
+      }
+
+      // Función para confirmar y completar la meta
+      async function confirmarCompletada() {
+        if (!metaActualDetalle) return;
+
+        try {
+          const response = await fetch(
+            `/api/metas/${metaActualDetalle.id}/completar`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          const data = await response.json();
+
+          if (data.success) {
+            document.querySelector('[style*="position: fixed"]').remove();
+            await cargarMetas();
+            volverDashboard();
+            mostrarNotificacion(
+              "🎉 ¡Meta completada! ¡Felicitaciones por tu logro!"
+            );
+          } else {
+            mostrarNotificacion(
+              data.message || "Error al completar meta",
+              "error"
+            );
+          }
+        } catch (error) {
+          console.error("Error al completar meta:", error);
+          mostrarNotificacion("Error al completar la meta", "error");
+        }
+      }
       // Función para mostrar notificaciones
       function mostrarNotificacion(mensaje, tipo = "success") {
         const notif = document.createElement("div");
