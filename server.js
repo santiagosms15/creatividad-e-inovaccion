@@ -21,12 +21,13 @@ const db = new sqlite3.Database("./usuarios.db", (err) => {
     console.error("❌ Error al conectar a SQLite:", err);
   } else {
     console.log("✅ Base de datos SQLite conectada");
-    crearTabla();
+    crearTablas();
   }
 });
 
-function crearTabla() {
-  const sql = `
+function crearTablas() {
+  // Tabla usuarios
+  const sqlUsuarios = `
     CREATE TABLE IF NOT EXISTS usuarios (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       nombre TEXT NOT NULL,
@@ -37,9 +38,47 @@ function crearTabla() {
     )
   `;
 
-  db.run(sql, (err) => {
-    if (err) console.error("❌ Error al crear tabla:", err);
+  // Tabla metas
+  const sqlMetas = `
+    CREATE TABLE IF NOT EXISTS metas (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      usuario_id INTEGER NOT NULL,
+      nombre TEXT NOT NULL,
+      categoria TEXT NOT NULL,
+      prioridad TEXT NOT NULL,
+      monto_actual REAL DEFAULT 0,
+      monto_objetivo REAL NOT NULL,
+      fecha_creacion DATE NOT NULL,
+      fecha_objetivo DATE NOT NULL,
+      completada INTEGER DEFAULT 0,
+      FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+    )
+  `;
+
+  // Tabla aportes
+  const sqlAportes = `
+    CREATE TABLE IF NOT EXISTS aportes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      meta_id INTEGER NOT NULL,
+      monto REAL NOT NULL,
+      fecha DATE NOT NULL,
+      FOREIGN KEY (meta_id) REFERENCES metas(id) ON DELETE CASCADE
+    )
+  `;
+
+  db.run(sqlUsuarios, (err) => {
+    if (err) console.error("❌ Error al crear tabla usuarios:", err);
     else console.log("📌 Tabla 'usuarios' lista");
+  });
+
+  db.run(sqlMetas, (err) => {
+    if (err) console.error("❌ Error al crear tabla metas:", err);
+    else console.log("📌 Tabla 'metas' lista");
+  });
+
+  db.run(sqlAportes, (err) => {
+    if (err) console.error("❌ Error al crear tabla aportes:", err);
+    else console.log("📌 Tabla 'aportes' lista");
   });
 }
 
@@ -155,16 +194,22 @@ app.post("/api/verificar-usuario", (req, res) => {
   const { usuario } = req.body;
 
   if (!usuario) {
-    return res.status(400).json({ success: false, message: "Falta el nombre de usuario" });
+    return res
+      .status(400)
+      .json({ success: false, message: "Falta el nombre de usuario" });
   }
 
   const sql = `SELECT id FROM usuarios WHERE usuario = ?`;
   db.get(sql, [usuario], (err, row) => {
     if (err) {
-      return res.status(500).json({ success: false, message: "Error en el servidor" });
+      return res
+        .status(500)
+        .json({ success: false, message: "Error en el servidor" });
     }
     if (!row) {
-      return res.status(404).json({ success: false, message: "El usuario no fue encontrado" });
+      return res
+        .status(404)
+        .json({ success: false, message: "El usuario no fue encontrado" });
     }
     res.json({ success: true });
   });
@@ -179,7 +224,10 @@ app.post("/api/restablecer-contrasena", async (req, res) => {
   }
 
   if (nuevaContrasena.length < 6) {
-    return res.status(400).json({ success: false, message: "La contraseña debe tener al menos 6 caracteres" });
+    return res.status(400).json({
+      success: false,
+      message: "La contraseña debe tener al menos 6 caracteres",
+    });
   }
 
   try {
@@ -188,10 +236,16 @@ app.post("/api/restablecer-contrasena", async (req, res) => {
 
     db.run(sql, [hash, usuario], function (err) {
       if (err) {
-        return res.status(500).json({ success: false, message: "Error al actualizar la contraseña" });
+        return res.status(500).json({
+          success: false,
+          message: "Error al actualizar la contraseña",
+        });
       }
       if (this.changes === 0) {
-        return res.status(404).json({ success: false, message: "Usuario no encontrado para actualizar" });
+        return res.status(404).json({
+          success: false,
+          message: "Usuario no encontrado para actualizar",
+        });
       }
       res.json({ success: true, message: "Contraseña actualizada con éxito" });
     });
@@ -211,6 +265,203 @@ app.get("/api/usuarios", (req, res) => {
         .json({ success: false, message: "Error al consultar usuarios" });
 
     res.json({ success: true, usuarios: rows });
+  });
+});
+
+// ========== API METAS ==========
+
+// 1. Obtener todas las metas de un usuario
+app.get("/api/metas/:usuarioId", (req, res) => {
+  const { usuarioId } = req.params;
+
+  const sql = `SELECT * FROM metas WHERE usuario_id = ? ORDER BY fecha_creacion DESC`;
+
+  db.all(sql, [usuarioId], (err, metas) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al obtener metas" });
+    }
+
+    // Para cada meta, obtener sus aportes
+    const metasConAportes = [];
+    let processed = 0;
+
+    if (metas.length === 0) {
+      return res.json({ success: true, metas: [] });
+    }
+
+    metas.forEach((meta) => {
+      const sqlAportes = `SELECT * FROM aportes WHERE meta_id = ? ORDER BY fecha DESC`;
+
+      db.all(sqlAportes, [meta.id], (err, aportes) => {
+        if (err) {
+          metasConAportes.push({ ...meta, aportes: [] });
+        } else {
+          metasConAportes.push({ ...meta, aportes: aportes || [] });
+        }
+
+        processed++;
+        if (processed === metas.length) {
+          res.json({ success: true, metas: metasConAportes });
+        }
+      });
+    });
+  });
+});
+
+// 2. Crear una nueva meta
+app.post("/api/metas", (req, res) => {
+  const {
+    usuarioId,
+    nombre,
+    categoria,
+    prioridad,
+    montoObjetivo,
+    montoInicial, // ✅ Debe ser montoInicial
+    fechaObjetivo,
+  } = req.body;
+
+  // Validaciones
+  if (
+    !usuarioId ||
+    !nombre ||
+    !categoria ||
+    !prioridad ||
+    !montoObjetivo ||
+    !fechaObjetivo
+  ) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Faltan campos requeridos" });
+  }
+
+  const fechaCreacion = new Date().toISOString().split("T")[0];
+  const montoActual = montoInicial || 0; // ✅ Convertir montoInicial a montoActual
+
+  const sql = `
+    INSERT INTO metas (usuario_id, nombre, categoria, prioridad, monto_actual, monto_objetivo, fecha_creacion, fecha_objetivo)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  db.run(
+    sql,
+    [
+      usuarioId,
+      nombre,
+      categoria,
+      prioridad,
+      montoActual,
+      montoObjetivo,
+      fechaCreacion,
+      fechaObjetivo,
+    ],
+    function (err) {
+      if (err) {
+        console.error("Error al crear meta:", err); // ✅ Agregar log para debug
+        return res
+          .status(500)
+          .json({ success: false, message: "Error al crear meta" });
+      }
+
+      const metaId = this.lastID;
+
+      // Si hay monto inicial, crear el primer aporte
+      if (montoInicial && montoInicial > 0) {
+        const sqlAporte = `INSERT INTO aportes (meta_id, monto, fecha) VALUES (?, ?, ?)`;
+        db.run(sqlAporte, [metaId, montoInicial, fechaCreacion], (err) => {
+          if (err) console.error("Error al crear aporte inicial:", err);
+        });
+      }
+
+      res.status(201).json({
+        success: true,
+        message: "Meta creada exitosamente",
+        metaId: metaId,
+      });
+    }
+  );
+});
+
+// 3. Agregar un aporte a una meta
+app.post("/api/metas/:metaId/aportes", (req, res) => {
+  const { metaId } = req.params;
+  const { monto, fecha } = req.body;
+
+  if (!monto || !fecha) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Faltan datos del aporte" });
+  }
+
+  // Insertar el aporte
+  const sqlAporte = `INSERT INTO aportes (meta_id, monto, fecha) VALUES (?, ?, ?)`;
+
+  db.run(sqlAporte, [metaId, monto, fecha], function (err) {
+    if (err) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al agregar aporte" });
+    }
+
+    // Actualizar el monto actual de la meta
+    const sqlUpdate = `UPDATE metas SET monto_actual = monto_actual + ? WHERE id = ?`;
+
+    db.run(sqlUpdate, [monto, metaId], (err) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({ success: false, message: "Error al actualizar meta" });
+      }
+
+      res.json({ success: true, message: "Aporte agregado exitosamente" });
+    });
+  });
+});
+
+// 4. Marcar meta como completada
+app.put("/api/metas/:metaId/completar", (req, res) => {
+  const { metaId } = req.params;
+
+  const sql = `UPDATE metas SET completada = 1 WHERE id = ?`;
+
+  db.run(sql, [metaId], function (err) {
+    if (err) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al completar meta" });
+    }
+
+    if (this.changes === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Meta no encontrada" });
+    }
+
+    res.json({ success: true, message: "¡Meta completada! 🎉" });
+  });
+});
+
+// 5. Eliminar una meta
+app.delete("/api/metas/:metaId", (req, res) => {
+  const { metaId } = req.params;
+
+  const sql = `DELETE FROM metas WHERE id = ?`;
+
+  db.run(sql, [metaId], function (err) {
+    if (err) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al eliminar meta" });
+    }
+
+    if (this.changes === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Meta no encontrada" });
+    }
+
+    res.json({ success: true, message: "Meta eliminada exitosamente" });
   });
 });
 

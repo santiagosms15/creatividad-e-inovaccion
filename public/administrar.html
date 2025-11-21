@@ -1,954 +1,992 @@
 <!doctype html>
 <html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <title>Administrar Finanzas</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/x-icon" href="favicon.ico" />
-  <title>Administrar Finanzas</title>
-  <style>
-    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      --primary: #0f172a;
-      --secondary: #1e293b;
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
-      --success: #10b981;
-      --danger: #ef4444;
-      --warning: #f59e0b;
-      --text-primary: #f8fafc;
-      --text-secondary: #cbd5e1;
-      --text-muted: #64748b;
-      --card-bg: #1e293b;
-      --card-hover: #334155;
-      --border: #334155;
-      --shadow: rgba(0, 0, 0, 0.3);
-    }
-
-    body {
-      font-family:
-        "Inter",
-        -apple-system,
-        BlinkMacSystemFont,
-        sans-serif;
-      background: url("img/fondoAD.jpg") no-repeat center center fixed;
-      background-size: cover;
-      min-height: 100vh;
-      padding: 0;
-      color: var(--text-primary);
-      position: relative;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: radial-gradient(circle at 20% 30%,
-          rgba(59, 130, 246, 0.1) 0%,
-          transparent 50%),
-        radial-gradient(circle at 80% 70%,
-          rgba(16, 185, 129, 0.1) 0%,
-          transparent 50%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0;
-      position: relative;
-      z-index: 1;
-    }
-
-    .header {
-      background: rgba(30, 41, 59, 0.8);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
-      padding: 24px 40px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .header h1 {
-      color: var(--text-primary);
-      font-size: 1.75em;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .header-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .btn-logros {
-      padding: 12px 24px;
-      background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 0.95em;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    }
-
-    .btn-logros:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
-    }
-
-    .btn-menu {
-      padding: 12px 24px;
-      background: linear-gradient(135deg, var(--secondary) 0%, #334155 100%);
-      color: var(--text-secondary);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font-size: 0.95em;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      text-decoration: none;
-    }
-
-    .btn-menu:hover {
-      background: var(--card-hover);
-      color: var(--text-primary);
-      border-color: var(--accent);
-    }
-
-    .tabs {
-      display: flex;
-      gap: 8px;
-      margin-top: 24px;
-      flex-wrap: wrap;
-      background: rgba(15, 23, 42, 0.5);
-      padding: 6px;
-      border-radius: 12px;
-    }
-
-    .tab {
-      padding: 10px 20px;
-      background: transparent;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.9em;
-      font-weight: 500;
-      color: var(--text-secondary);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-    }
-
-    .tab:hover {
-      background: rgba(59, 130, 246, 0.1);
-      color: var(--text-primary);
-    }
-
-    .tab.active {
-      background: var(--accent);
-      color: white;
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-    }
-
-    .content-section {
-      display: none;
-      padding: 40px;
-      animation: fadeIn 0.4s ease-out;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .content-section.active {
-      display: block;
-    }
-
-    .card {
-      background: var(--card-bg);
-      padding: 32px;
-      border-radius: 16px;
-      box-shadow: 0 4px 24px var(--shadow);
-      margin-bottom: 24px;
-      border: 1px solid var(--border);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .card:hover {
-      border-color: rgba(59, 130, 246, 0.3);
-      box-shadow: 0 8px 32px var(--shadow);
-    }
-
-    .card h2 {
-      color: var(--text-primary);
-      margin-bottom: 24px;
-      font-size: 1.5em;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .card h2::before {
-      content: "";
-      width: 4px;
-      height: 24px;
-      background: linear-gradient(180deg, var(--accent), var(--success));
-      border-radius: 2px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--text-secondary);
-      font-weight: 500;
-      font-size: 0.9em;
-      letter-spacing: 0.01em;
-    }
-
-    .form-group input,
-    .form-group select {
-      width: 100%;
-      padding: 14px 16px;
-      background: var(--primary);
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      font-size: 1em;
-      color: var(--text-primary);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      font-family: "Inter", sans-serif;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-
-    .btn {
-      padding: 14px 32px;
-      background: linear-gradient(135deg, var(--accent), #2563eb);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 1em;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-    }
-
-    .btn-delete {
-      background: linear-gradient(135deg, var(--danger), #dc2626);
-      padding: 10px 20px;
-      font-size: 0.9em;
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-    }
-
-    .btn-delete:hover {
-      box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
-    }
-
-    .btn-completar {
-      background: linear-gradient(135deg, var(--success), #059669);
-      padding: 10px 20px;
-      font-size: 0.9em;
-      margin-right: 8px;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    }
-
-    .btn-completar:hover {
-      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
-    }
-
-    .expense-item,
-    .goal-item,
-    .budget-item {
-      background: var(--primary);
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border: 1px solid var(--border);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .expense-item:hover,
-    .goal-item:hover,
-    .budget-item:hover {
-      border-color: rgba(59, 130, 246, 0.3);
-      transform: translateX(4px);
-    }
-
-    .expense-info {
-      flex: 1;
-    }
-
-    .expense-category {
-      display: inline-block;
-      padding: 6px 14px;
-      background: rgba(59, 130, 246, 0.2);
-      color: var(--accent);
-      border-radius: 20px;
-      font-size: 0.85em;
-      font-weight: 600;
-      margin-right: 12px;
-      border: 1px solid rgba(59, 130, 246, 0.3);
-    }
-
-    .expense-amount {
-      font-size: 1.3em;
-      font-weight: 700;
-      color: var(--danger);
-      letter-spacing: -0.02em;
-    }
-
-    .goal-amount {
-      font-size: 1.3em;
-      font-weight: 700;
-      color: var(--success);
-      letter-spacing: -0.02em;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 28px;
-      background: var(--primary);
-      border-radius: 14px;
-      overflow: hidden;
-      margin: 12px 0;
-      border: 1px solid var(--border);
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg,
-          var(--accent) 0%,
-          var(--success) 100%);
-      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: 700;
-      font-size: 0.85em;
-      letter-spacing: 0.02em;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 24px;
-      margin-bottom: 32px;
-    }
-
-    .stat-card {
-      background: linear-gradient(135deg,
-          var(--card-bg) 0%,
-          var(--secondary) 100%);
-      color: white;
-      padding: 32px;
-      border-radius: 16px;
-      box-shadow: 0 4px 24px var(--shadow);
-      border: 1px solid var(--border);
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .stat-card::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 150px;
-      height: 150px;
-      background: radial-gradient(circle,
-          rgba(59, 130, 246, 0.15) 0%,
-          transparent 70%);
-      border-radius: 50%;
-      transform: translate(30%, -30%);
-    }
-
-    .stat-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 32px var(--shadow);
-      border-color: rgba(59, 130, 246, 0.5);
-    }
-
-    .stat-card h3 {
-      font-size: 0.85em;
-      opacity: 0.8;
-      margin-bottom: 12px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      position: relative;
-      z-index: 1;
-    }
-
-    .stat-card .value {
-      font-size: 2.5em;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      position: relative;
-      z-index: 1;
-    }
-
-    .chart-container {
-      margin-top: 24px;
-    }
-
-    .category-bar {
-      margin-bottom: 20px;
-    }
-
-    .category-label {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 8px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      font-size: 0.95em;
-    }
-
-    .bar {
-      height: 36px;
-      background: var(--primary);
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-    }
-
-    .bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--success));
-      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      align-items: center;
-      padding-left: 16px;
-      color: white;
-      font-weight: 600;
-      font-size: 0.9em;
-    }
-
-    .alert {
-      padding: 16px 20px;
-      border-radius: 12px;
-      margin-bottom: 16px;
-      border-left: 4px solid;
-      font-size: 0.95em;
-    }
-
-    .alert-warning {
-      background: rgba(245, 158, 11, 0.1);
-      border-color: var(--warning);
-      color: #fbbf24;
-    }
-
-    .alert-success {
-      background: rgba(16, 185, 129, 0.1);
-      border-color: var(--success);
-      color: #34d399;
-    }
-
-    .tips-list {
-      list-style: none;
-    }
-
-    .tips-list li {
-      padding: 20px;
-      background: var(--primary);
-      border-radius: 12px;
-      margin-bottom: 12px;
-      border-left: 4px solid var(--accent);
-      color: var(--text-secondary);
-      line-height: 1.6;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .tips-list li:hover {
-      background: var(--secondary);
-      border-color: var(--success);
-      transform: translateX(4px);
-    }
-
-    .tips-list li::before {
-      content: "💡 ";
-      margin-right: 12px;
-      font-size: 1.2em;
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(4px);
-      animation: fadeIn 0.3s;
-    }
-
-    .modal-content {
-      background: var(--card-bg);
-      margin: 10% auto;
-      padding: 40px;
-      border-radius: 20px;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-      animation: slideDown 0.3s;
-      border: 1px solid var(--border);
-    }
-
-    @keyframes slideDown {
-      from {
-        transform: translateY(-50px);
-        opacity: 0;
+      :root {
+        --primary: #0f172a;
+        --secondary: #1e293b;
+        --accent: #3b82f6;
+        --accent-hover: #2563eb;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --text-primary: #f8fafc;
+        --text-secondary: #cbd5e1;
+        --text-muted: #64748b;
+        --card-bg: #1e293b;
+        --card-hover: #334155;
+        --border: #334155;
+        --shadow: rgba(0, 0, 0, 0.3);
       }
 
-      to {
-        transform: translateY(0);
-        opacity: 1;
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: url("img/fondoAD.jpg") no-repeat center center fixed;
+        background-size: cover;
+        min-height: 100vh;
+        padding: 0;
+        color: var(--text-primary);
+        position: relative;
       }
-    }
 
-    .modal-header {
-      color: var(--text-primary);
-      margin-bottom: 24px;
-      font-size: 2em;
-      text-align: center;
-      font-weight: 700;
-    }
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(
+            circle at 20% 30%,
+            rgba(59, 130, 246, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 70%,
+            rgba(16, 185, 129, 0.1) 0%,
+            transparent 50%
+          );
+        pointer-events: none;
+        z-index: 0;
+      }
 
-    .modal-buttons {
-      display: flex;
-      gap: 12px;
-      margin-top: 24px;
-    }
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0;
+        position: relative;
+        z-index: 1;
+      }
 
-    .modal-buttons button {
-      flex: 1;
-    }
-
-    @media (max-width: 768px) {
       .header {
-        padding: 20px 24px;
+        background: rgba(30, 41, 59, 0.8);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border);
+        padding: 24px 40px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .header h1 {
+        color: var(--text-primary);
+        font-size: 1.75em;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .header-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      .btn-logros {
+        padding: 12px 24px;
+        background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.95em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      }
+
+      .btn-logros:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+      }
+
+      .btn-menu {
+        padding: 12px 24px;
+        background: linear-gradient(135deg, var(--secondary) 0%, #334155 100%);
+        color: var(--text-secondary);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        font-size: 0.95em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-decoration: none;
+      }
+
+      .btn-menu:hover {
+        background: var(--card-hover);
+        color: var(--text-primary);
+        border-color: var(--accent);
+      }
+
+      .tabs {
+        display: flex;
+        gap: 8px;
+        margin-top: 24px;
+        flex-wrap: wrap;
+        background: rgba(15, 23, 42, 0.5);
+        padding: 6px;
+        border-radius: 12px;
+      }
+
+      .tab {
+        padding: 10px 20px;
+        background: transparent;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9em;
+        font-weight: 500;
+        color: var(--text-secondary);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+      }
+
+      .tab:hover {
+        background: rgba(59, 130, 246, 0.1);
+        color: var(--text-primary);
+      }
+
+      .tab.active {
+        background: var(--accent);
+        color: white;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
       }
 
       .content-section {
-        padding: 24px 20px;
+        display: none;
+        padding: 40px;
+        animation: fadeIn 0.4s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .content-section.active {
+        display: block;
       }
 
       .card {
-        padding: 24px 20px;
+        background: var(--card-bg);
+        padding: 32px;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px var(--shadow);
+        margin-bottom: 24px;
+        border: 1px solid var(--border);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .card:hover {
+        border-color: rgba(59, 130, 246, 0.3);
+        box-shadow: 0 8px 32px var(--shadow);
+      }
+
+      .card h2 {
+        color: var(--text-primary);
+        margin-bottom: 24px;
+        font-size: 1.5em;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .card h2::before {
+        content: "";
+        width: 4px;
+        height: 24px;
+        background: linear-gradient(180deg, var(--accent), var(--success));
+        border-radius: 2px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--text-secondary);
+        font-weight: 500;
+        font-size: 0.9em;
+        letter-spacing: 0.01em;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 14px 16px;
+        background: var(--primary);
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        font-size: 1em;
+        color: var(--text-primary);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: "Inter", sans-serif;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+
+      .btn {
+        padding: 14px 32px;
+        background: linear-gradient(135deg, var(--accent), #2563eb);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn-delete {
+        background: linear-gradient(135deg, var(--danger), #dc2626);
+        padding: 10px 20px;
+        font-size: 0.9em;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+      }
+
+      .btn-delete:hover {
+        box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+      }
+
+      .btn-completar {
+        background: linear-gradient(135deg, var(--success), #059669);
+        padding: 10px 20px;
+        font-size: 0.9em;
+        margin-right: 8px;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      }
+
+      .btn-completar:hover {
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+      }
+
+      .expense-item,
+      .goal-item,
+      .budget-item {
+        background: var(--primary);
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid var(--border);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .expense-item:hover,
+      .goal-item:hover,
+      .budget-item:hover {
+        border-color: rgba(59, 130, 246, 0.3);
+        transform: translateX(4px);
+      }
+
+      .expense-info {
+        flex: 1;
+      }
+
+      .expense-category {
+        display: inline-block;
+        padding: 6px 14px;
+        background: rgba(59, 130, 246, 0.2);
+        color: var(--accent);
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: 600;
+        margin-right: 12px;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+
+      .expense-amount {
+        font-size: 1.3em;
+        font-weight: 700;
+        color: var(--danger);
+        letter-spacing: -0.02em;
+      }
+
+      .goal-amount {
+        font-size: 1.3em;
+        font-weight: 700;
+        color: var(--success);
+        letter-spacing: -0.02em;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 28px;
+        background: var(--primary);
+        border-radius: 14px;
+        overflow: hidden;
+        margin: 12px 0;
+        border: 1px solid var(--border);
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          var(--accent) 0%,
+          var(--success) 100%
+        );
+        transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 0.85em;
+        letter-spacing: 0.02em;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+      }
+
+      .stat-card {
+        background: linear-gradient(
+          135deg,
+          var(--card-bg) 0%,
+          var(--secondary) 100%
+        );
+        color: white;
+        padding: 32px;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px var(--shadow);
+        border: 1px solid var(--border);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .stat-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(
+          circle,
+          rgba(59, 130, 246, 0.15) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+        transform: translate(30%, -30%);
+      }
+
+      .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 32px var(--shadow);
+        border-color: rgba(59, 130, 246, 0.5);
+      }
+
+      .stat-card h3 {
+        font-size: 0.85em;
+        opacity: 0.8;
+        margin-bottom: 12px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        position: relative;
+        z-index: 1;
       }
 
       .stat-card .value {
-        font-size: 2em;
+        font-size: 2.5em;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        position: relative;
+        z-index: 1;
       }
-    }
-  </style>
-</head>
 
-<body>
-  <div class="container">
-    <div class="header">
-      <div class="header-actions">
-        <h1>Administrar Finanzas</h1>
-        <button class="btn back-btn" onclick="backToMenu()">
-          ← Volver al Menú
-        </button>
-        <a href="objetivos.html" class="btn-logros" target="_blank">
-          Ver Mis Logros
-        </a>
-      </div>
-      <div class="tabs">
-        <button class="tab active" onclick="showTab('gastos')">
-          Registro de Gastos
-        </button>
-        <button class="tab" onclick="showTab('presupuesto')">
-          Presupuesto Mensual
-        </button>
-        <button class="tab" onclick="showTab('objetivos')">
-          Objetivos de Ahorro
-        </button>
-        <button class="tab" onclick="showTab('analisis')">Análisis</button>
-        <button class="tab" onclick="showTab('consejos')">Consejos</button>
-      </div>
-    </div>
+      .chart-container {
+        margin-top: 24px;
+      }
 
-    <!-- Registro de Gastos -->
-    <div id="gastos" class="content-section active">
-      <div class="card">
-        <h2>Registrar Nuevo Gasto</h2>
-        <div class="form-group">
-          <label>Descripción:</label>
-          <input type="text" id="gastoDesc" placeholder="Ej: Compra de supermercado" />
-        </div>
-        <div class="form-group">
-          <label>Monto:</label>
-          <input type="number" id="gastoMonto" placeholder="0.00" />
-        </div>
-        <div class="form-group">
-          <label>Categoría:</label>
-          <select id="gastoCategoria">
-            <option value="Comida">🍔 Comida</option>
-            <option value="Transporte">🚗 Transporte</option>
-            <option value="Entretenimiento">🎮 Entretenimiento</option>
-            <option value="Servicios">💡 Servicios</option>
-            <option value="Salud">💊 Salud</option>
-            <option value="Educación">📚 Educación</option>
-            <option value="Ropa">👕 Ropa</option>
-            <option value="Otros">📦 Otros</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Fecha:</label>
-          <input type="date" id="gastoFecha" />
-        </div>
-        <button class="btn" onclick="agregarGasto()">Agregar Gasto</button>
-      </div>
+      .category-bar {
+        margin-bottom: 20px;
+      }
 
-      <div class="card">
-        <h2>Historial de Gastos</h2>
-        <div id="listaGastos"></div>
-      </a>
-    </div>
+      .category-label {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        font-size: 0.95em;
+      }
 
-    <!-- Presupuesto Mensual -->
-    <div id="presupuesto" class="content-section">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <h3>Presupuesto Total</h3>
-          <div class="value" id="presupuestoTotal">$0</div>
-        </div>
-        <div class="stat-card">
-          <h3>Gastado Este Mes</h3>
-          <div class="value" id="gastadoMes">$0</div>
-        </div>
-        <div class="stat-card">
-          <h3>Disponible</h3>
-          <div class="value" id="disponible">$0</div>
-        </div>
-      </div>
+      .bar {
+        height: 36px;
+        background: var(--primary);
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
 
-      <div class="card">
-        <h2>Configurar Presupuesto por Categoría</h2>
-        <div class="form-group">
-          <label>Categoría:</label>
-          <select id="presupuestoCategoria">
-            <option value="Comida">🍔 Comida</option>
-            <option value="Transporte">🚗 Transporte</option>
-            <option value="Entretenimiento">🎮 Entretenimiento</option>
-            <option value="Servicios">💡 Servicios</option>
-            <option value="Salud">💊 Salud</option>
-            <option value="Educación">📚 Educación</option>
-            <option value="Ropa">👕 Ropa</option>
-            <option value="Otros">📦 Otros</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Límite Mensual:</label>
-          <input type="number" id="presupuestoLimite" placeholder="0.00" />
-        </div>
-        <button class="btn" onclick="establecerPresupuesto()">
-          Establecer Presupuesto
-        </button>
-      </div>
+      .bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent), var(--success));
+        transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        padding-left: 16px;
+        color: white;
+        font-weight: 600;
+        font-size: 0.9em;
+      }
 
-      <div class="card">
-        <h2>Estado del Presupuesto</h2>
-        <div id="estadoPresupuesto"></div>
-      </a>
-    </div>
+      .alert {
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin-bottom: 16px;
+        border-left: 4px solid;
+        font-size: 0.95em;
+      }
 
-    <!-- Objetivos de Ahorro -->
-    <div id="objetivos" class="content-section">
-      <div class="card">
-        <h2>Crear Nuevo Objetivo</h2>
-        <div class="form-group">
-          <label>Nombre del Objetivo:</label>
-          <input type="text" id="objetivoNombre" placeholder="Ej: Comprar laptop" />
-        </div>
-        <div class="form-group">
-          <label>Monto Objetivo:</label>
-          <input type="number" id="objetivoMonto" placeholder="0.00" />
-        </div>
-        <div class="form-group">
-          <label>Monto Actual Ahorrado:</label>
-          <input type="number" id="objetivoActual" placeholder="0.00" />
-        </div>
-        <div class="form-group">
-          <label>Fecha Límite:</label>
-          <input type="date" id="objetivoFecha" />
-        </div>
-        <div class="form-group">
-          <label>Prioridad:</label>
-          <select id="objetivoPrioridad">
-            <option value="Alta">🔴 Alta</option>
-            <option value="Media">🟡 Media</option>
-            <option value="Baja">🟢 Baja</option>
-          </select>
-        </div>
-        <button class="btn" onclick="agregarObjetivo()">
-          Crear Objetivo
-        </button>
-      </div>
+      .alert-warning {
+        background: rgba(245, 158, 11, 0.1);
+        border-color: var(--warning);
+        color: #fbbf24;
+      }
 
-      <div class="card">
-        <h2>Mis Objetivos de Ahorro</h2>
-        <div id="listaObjetivos"></div>
-      </div>
-    </div>
+      .alert-success {
+        background: rgba(16, 185, 129, 0.1);
+        border-color: var(--success);
+        color: #34d399;
+      }
 
-    <!-- Análisis -->
-    <div id="analisis" class="content-section">
-      <div class="card">
-        <h2>Análisis de Gastos por Categoría</h2>
-        <div class="chart-container" id="chartGastos"></div>
-      </div>
+      .tips-list {
+        list-style: none;
+      }
 
-      <div class="card">
-        <h2>Viabilidad de Objetivos</h2>
-        <div id="viabilidadObjetivos"></div>
-      </div>
+      .tips-list li {
+        padding: 20px;
+        background: var(--primary);
+        border-radius: 12px;
+        margin-bottom: 12px;
+        border-left: 4px solid var(--accent);
+        color: var(--text-secondary);
+        line-height: 1.6;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
 
-      <div class="card">
-        <h2>Resumen Financiero</h2>
-        <div class="form-group">
-          <label>Ingreso Mensual:</label>
-          <input type="number" id="ingresoMensual" placeholder="0.00" />
-        </div>
-        <div class="form-group">
-          <label>Gastos Fijos:</label>
-          <input type="number" id="gastosFijos" placeholder="0.00" />
-        </div>
-        <button class="btn" onclick="calcularViabilidad()">Analizar</button>
-        <div id="resultadoAnalisis" style="margin-top: 20px"></div>
-      </div>
-    </div>
+      .tips-list li:hover {
+        background: var(--secondary);
+        border-color: var(--success);
+        transform: translateX(4px);
+      }
 
-    <!-- Consejos -->
-    <div id="consejos" class="content-section">
-      <div class="card">
-        <h2>Consejos Personalizados</h2>
-        <ul class="tips-list" id="listaConsejos">
-          <li>
-            Registra todos tus gastos diariamente para tener un mejor control.
-          </li>
-          <li>Establece un presupuesto para cada categoría y respétalo.</li>
-          <li>Intenta ahorrar al menos el 20% de tus ingresos mensuales.</li>
-          <li>Revisa tus suscripciones y cancela las que no uses.</li>
-          <li>
-            Usa el método 50/30/20: 50% necesidades, 30% deseos, 20% ahorros.
-          </li>
-        </ul>      
-      </div>
-    </div>
-  </div>
+      .tips-list li::before {
+        content: "💡 ";
+        margin-right: 12px;
+        font-size: 1.2em;
+      }
 
-  <!-- Modal de completar objetivo -->
-  <div id="modalCompletar" class="modal">
-    <div class="modal-content">
-      <h2 class="modal-header">🎉 ¡Felicidades!</h2>
-      <p style="text-align: center; color: #666; margin-bottom: 20px">
-        ¿Has completado este objetivo?
-      </p>
-      <div class="form-group">
-        <label>Agrega una nota sobre este logro (opcional):</label>
-        <input type="text" id="notaLogro" placeholder="Ej: ¡Finalmente lo logré después de mucho esfuerzo!" />
-      </div>
-      <div class="modal-buttons">
-        <button class="btn btn-delete" onclick="cerrarModal()">
-          Cancelar
-        </button>
-        <button class="btn btn-completar" onclick="confirmarCompletado()">
-          Marcar como Completado
-        </button>
-      </div>
-    </div>
-  </div>
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+        animation: fadeIn 0.3s;
+      }
 
-  <script>
-    // Datos en memoria
-    let gastos = [];
-    let presupuestos = {};
-    let objetivos = [];
-    let objetivoACompletar = null;
+      .modal-content {
+        background: var(--card-bg);
+        margin: 10% auto;
+        padding: 40px;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        animation: slideDown 0.3s;
+        border: 1px solid var(--border);
+      }
 
-    // Cargar datos al iniciar
-    async function cargarDatos() {
-      try {
-        // Cargar gastos
-        const resultGastos = await window.storage.get("finanzas:gastos");
-        if (resultGastos) {
-          gastos = JSON.parse(resultGastos.value);
+      @keyframes slideDown {
+        from {
+          transform: translateY(-50px);
+          opacity: 0;
         }
 
-        // Cargar presupuestos
-        const resultPresupuestos = await window.storage.get(
-          "finanzas:presupuestos"
-        );
-        if (resultPresupuestos) {
-          presupuestos = JSON.parse(resultPresupuestos.value);
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .modal-header {
+        color: var(--text-primary);
+        margin-bottom: 24px;
+        font-size: 2em;
+        text-align: center;
+        font-weight: 700;
+      }
+
+      .modal-buttons {
+        display: flex;
+        gap: 12px;
+        margin-top: 24px;
+      }
+
+      .modal-buttons button {
+        flex: 1;
+      }
+
+      @media (max-width: 768px) {
+        .header {
+          padding: 20px 24px;
         }
 
-        // Cargar objetivos
-        const resultObjetivos =
-          await window.storage.get("finanzas:objetivos");
-        if (resultObjetivos) {
-          objetivos = JSON.parse(resultObjetivos.value);
+        .content-section {
+          padding: 24px 20px;
         }
+
+        .card {
+          padding: 24px 20px;
+        }
+
+        .stat-card .value {
+          font-size: 2em;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="header-actions">
+          <h1>Administrar Finanzas</h1>
+          <a href="/dashboard" class="btn back-btn"> ← Volver al Menú </a>
+          <a href="/objetivos" class="btn-logros" target="_blank">
+            Ver Mis Logros
+          </a>
+        </div>
+        <div class="tabs">
+          <button class="tab active" onclick="showTab('gastos')">
+            Registro de Gastos
+          </button>
+          <button class="tab" onclick="showTab('presupuesto')">
+            Presupuesto Mensual
+          </button>
+          <button class="tab" onclick="showTab('objetivos')">
+            Objetivos de Ahorro
+          </button>
+          <button class="tab" onclick="showTab('analisis')">Análisis</button>
+          <button class="tab" onclick="showTab('consejos')">Consejos</button>
+        </div>
+      </div>
+
+      <!-- Registro de Gastos -->
+      <div id="gastos" class="content-section active">
+        <div class="card">
+          <h2>Registrar Nuevo Gasto</h2>
+          <div class="form-group">
+            <label>Descripción:</label>
+            <input
+              type="text"
+              id="gastoDesc"
+              placeholder="Ej: Compra de supermercado"
+            />
+          </div>
+          <div class="form-group">
+            <label>Monto:</label>
+            <input type="number" id="gastoMonto" placeholder="0.00" />
+          </div>
+          <div class="form-group">
+            <label>Categoría:</label>
+            <select id="gastoCategoria">
+              <option value="Comida">🍔 Comida</option>
+              <option value="Transporte">🚗 Transporte</option>
+              <option value="Entretenimiento">🎮 Entretenimiento</option>
+              <option value="Servicios">💡 Servicios</option>
+              <option value="Salud">💊 Salud</option>
+              <option value="Educación">📚 Educación</option>
+              <option value="Ropa">👕 Ropa</option>
+              <option value="Otros">📦 Otros</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Fecha:</label>
+            <input type="date" id="gastoFecha" />
+          </div>
+          <button class="btn" onclick="agregarGasto()">Agregar Gasto</button>
+        </div>
+
+        <div class="card">
+          <h2>Historial de Gastos</h2>
+          <div id="listaGastos"></div>
+        </div>
+      </div>
+
+      <!-- Presupuesto Mensual -->
+      <div id="presupuesto" class="content-section">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h3>Presupuesto Total</h3>
+            <div class="value" id="presupuestoTotal">$0</div>
+          </div>
+          <div class="stat-card">
+            <h3>Gastado Este Mes</h3>
+            <div class="value" id="gastadoMes">$0</div>
+          </div>
+          <div class="stat-card">
+            <h3>Disponible</h3>
+            <div class="value" id="disponible">$0</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Configurar Presupuesto por Categoría</h2>
+          <div class="form-group">
+            <label>Categoría:</label>
+            <select id="presupuestoCategoria">
+              <option value="Comida">🍔 Comida</option>
+              <option value="Transporte">🚗 Transporte</option>
+              <option value="Entretenimiento">🎮 Entretenimiento</option>
+              <option value="Servicios">💡 Servicios</option>
+              <option value="Salud">💊 Salud</option>
+              <option value="Educación">📚 Educación</option>
+              <option value="Ropa">👕 Ropa</option>
+              <option value="Otros">📦 Otros</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Límite Mensual:</label>
+            <input type="number" id="presupuestoLimite" placeholder="0.00" />
+          </div>
+          <button class="btn" onclick="establecerPresupuesto()">
+            Establecer Presupuesto
+          </button>
+        </div>
+
+        <div class="card">
+          <h2>Estado del Presupuesto</h2>
+          <div id="estadoPresupuesto"></div>
+        </div>
+      </div>
+
+      <!-- Objetivos de Ahorro -->
+      <div id="objetivos" class="content-section">
+        <div class="card">
+          <h2>Crear Nuevo Objetivo</h2>
+          <div class="form-group">
+            <label>Nombre del Objetivo:</label>
+            <input
+              type="text"
+              id="objetivoNombre"
+              placeholder="Ej: Comprar laptop"
+            />
+          </div>
+          <div class="form-group">
+            <label>Monto Objetivo:</label>
+            <input type="number" id="objetivoMonto" placeholder="0.00" />
+          </div>
+          <div class="form-group">
+            <label>Monto Actual Ahorrado:</label>
+            <input type="number" id="objetivoActual" placeholder="0.00" />
+          </div>
+          <div class="form-group">
+            <label>Fecha Límite:</label>
+            <input type="date" id="objetivoFecha" />
+          </div>
+          <div class="form-group">
+            <label>Prioridad:</label>
+            <select id="objetivoPrioridad">
+              <option value="Alta">🔴 Alta</option>
+              <option value="Media">🟡 Media</option>
+              <option value="Baja">🟢 Baja</option>
+            </select>
+          </div>
+          <button class="btn" onclick="agregarObjetivo()">
+            Crear Objetivo
+          </button>
+        </div>
+
+        <div class="card">
+          <h2>Mis Objetivos de Ahorro</h2>
+          <div id="listaObjetivos"></div>
+        </div>
+      </div>
+
+      <!-- Análisis -->
+      <div id="analisis" class="content-section">
+        <div class="card">
+          <h2>Análisis de Gastos por Categoría</h2>
+          <div class="chart-container" id="chartGastos"></div>
+        </div>
+
+        <div class="card">
+          <h2>Viabilidad de Objetivos</h2>
+          <div id="viabilidadObjetivos"></div>
+        </div>
+
+        <div class="card">
+          <h2>Resumen Financiero</h2>
+          <div class="form-group">
+            <label>Ingreso Mensual:</label>
+            <input type="number" id="ingresoMensual" placeholder="0.00" />
+          </div>
+          <div class="form-group">
+            <label>Gastos Fijos:</label>
+            <input type="number" id="gastosFijos" placeholder="0.00" />
+          </div>
+          <button class="btn" onclick="calcularViabilidad()">Analizar</button>
+          <div id="resultadoAnalisis" style="margin-top: 20px"></div>
+        </div>
+      </div>
+
+      <!-- Consejos -->
+      <div id="consejos" class="content-section">
+        <div class="card">
+          <h2>Consejos Personalizados</h2>
+          <ul class="tips-list" id="listaConsejos">
+            <li>
+              Registra todos tus gastos diariamente para tener un mejor control.
+            </li>
+            <li>Establece un presupuesto para cada categoría y respétalo.</li>
+            <li>Intenta ahorrar al menos el 20% de tus ingresos mensuales.</li>
+            <li>Revisa tus suscripciones y cancela las que no uses.</li>
+            <li>
+              Usa el método 50/30/20: 50% necesidades, 30% deseos, 20% ahorros.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de completar objetivo -->
+    <div id="modalCompletar" class="modal">
+      <div class="modal-content">
+        <h2 class="modal-header">🎉 ¡Felicidades!</h2>
+        <p style="text-align: center; color: #666; margin-bottom: 20px">
+          ¿Has completado este objetivo?
+        </p>
+        <div class="form-group">
+          <label>Agrega una nota sobre este logro (opcional):</label>
+          <input
+            type="text"
+            id="notaLogro"
+            placeholder="Ej: ¡Finalmente lo logré después de mucho esfuerzo!"
+          />
+        </div>
+        <div class="modal-buttons">
+          <button class="btn btn-delete" onclick="cerrarModal()">
+            Cancelar
+          </button>
+          <button class="btn btn-completar" onclick="confirmarCompletado()">
+            Marcar como Completado
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // --- Implementación de Storage para el navegador ---
+      if (!window.storage) {
+        window.storage = {
+          get: (key) => {
+            const value = localStorage.getItem(key);
+            return Promise.resolve(value ? { value } : null);
+          },
+          set: (key, value) => {
+            localStorage.setItem(key, value);
+            return Promise.resolve();
+          },
+        };
+      }
+      if (!window.appStorage) {
+        // Asumimos que appStorage funciona igual que storage
+        window.appStorage = window.storage;
+      }
+      // --- Fin de la implementación de Storage ---
+
+      // Datos en memoria
+      let gastos = [];
+      let presupuestos = {};
+      let objetivos = [];
+      let objetivoACompletar = null;
+
+      // Cargar datos al iniciar
+      async function cargarDatos() {
+        try {
+          // Cargar gastos
+          const resultGastos = await window.storage.get("finanzas:gastos");
+          if (resultGastos) {
+            gastos = JSON.parse(resultGastos.value);
+          }
+
+          // Cargar presupuestos
+          const resultPresupuestos = await window.storage.get(
+            "finanzas:presupuestos"
+          );
+          if (resultPresupuestos) {
+            presupuestos = JSON.parse(resultPresupuestos.value);
+          }
+
+          // Cargar objetivos
+          const resultObjetivos =
+            await window.storage.get("finanzas:objetivos");
+          if (resultObjetivos) {
+            objetivos = JSON.parse(resultObjetivos.value);
+          }
+
+          mostrarGastos();
+          mostrarObjetivos();
+          actualizarEstadoPresupuesto();
+        } catch (error) {
+          console.log("Primera vez usando la app, iniciando con datos vacíos");
+        }
+      }
+
+      // Guardar datos
+      async function guardarGastos() {
+        try {
+          await window.storage.set("finanzas:gastos", JSON.stringify(gastos));
+        } catch (error) {
+          console.error("Error guardando gastos:", error);
+        }
+      }
+
+      async function guardarPresupuestos() {
+        try {
+          await window.storage.set(
+            "finanzas:presupuestos",
+            JSON.stringify(presupuestos)
+          );
+        } catch (error) {
+          console.error("Error guardando presupuestos:", error);
+        }
+      }
+
+      async function guardarObjetivos() {
+        try {
+          await window.storage.set(
+            "finanzas:objetivos",
+            JSON.stringify(objetivos)
+          );
+        } catch (error) {
+          console.error("Error guardando objetivos:", error);
+        }
+      }
+
+      // Inicializar fecha actual
+      document.getElementById("gastoFecha").valueAsDate = new Date();
+
+      // Funciones para tabs
+      function showTab(tabName) {
+        document.querySelectorAll(".content-section").forEach((section) => {
+          section.classList.remove("active");
+        });
+        document.querySelectorAll(".tab").forEach((tab) => {
+          tab.classList.remove("active");
+        });
+        document.getElementById(tabName).classList.add("active");
+        event.target.classList.add("active");
+
+        if (tabName === "presupuesto") {
+          actualizarEstadoPresupuesto();
+        } else if (tabName === "analisis") {
+          actualizarAnalisis();
+        } else if (tabName === "consejos") {
+          generarConsejos();
+        }
+      }
+
+      // Funciones de Gastos
+      async function agregarGasto() {
+        const desc = document.getElementById("gastoDesc").value;
+        const monto = parseFloat(document.getElementById("gastoMonto").value);
+        const categoria = document.getElementById("gastoCategoria").value;
+        const fecha = document.getElementById("gastoFecha").value;
+
+        if (!desc || !monto || !fecha) {
+          alert("Por favor completa todos los campos");
+          return;
+        }
+
+        const gasto = { desc, monto, categoria, fecha, id: Date.now() };
+        gastos.push(gasto);
+        await guardarGastos();
+
+        document.getElementById("gastoDesc").value = "";
+        document.getElementById("gastoMonto").value = "";
 
         mostrarGastos();
-        mostrarObjetivos();
-        actualizarEstadoPresupuesto();
-      } catch (error) {
-        console.log("Primera vez usando la app, iniciando con datos vacíos");
-      }
-    }
-
-    // Guardar datos
-    async function guardarGastos() {
-      try {
-        await window.storage.set("finanzas:gastos", JSON.stringify(gastos));
-      } catch (error) {
-        console.error("Error guardando gastos:", error);
-      }
-    }
-
-    async function guardarPresupuestos() {
-      try {
-        await window.storage.set(
-          "finanzas:presupuestos",
-          JSON.stringify(presupuestos)
-        );
-      } catch (error) {
-        console.error("Error guardando presupuestos:", error);
-      }
-    }
-
-    async function guardarObjetivos() {
-      try {
-        await window.storage.set(
-          "finanzas:objetivos",
-          JSON.stringify(objetivos)
-        );
-      } catch (error) {
-        console.error("Error guardando objetivos:", error);
-      }
-    }
-
-    // Inicializar fecha actual
-    document.getElementById("gastoFecha").valueAsDate = new Date();
-
-    // Funciones para tabs
-    function showTab(tabName) {
-      document.querySelectorAll(".content-section").forEach((section) => {
-        section.classList.remove("active");
-      });
-      document.querySelectorAll(".tab").forEach((tab) => {
-        tab.classList.remove("active");
-      });
-      document.getElementById(tabName).classList.add("active");
-      event.target.classList.add("active");
-
-      if (tabName === "presupuesto") {
-        actualizarEstadoPresupuesto();
-      } else if (tabName === "analisis") {
-        actualizarAnalisis();
-      } else if (tabName === "consejos") {
-        generarConsejos();
-      }
-    }
-
-    // Funciones de Gastos
-    async function agregarGasto() {
-      const desc = document.getElementById("gastoDesc").value;
-      const monto = parseFloat(document.getElementById("gastoMonto").value);
-      const categoria = document.getElementById("gastoCategoria").value;
-      const fecha = document.getElementById("gastoFecha").value;
-
-      if (!desc || !monto || !fecha) {
-        alert("Por favor completa todos los campos");
-        return;
+        verificarPresupuesto(categoria, monto);
       }
 
-      const gasto = { desc, monto, categoria, fecha, id: Date.now() };
-      gastos.push(gasto);
-      await guardarGastos();
+      function mostrarGastos() {
+        const lista = document.getElementById("listaGastos");
+        if (gastos.length === 0) {
+          lista.innerHTML =
+            '<p style="color: #999;">No hay gastos registrados</p>';
+          return;
+        }
 
-      document.getElementById("gastoDesc").value = "";
-      document.getElementById("gastoMonto").value = "";
-
-      mostrarGastos();
-      verificarPresupuesto(categoria, monto);
-    }
-
-    function mostrarGastos() {
-      const lista = document.getElementById("listaGastos");
-      if (gastos.length === 0) {
-        lista.innerHTML =
-          '<p style="color: #999;">No hay gastos registrados</p>';
-        return;
-      }
-
-      lista.innerHTML = gastos
-        .map(
-          (gasto) => `
+        lista.innerHTML = gastos
+          .map(
+            (gasto) => `
                 <div class="expense-item">
                     <div class="expense-info">
                         <span class="expense-category">${gasto.categoria}</span>
@@ -961,74 +999,74 @@
                     </div>
                 </div>
             `
-        )
-        .join("");
-    }
-
-    async function eliminarGasto(id) {
-      gastos = gastos.filter((g) => g.id !== id);
-      await guardarGastos();
-      mostrarGastos();
-      actualizarEstadoPresupuesto();
-    }
-
-    // Funciones de Presupuesto
-    async function establecerPresupuesto() {
-      const categoria = document.getElementById("presupuestoCategoria").value;
-      const limite = parseFloat(
-        document.getElementById("presupuestoLimite").value
-      );
-
-      if (!limite) {
-        alert("Ingresa un monto válido");
-        return;
+          )
+          .join("");
       }
 
-      presupuestos[categoria] = limite;
-      await guardarPresupuestos();
-      document.getElementById("presupuestoLimite").value = "";
-      actualizarEstadoPresupuesto();
-    }
+      async function eliminarGasto(id) {
+        gastos = gastos.filter((g) => g.id !== id);
+        await guardarGastos();
+        mostrarGastos();
+        actualizarEstadoPresupuesto();
+      }
 
-    function actualizarEstadoPresupuesto() {
-      const mesActual = new Date().getMonth();
-      const añoActual = new Date().getFullYear();
-
-      const gastosMes = gastos.filter((g) => {
-        const fecha = new Date(g.fecha);
-        return (
-          fecha.getMonth() === mesActual && fecha.getFullYear() === añoActual
+      // Funciones de Presupuesto
+      async function establecerPresupuesto() {
+        const categoria = document.getElementById("presupuestoCategoria").value;
+        const limite = parseFloat(
+          document.getElementById("presupuestoLimite").value
         );
-      });
 
-      const totalGastado = gastosMes.reduce((sum, g) => sum + g.monto, 0);
-      const totalPresupuesto = Object.values(presupuestos).reduce(
-        (sum, p) => sum + p,
-        0
-      );
+        if (!limite) {
+          alert("Ingresa un monto válido");
+          return;
+        }
 
-      document.getElementById("presupuestoTotal").textContent =
-        `$${totalPresupuesto.toFixed(2)}`;
-      document.getElementById("gastadoMes").textContent =
-        `$${totalGastado.toFixed(2)}`;
-      document.getElementById("disponible").textContent =
-        `$${(totalPresupuesto - totalGastado).toFixed(2)}`;
-
-      const container = document.getElementById("estadoPresupuesto");
-      if (Object.keys(presupuestos).length === 0) {
-        container.innerHTML =
-          '<p style="color: #999;">No hay presupuestos configurados</p>';
-        return;
+        presupuestos[categoria] = limite;
+        await guardarPresupuestos();
+        document.getElementById("presupuestoLimite").value = "";
+        actualizarEstadoPresupuesto();
       }
 
-      container.innerHTML = Object.entries(presupuestos)
-        .map(([cat, limite]) => {
-          const gastado = gastosMes
-            .filter((g) => g.categoria === cat)
-            .reduce((sum, g) => sum + g.monto, 0);
-          const porcentaje = (gastado / limite) * 100;
+      function actualizarEstadoPresupuesto() {
+        const mesActual = new Date().getMonth();
+        const añoActual = new Date().getFullYear();
 
-          return `
+        const gastosMes = gastos.filter((g) => {
+          const fecha = new Date(g.fecha);
+          return (
+            fecha.getMonth() === mesActual && fecha.getFullYear() === añoActual
+          );
+        });
+
+        const totalGastado = gastosMes.reduce((sum, g) => sum + g.monto, 0);
+        const totalPresupuesto = Object.values(presupuestos).reduce(
+          (sum, p) => sum + p,
+          0
+        );
+
+        document.getElementById("presupuestoTotal").textContent =
+          `$${totalPresupuesto.toFixed(2)}`;
+        document.getElementById("gastadoMes").textContent =
+          `$${totalGastado.toFixed(2)}`;
+        document.getElementById("disponible").textContent =
+          `$${(totalPresupuesto - totalGastado).toFixed(2)}`;
+
+        const container = document.getElementById("estadoPresupuesto");
+        if (Object.keys(presupuestos).length === 0) {
+          container.innerHTML =
+            '<p style="color: #999;">No hay presupuestos configurados</p>';
+          return;
+        }
+
+        container.innerHTML = Object.entries(presupuestos)
+          .map(([cat, limite]) => {
+            const gastado = gastosMes
+              .filter((g) => g.categoria === cat)
+              .reduce((sum, g) => sum + g.monto, 0);
+            const porcentaje = (gastado / limite) * 100;
+
+            return `
                     <div class="budget-item">
                         <div style="flex: 1;">
                             <strong>${cat}</strong>
@@ -1045,88 +1083,88 @@
                     </div>
                     ${porcentaje > 90 ? `<div class="alert alert-warning" style="margin-top: 10px;">⚠️ Te estás acercando al límite en ${cat}</div>` : ""}
                 `;
-        })
-        .join("");
-    }
+          })
+          .join("");
+      }
 
-    function verificarPresupuesto(categoria, monto) {
-      if (presupuestos[categoria]) {
-        const mesActual = new Date().getMonth();
-        const añoActual = new Date().getFullYear();
-        const gastosCat = gastos.filter((g) => {
-          const fecha = new Date(g.fecha);
-          return (
-            g.categoria === categoria &&
-            fecha.getMonth() === mesActual &&
-            fecha.getFullYear() === añoActual
-          );
-        });
-        const totalGastado = gastosCat.reduce((sum, g) => sum + g.monto, 0);
+      function verificarPresupuesto(categoria, monto) {
+        if (presupuestos[categoria]) {
+          const mesActual = new Date().getMonth();
+          const añoActual = new Date().getFullYear();
+          const gastosCat = gastos.filter((g) => {
+            const fecha = new Date(g.fecha);
+            return (
+              g.categoria === categoria &&
+              fecha.getMonth() === mesActual &&
+              fecha.getFullYear() === añoActual
+            );
+          });
+          const totalGastado = gastosCat.reduce((sum, g) => sum + g.monto, 0);
 
-        if (totalGastado > presupuestos[categoria] * 0.9) {
-          alert(
-            `⚠️ Alerta: Has gastado el ${((totalGastado / presupuestos[categoria]) * 100).toFixed(0)}% de tu presupuesto en ${categoria}`
-          );
+          if (totalGastado > presupuestos[categoria] * 0.9) {
+            alert(
+              `⚠️ Alerta: Has gastado el ${((totalGastado / presupuestos[categoria]) * 100).toFixed(0)}% de tu presupuesto en ${categoria}`
+            );
+          }
         }
       }
-    }
 
-    // Funciones de Objetivos
-    async function agregarObjetivo() {
-      const nombre = document.getElementById("objetivoNombre").value;
-      const monto = parseFloat(
-        document.getElementById("objetivoMonto").value
-      );
-      const actual = parseFloat(
-        document.getElementById("objetivoActual").value
-      );
-      const fecha = document.getElementById("objetivoFecha").value;
-      const prioridad = document.getElementById("objetivoPrioridad").value;
+      // Funciones de Objetivos
+      async function agregarObjetivo() {
+        const nombre = document.getElementById("objetivoNombre").value;
+        const monto = parseFloat(
+          document.getElementById("objetivoMonto").value
+        );
+        const actual = parseFloat(
+          document.getElementById("objetivoActual").value
+        );
+        const fecha = document.getElementById("objetivoFecha").value;
+        const prioridad = document.getElementById("objetivoPrioridad").value;
 
-      if (!nombre || !monto || !fecha) {
-        alert("Por favor completa todos los campos");
-        return;
+        if (!nombre || !monto || !fecha) {
+          alert("Por favor completa todos los campos");
+          return;
+        }
+
+        const objetivo = {
+          nombre,
+          monto,
+          actual: actual || 0,
+          fecha,
+          prioridad,
+          id: Date.now(),
+          fechaInicio: new Date().toISOString().split("T")[0],
+        };
+        objetivos.push(objetivo);
+        await guardarObjetivos();
+
+        document.getElementById("objetivoNombre").value = "";
+        document.getElementById("objetivoMonto").value = "";
+        document.getElementById("objetivoActual").value = "";
+        document.getElementById("objetivoFecha").value = "";
+
+        mostrarObjetivos();
       }
 
-      const objetivo = {
-        nombre,
-        monto,
-        actual: actual || 0,
-        fecha,
-        prioridad,
-        id: Date.now(),
-        fechaInicio: new Date().toISOString().split("T")[0],
-      };
-      objetivos.push(objetivo);
-      await guardarObjetivos();
+      function mostrarObjetivos() {
+        const lista = document.getElementById("listaObjetivos");
+        if (objetivos.length === 0) {
+          lista.innerHTML =
+            '<p style="color: #999;">No hay objetivos creados</p>';
+          return;
+        }
 
-      document.getElementById("objetivoNombre").value = "";
-      document.getElementById("objetivoMonto").value = "";
-      document.getElementById("objetivoActual").value = "";
-      document.getElementById("objetivoFecha").value = "";
+        lista.innerHTML = objetivos
+          .map((obj) => {
+            const porcentaje = (obj.actual / obj.monto) * 100;
+            const prioridadIcon =
+              obj.prioridad === "Alta"
+                ? "🔴"
+                : obj.prioridad === "Media"
+                  ? "🟡"
+                  : "🟢";
 
-      mostrarObjetivos();
-    }
-
-    function mostrarObjetivos() {
-      const lista = document.getElementById("listaObjetivos");
-      if (objetivos.length === 0) {
-        lista.innerHTML =
-          '<p style="color: #999;">No hay objetivos creados</p>';
-        return;
-      }
-
-      lista.innerHTML = objetivos
-        .map((obj) => {
-          const porcentaje = (obj.actual / obj.monto) * 100;
-          const prioridadIcon =
-            obj.prioridad === "Alta"
-              ? "🔴"
-              : obj.prioridad === "Media"
-                ? "🟡"
-                : "🟢";
-
-          return `
+            return `
                     <div class="goal-item">
                         <div style="flex: 1;">
                             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
@@ -1154,316 +1192,144 @@
                         </div>
                     </div>
                 `;
-        })
-        .join("");
-    }
-
-    async function agregarAporte(id) {
-      const input = document.getElementById(`aporte-${id}`);
-      const aporte = parseFloat(input.value);
-
-      if (!aporte || aporte <= 0) {
-        alert("Ingresa un monto válido");
-        return;
+          })
+          .join("");
       }
 
-      const objetivo = objetivos.find((o) => o.id === id);
-      if (objetivo) {
-        objetivo.actual += aporte;
-        input.value = "";
+      async function agregarAporte(id) {
+        const input = document.getElementById(`aporte-${id}`);
+        const aporte = parseFloat(input.value);
 
-        // Si alcanzó o superó la meta, preguntar si desea completarlo
-        if (objetivo.actual >= objetivo.monto) {
-          if (
-            confirm(
-              `🎉 ¡Felicidades! Has alcanzado tu objetivo "${objetivo.nombre}". ¿Deseas marcarlo como completado?`
-            )
-          ) {
-            abrirModalCompletar(id);
-          }
+        if (!aporte || aporte <= 0) {
+          alert("Ingresa un monto válido");
+          return;
         }
 
-        await guardarObjetivos();
-        mostrarObjetivos();
-      }
-    }
+        const objetivo = objetivos.find((o) => o.id === id);
+        if (objetivo) {
+          objetivo.actual += aporte;
+          input.value = "";
 
-    async function eliminarObjetivo(id) {
-      if (confirm("¿Estás seguro de eliminar este objetivo?")) {
-        objetivos = objetivos.filter((o) => o.id !== id);
-        await guardarObjetivos();
-        mostrarObjetivos();
-      }
-    }
-
-    // Funciones del modal
-    function abrirModalCompletar(id) {
-      objetivoACompletar = id;
-      document.getElementById("modalCompletar").style.display = "block";
-    }
-
-    function cerrarModal() {
-      document.getElementById("modalCompletar").style.display = "none";
-      document.getElementById("notaLogro").value = "";
-      objetivoACompletar = null;
-    }
-
-    async function confirmarCompletado() {
-      if (!objetivoACompletar) return;
-
-      const objetivo = objetivos.find((o) => o.id === objetivoACompletar);
-      if (!objetivo) return;
-
-      const nota = document.getElementById("notaLogro").value;
-
-      // Crear objeto de logro
-      const logro = {
-        id: objetivo.id,
-        nombre: objetivo.nombre,
-        monto: objetivo.monto,
-        fechaInicio:
-          objetivo.fechaInicio || new Date().toISOString().split("T")[0],
-        fechaCumplida: new Date().toISOString().split("T")[0],
-        prioridad: objetivo.prioridad,
-        nota: nota || `Objetivo cumplido: ${objetivo.nombre}`,
-        tiempoMeses: calcularMeses(
-          objetivo.fechaInicio || new Date().toISOString().split("T")[0],
-          new Date().toISOString().split("T")[0]
-        ),
-      };
-
-      try {
-        // Obtener lista de IDs de logros
-        let listaLogros = [];
-        const resultLista = await window.appStorage.get("logros:lista", true);
-        if (resultLista && resultLista.value) {
-          listaLogros = JSON.parse(resultLista.value);
-        }
-
-        // Agregar nuevo ID si no existe
-        if (!listaLogros.includes(logro.id)) {
-          listaLogros.push(logro.id);
-        }
-
-        // Guardar el logro individual
-        const keyLogro = `logro:${logro.id}`;
-        await window.appStorage.set(keyLogro, JSON.stringify(logro), true);
-
-        // Guardar la lista actualizada
-        await window.appStorage.set(
-          "logros:lista",
-          JSON.stringify(listaLogros),
-          true
-        );
-
-        // Eliminar de objetivos activos
-        objetivos = objetivos.filter((o) => o.id !== objetivoACompletar);
-        await guardarObjetivos();
-
-        cerrarModal();
-        mostrarObjetivos();
-
-        alert(
-          '🎉 ¡Felicidades! Tu logro ha sido guardado. Puedes verlo en la página de "Objetivos Cumplidos".'
-        );
-      } catch (error) {
-        console.error("Error guardando logro:", error);
-        alert(
-          "Hubo un error al guardar el logro. Por favor intenta de nuevo. Error: " +
-          error.message
-        );
-      }
-    }
-
-    function calcularMeses(fechaInicio, fechaFin) {
-      const inicio = new Date(fechaInicio);
-      const fin = new Date(fechaFin);
-      const meses =
-        (fin.getFullYear() - inicio.getFullYear()) * 12 +
-        (fin.getMonth() - inicio.getMonth());
-      return Math.max(0.5, meses || 0.5);
-    }
-
-    // Funciones de Análisis
-    function actualizarAnalisis() {
-      const mesActual = new Date().getMonth();
-      const añoActual = new Date().getFullYear();
-      const gastosMes = gastos.filter((g) => {
-        const fecha = new Date(g.fecha);
-        return (
-          fecha.getMonth() === mesActual && fecha.getFullYear() === añoActual
-        );
-      });
-
-      const categorias = {};
-      gastosMes.forEach((g) => {
-        categorias[g.categoria] = (categorias[g.categoria] || 0) + g.monto;
-      });
-
-      const total = Object.values(categorias).reduce(
-        (sum, val) => sum + val,
-        0
-      );
-      const chart = document.getElementById("chartGastos");
-
-      if (total === 0) {
-        chart.innerHTML =
-          '<p style="color: #999;">No hay gastos para analizar este mes</p>';
-        return;
-      }
-
-      chart.innerHTML = Object.entries(categorias)
-        .map(([cat, monto]) => {
-          const porcentaje = (monto / total) * 100;
-          return `
-                    <div class="category-bar">
-                        <div class="category-label">
-                            <span>${cat}</span>
-                            <span>${monto.toFixed(2)} (${porcentaje.toFixed(1)}%)</span>
-                        </div>
-                        <div class="bar">
-                            <div class="bar-fill" style="width: ${porcentaje}%">
-                                ${porcentaje.toFixed(0)}%
-                            </div>
-                        </div>
-                    </div>
-                `;
-        })
-        .join("");
-    }
-
-    function calcularViabilidad() {
-      const ingreso = parseFloat(
-        document.getElementById("ingresoMensual").value
-      );
-      const fijos = parseFloat(document.getElementById("gastosFijos").value);
-      const resultado = document.getElementById("resultadoAnalisis");
-
-      if (!ingreso) {
-        alert("Ingresa tu ingreso mensual");
-        return;
-      }
-
-      const disponible = ingreso - (fijos || 0);
-      const mesActual = new Date().getMonth();
-      const añoActual = new Date().getFullYear();
-      const gastosMes = gastos.filter((g) => {
-        const fecha = new Date(g.fecha);
-        return (
-          fecha.getMonth() === mesActual && fecha.getFullYear() === añoActual
-        );
-      });
-      const totalGastosVariables = gastosMes.reduce(
-        (sum, g) => sum + g.monto,
-        0
-      );
-      const libre = disponible - totalGastosVariables;
-
-      let html = `
-                <div class="alert alert-success">
-                    <strong>Dinero Libre Mensual:</strong> ${libre.toFixed(2)}
-                </div>
-            `;
-
-      if (objetivos.length > 0) {
-        html +=
-          '<h3 style="margin-top: 20px; color: #667eea;">Viabilidad de Objetivos:</h3>';
-        objetivos.forEach((obj) => {
-          const falta = obj.monto - obj.actual;
-          const fechaLimite = new Date(obj.fecha);
-          const hoy = new Date();
-          const mesesRestantes = Math.max(
-            1,
-            Math.ceil((fechaLimite - hoy) / (1000 * 60 * 60 * 24 * 30))
-          );
-          const necesitaMes = falta / mesesRestantes;
-          const porcentajeIngreso = (necesitaMes / ingreso) * 100;
-
-          const viable = necesitaMes <= libre;
-          const clase = viable ? "alert-success" : "alert-warning";
-          const icono = viable ? "✅" : "⚠️";
-
-          html += `
-                        <div class="alert ${clase}" style="margin-top: 10px;">
-                            <strong>${icono} ${obj.nombre}</strong><br>
-                            Necesitas ahorrar: ${necesitaMes.toFixed(2)}/mes durante ${mesesRestantes} meses<br>
-                            Esto representa el ${porcentajeIngreso.toFixed(1)}% de tu ingreso<br>
-                            ${viable
-              ? "¡Este objetivo es alcanzable con tu ingreso actual!"
-              : "Considera extender el plazo o reducir otros gastos para alcanzar este objetivo."
+          // Si alcanzó o superó la meta, preguntar si desea completarlo
+          if (objetivo.actual >= objetivo.monto) {
+            if (
+              confirm(
+                `🎉 ¡Felicidades! Has alcanzado tu objetivo "${objetivo.nombre}". ¿Deseas marcarlo como completado?`
+              )
+            ) {
+              abrirModalCompletar(id);
             }
-                        </div>
-                    `;
-        });
+          }
+
+          await guardarObjetivos();
+          mostrarObjetivos();
+        }
       }
 
-      const viabilidad = document.getElementById("viabilidadObjetivos");
-      if (ingreso && objetivos.length > 0) {
-        viabilidad.innerHTML = html;
+      async function eliminarObjetivo(id) {
+        if (confirm("¿Estás seguro de eliminar este objetivo?")) {
+          objetivos = objetivos.filter((o) => o.id !== id);
+          await guardarObjetivos();
+          mostrarObjetivos();
+        }
       }
 
-      resultado.innerHTML = html;
-    }
+      // Funciones del modal
+      function abrirModalCompletar(id) {
+        objetivoACompletar = id;
+        document.getElementById("modalCompletar").style.display = "block";
+      }
 
-    // Función para generar consejos personalizados
-    function generarConsejos() {
-      const lista = document.getElementById("listaConsejos");
+      function cerrarModal() {
+        document.getElementById("modalCompletar").style.display = "none";
+        document.getElementById("notaLogro").value = "";
+        objetivoACompletar = null;
+      }
 
-      // Base de consejos generales
-      const consejosGenerales = [
-        "Registra todos tus gastos diariamente para tener un mejor control.",
-        "Establece un presupuesto para cada categoría y respétalo.",
-        "Intenta ahorrar al menos el 20% de tus ingresos mensuales.",
-        "Revisa tus suscripciones mensuales y cancela las que no uses regularmente.",
-        "Usa la regla 50/30/20: 50% para necesidades, 30% para deseos, 20% para ahorros.",
-        'Establece un "día sin gastos" a la semana para aumentar tus ahorros.',
-        "Antes de comprar algo, espera 24 horas. Muchas veces la urgencia desaparece.",
-        "Automatiza tus ahorros: configura transferencias automáticas a tu cuenta de ahorros.",
-        "Compara precios antes de comprar. Usa aplicaciones de comparación de precios.",
-        "Prepara una lista de compras y apégate a ella para evitar compras impulsivas.",
-        "Cocina en casa más seguido. Es más saludable y económico que comer fuera.",
-        "Aprovecha los descuentos y cupones, pero solo para cosas que realmente necesitas.",
-        "Vende cosas que ya no uses. Puedes generar ingresos extra y liberar espacio.",
-        "Busca actividades gratuitas de entretenimiento en tu ciudad.",
-        "Aprende a reparar cosas básicas en lugar de comprar nuevas inmediatamente.",
-        "Usa transporte público o bicicleta cuando sea posible para ahorrar en combustible.",
-        "Compra productos de marca propia en el supermercado, suelen ser más económicos.",
-        "Congela comidas en porciones para evitar desperdicios y ahorrar tiempo.",
-        "Establece una meta de ahorro específica antes de hacer una compra grande.",
-        "Revisa tu estado financiero semanalmente para mantenerte consciente de tus gastos.",
-        "Evita las compras emocionales. Identifica qué emociones te llevan a gastar.",
-        "Usa efectivo para gastos diarios. Te ayuda a ser más consciente del dinero que gastas.",
-        "Negocia tus facturas de servicios. Muchas empresas ofrecen descuentos si preguntas.",
-        "Invierte en calidad para cosas que usas diariamente. A largo plazo es más económico.",
-        "Cancela membresías de gimnasios si no vas regularmente. Ejercítate en casa o al aire libre.",
-        "Compra ropa fuera de temporada cuando hay mayores descuentos.",
-        "Lleva tu propia botella de agua y café. Ahorrarás mucho en bebidas fuera de casa.",
-        "Organiza intercambios con amigos en lugar de comprar todo nuevo.",
-        "Establece límites de gasto para regalos en fechas especiales con tu familia.",
-        "Usa la biblioteca pública para libros, películas y recursos educativos gratuitos.",
-        "Planifica tus comidas semanalmente para reducir desperdicios y gastos innecesarios.",
-        "Aprovecha las horas felices y promociones en restaurantes si vas a salir a comer.",
-        "Mantén un fondo de emergencia equivalente a 3-6 meses de gastos.",
-        "Revisa y ajusta tus seguros anualmente para asegurarte de tener las mejores tarifas.",
-        "Aprende nuevas habilidades online gratis en lugar de pagar por cursos costosos.",
-        "Cultiva tus propias hierbas y vegetales si tienes espacio. Es gratificante y económico.",
-        "Usa aplicaciones de cashback para recuperar parte del dinero en tus compras habituales.",
-        "Establece metas financieras a corto, mediano y largo plazo.",
-        "Celebra tus logros financieros, por pequeños que sean. Te mantendrá motivado.",
-        "Educa a tu familia sobre finanzas. Todos pueden contribuir al ahorro del hogar."
-      ];
+      async function confirmarCompletado() {
+        if (!objetivoACompletar) return;
 
-      const consejos = [];
+        const objetivo = objetivos.find((o) => o.id === objetivoACompletar);
+        if (!objetivo) return;
 
-      // Analizar gastos para dar consejos personalizados
-      if (gastos.length > 0) {
+        const nota = document.getElementById("notaLogro").value;
+
+        // Crear objeto de logro
+        const logro = {
+          id: objetivo.id,
+          nombre: objetivo.nombre,
+          monto: objetivo.monto,
+          fechaInicio:
+            objetivo.fechaInicio || new Date().toISOString().split("T")[0],
+          fechaCumplida: new Date().toISOString().split("T")[0],
+          prioridad: objetivo.prioridad,
+          nota: nota || `Objetivo cumplido: ${objetivo.nombre}`,
+          tiempoMeses: calcularMeses(
+            objetivo.fechaInicio || new Date().toISOString().split("T")[0],
+            new Date().toISOString().split("T")[0]
+          ),
+        };
+
+        try {
+          // Obtener lista de IDs de logros
+          let listaLogros = [];
+          const resultLista = await window.appStorage.get("logros:lista", true);
+          if (resultLista && resultLista.value) {
+            listaLogros = JSON.parse(resultLista.value);
+          }
+
+          // Agregar nuevo ID si no existe
+          if (!listaLogros.includes(logro.id)) {
+            listaLogros.push(logro.id);
+          }
+
+          // Guardar el logro individual
+          const keyLogro = `logro:${logro.id}`;
+          await window.appStorage.set(keyLogro, JSON.stringify(logro), true);
+
+          // Guardar la lista actualizada
+          await window.appStorage.set(
+            "logros:lista",
+            JSON.stringify(listaLogros),
+            true
+          );
+
+          // Eliminar de objetivos activos
+          objetivos = objetivos.filter((o) => o.id !== objetivoACompletar);
+          await guardarObjetivos();
+
+          cerrarModal();
+          mostrarObjetivos();
+
+          alert(
+            '🎉 ¡Felicidades! Tu logro ha sido guardado. Puedes verlo en la página de "Objetivos Cumplidos".'
+          );
+        } catch (error) {
+          console.error("Error guardando logro:", error);
+          alert(
+            "Hubo un error al guardar el logro. Por favor intenta de nuevo. Error: " +
+              error.message
+          );
+        }
+      }
+
+      function calcularMeses(fechaInicio, fechaFin) {
+        const inicio = new Date(fechaInicio);
+        const fin = new Date(fechaFin);
+        const meses =
+          (fin.getFullYear() - inicio.getFullYear()) * 12 +
+          (fin.getMonth() - inicio.getMonth());
+        return Math.max(0.5, meses || 0.5);
+      }
+
+      // Funciones de Análisis
+      function actualizarAnalisis() {
         const mesActual = new Date().getMonth();
         const añoActual = new Date().getFullYear();
         const gastosMes = gastos.filter((g) => {
           const fecha = new Date(g.fecha);
           return (
-            fecha.getMonth() === mesActual &&
-            fecha.getFullYear() === añoActual
+            fecha.getMonth() === mesActual && fecha.getFullYear() === añoActual
           );
         });
 
@@ -1476,99 +1342,271 @@
           (sum, val) => sum + val,
           0
         );
+        const chart = document.getElementById("chartGastos");
 
-        // Consejo por categoría más alta
-        if (total > 0) {
-          const catMax = Object.entries(categorias).sort(
-            (a, b) => b[1] - a[1]
-          )[0];
-          const porcentaje = ((catMax[1] / total) * 100).toFixed(0);
-          if (porcentaje > 40) {
+        if (total === 0) {
+          chart.innerHTML =
+            '<p style="color: #999;">No hay gastos para analizar este mes</p>';
+          return;
+        }
+
+        chart.innerHTML = Object.entries(categorias)
+          .map(([cat, monto]) => {
+            const porcentaje = (monto / total) * 100;
+            return `
+                    <div class="category-bar">
+                        <div class="category-label">
+                            <span>${cat}</span>
+                            <span>${monto.toFixed(2)} (${porcentaje.toFixed(1)}%)</span>
+                        </div>
+                        <div class="bar">
+                            <div class="bar-fill" style="width: ${porcentaje}%">
+                                ${porcentaje.toFixed(0)}%
+                            </div>
+                        </div>
+                    </div>
+                `;
+          })
+          .join("");
+      }
+
+      function calcularViabilidad() {
+        const ingreso = parseFloat(
+          document.getElementById("ingresoMensual").value
+        );
+        const fijos = parseFloat(document.getElementById("gastosFijos").value);
+        const resultado = document.getElementById("resultadoAnalisis");
+
+        if (!ingreso) {
+          alert("Ingresa tu ingreso mensual");
+          return;
+        }
+
+        const disponible = ingreso - (fijos || 0);
+        const mesActual = new Date().getMonth();
+        const añoActual = new Date().getFullYear();
+        const gastosMes = gastos.filter((g) => {
+          const fecha = new Date(g.fecha);
+          return (
+            fecha.getMonth() === mesActual && fecha.getFullYear() === añoActual
+          );
+        });
+        const totalGastosVariables = gastosMes.reduce(
+          (sum, g) => sum + g.monto,
+          0
+        );
+        const libre = disponible - totalGastosVariables;
+
+        let html = `
+                <div class="alert alert-success">
+                    <strong>Dinero Libre Mensual:</strong> ${libre.toFixed(2)}
+                </div>
+            `;
+
+        if (objetivos.length > 0) {
+          html +=
+            '<h3 style="margin-top: 20px; color: #667eea;">Viabilidad de Objetivos:</h3>';
+          objetivos.forEach((obj) => {
+            const falta = obj.monto - obj.actual;
+            const fechaLimite = new Date(obj.fecha);
+            const hoy = new Date();
+            const mesesRestantes = Math.max(
+              1,
+              Math.ceil((fechaLimite - hoy) / (1000 * 60 * 60 * 24 * 30))
+            );
+            const necesitaMes = falta / mesesRestantes;
+            const porcentajeIngreso = (necesitaMes / ingreso) * 100;
+
+            const viable = necesitaMes <= libre;
+            const clase = viable ? "alert-success" : "alert-warning";
+            const icono = viable ? "✅" : "⚠️";
+
+            html += `
+                        <div class="alert ${clase}" style="margin-top: 10px;">
+                            <strong>${icono} ${obj.nombre}</strong><br>
+                            Necesitas ahorrar: ${necesitaMes.toFixed(2)}/mes durante ${mesesRestantes} meses<br>
+                            Esto representa el ${porcentajeIngreso.toFixed(1)}% de tu ingreso<br>
+                            ${
+                              viable
+                                ? "¡Este objetivo es alcanzable con tu ingreso actual!"
+                                : "Considera extender el plazo o reducir otros gastos para alcanzar este objetivo."
+                            }
+                        </div>
+                    `;
+          });
+        }
+
+        const viabilidad = document.getElementById("viabilidadObjetivos");
+        if (ingreso && objetivos.length > 0) {
+          viabilidad.innerHTML = html;
+        }
+
+        resultado.innerHTML = html;
+      }
+
+      // Función para generar consejos personalizados
+      function generarConsejos() {
+        const lista = document.getElementById("listaConsejos");
+
+        // Base de consejos generales
+        const consejosGenerales = [
+          "Registra todos tus gastos diariamente para tener un mejor control.",
+          "Establece un presupuesto para cada categoría y respétalo.",
+          "Intenta ahorrar al menos el 20% de tus ingresos mensuales.",
+          "Revisa tus suscripciones mensuales y cancela las que no uses regularmente.",
+          "Usa la regla 50/30/20: 50% para necesidades, 30% para deseos, 20% para ahorros.",
+          'Establece un "día sin gastos" a la semana para aumentar tus ahorros.',
+          "Antes de comprar algo, espera 24 horas. Muchas veces la urgencia desaparece.",
+          "Automatiza tus ahorros: configura transferencias automáticas a tu cuenta de ahorros.",
+          "Compara precios antes de comprar. Usa aplicaciones de comparación de precios.",
+          "Prepara una lista de compras y apégate a ella para evitar compras impulsivas.",
+          "Cocina en casa más seguido. Es más saludable y económico que comer fuera.",
+          "Aprovecha los descuentos y cupones, pero solo para cosas que realmente necesitas.",
+          "Vende cosas que ya no uses. Puedes generar ingresos extra y liberar espacio.",
+          "Busca actividades gratuitas de entretenimiento en tu ciudad.",
+          "Aprende a reparar cosas básicas en lugar de comprar nuevas inmediatamente.",
+          "Usa transporte público o bicicleta cuando sea posible para ahorrar en combustible.",
+          "Compra productos de marca propia en el supermercado, suelen ser más económicos.",
+          "Congela comidas en porciones para evitar desperdicios y ahorrar tiempo.",
+          "Establece una meta de ahorro específica antes de hacer una compra grande.",
+          "Revisa tu estado financiero semanalmente para mantenerte consciente de tus gastos.",
+          "Evita las compras emocionales. Identifica qué emociones te llevan a gastar.",
+          "Usa efectivo para gastos diarios. Te ayuda a ser más consciente del dinero que gastas.",
+          "Negocia tus facturas de servicios. Muchas empresas ofrecen descuentos si preguntas.",
+          "Invierte en calidad para cosas que usas diariamente. A largo plazo es más económico.",
+          "Cancela membresías de gimnasios si no vas regularmente. Ejercítate en casa o al aire libre.",
+          "Compra ropa fuera de temporada cuando hay mayores descuentos.",
+          "Lleva tu propia botella de agua y café. Ahorrarás mucho en bebidas fuera de casa.",
+          "Organiza intercambios con amigos en lugar de comprar todo nuevo.",
+          "Establece límites de gasto para regalos en fechas especiales con tu familia.",
+          "Usa la biblioteca pública para libros, películas y recursos educativos gratuitos.",
+          "Planifica tus comidas semanalmente para reducir desperdicios y gastos innecesarios.",
+          "Aprovecha las horas felices y promociones en restaurantes si vas a salir a comer.",
+          "Mantén un fondo de emergencia equivalente a 3-6 meses de gastos.",
+          "Revisa y ajusta tus seguros anualmente para asegurarte de tener las mejores tarifas.",
+          "Aprende nuevas habilidades online gratis en lugar de pagar por cursos costosos.",
+          "Cultiva tus propias hierbas y vegetales si tienes espacio. Es gratificante y económico.",
+          "Usa aplicaciones de cashback para recuperar parte del dinero en tus compras habituales.",
+          "Establece metas financieras a corto, mediano y largo plazo.",
+          "Celebra tus logros financieros, por pequeños que sean. Te mantendrá motivado.",
+          "Educa a tu familia sobre finanzas. Todos pueden contribuir al ahorro del hogar.",
+        ];
+
+        const consejos = [];
+
+        // Analizar gastos para dar consejos personalizados
+        if (gastos.length > 0) {
+          const mesActual = new Date().getMonth();
+          const añoActual = new Date().getFullYear();
+          const gastosMes = gastos.filter((g) => {
+            const fecha = new Date(g.fecha);
+            return (
+              fecha.getMonth() === mesActual &&
+              fecha.getFullYear() === añoActual
+            );
+          });
+
+          const categorias = {};
+          gastosMes.forEach((g) => {
+            categorias[g.categoria] = (categorias[g.categoria] || 0) + g.monto;
+          });
+
+          const total = Object.values(categorias).reduce(
+            (sum, val) => sum + val,
+            0
+          );
+
+          // Consejo por categoría más alta
+          if (total > 0) {
+            const catMax = Object.entries(categorias).sort(
+              (a, b) => b[1] - a[1]
+            )[0];
+            const porcentaje = ((catMax[1] / total) * 100).toFixed(0);
+            if (porcentaje > 40) {
+              consejos.push(
+                `📊 Tu categoría de mayor gasto es ${catMax[0]} (${porcentaje}%). Considera buscar alternativas más económicas en esta área.`
+              );
+            }
+          }
+
+          // Consejo sobre presupuestos
+          if (Object.keys(presupuestos).length === 0) {
             consejos.push(
-              `📊 Tu categoría de mayor gasto es ${catMax[0]} (${porcentaje}%). Considera buscar alternativas más económicas en esta área.`
+              "💰 Aún no has establecido presupuestos. Configura límites para cada categoría para tener mejor control."
+            );
+          }
+
+          // Consejo sobre entretenimiento
+          if (
+            categorias["Entretenimiento"] &&
+            categorias["Entretenimiento"] / total > 0.25
+          ) {
+            consejos.push(
+              "🎮 Tus gastos en entretenimiento representan más del 25% del total. Busca opciones gratuitas o más económicas de ocio."
+            );
+          }
+
+          // Consejo sobre comida
+          if (categorias["Comida"] && categorias["Comida"] / total > 0.35) {
+            consejos.push(
+              "🍔 Considera preparar más comidas en casa en lugar de comer fuera para reducir gastos en alimentación."
+            );
+          }
+
+          // Consejo sobre transporte
+          if (
+            categorias["Transporte"] &&
+            categorias["Transporte"] / total > 0.3
+          ) {
+            consejos.push(
+              "🚗 Tus gastos en transporte son altos. Evalúa opciones como compartir vehículo o usar transporte público."
             );
           }
         }
 
-        // Consejo sobre presupuestos
-        if (Object.keys(presupuestos).length === 0) {
+        // Consejos sobre objetivos
+        if (objetivos.length === 0) {
           consejos.push(
-            "💰 Aún no has establecido presupuestos. Configura límites para cada categoría para tener mejor control."
+            "🎯 No tienes objetivos de ahorro definidos. Establecer metas te ayudará a mantener la motivación y el enfoque."
+          );
+        } else if (objetivos.length > 5) {
+          consejos.push(
+            "📋 Tienes muchos objetivos simultáneos. Considera priorizar los más importantes para enfocarte mejor."
           );
         }
 
-        // Consejo sobre entretenimiento
-        if (
-          categorias["Entretenimiento"] &&
-          categorias["Entretenimiento"] / total > 0.25
-        ) {
-          consejos.push(
-            "🎮 Tus gastos en entretenimiento representan más del 25% del total. Busca opciones gratuitas o más económicas de ocio."
-          );
+        // Función para mezclar array aleatoriamente
+        function mezclarArray(array) {
+          const nuevoArray = [...array];
+          for (let i = nuevoArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [nuevoArray[i], nuevoArray[j]] = [nuevoArray[j], nuevoArray[i]];
+          }
+          return nuevoArray;
         }
 
-        // Consejo sobre comida
-        if (categorias["Comida"] && categorias["Comida"] / total > 0.35) {
-          consejos.push(
-            "🍔 Considera preparar más comidas en casa en lugar de comer fuera para reducir gastos en alimentación."
-          );
+        // Mezclar consejos generales y tomar algunos aleatorios
+        const consejosAleatorios = mezclarArray(consejosGenerales).slice(0, 8);
+
+        // Combinar consejos personalizados con aleatorios
+        const todosLosConsejos = [...consejos, ...consejosAleatorios];
+
+        // Mezclar todos los consejos
+        const consejosFinales = mezclarArray(todosLosConsejos);
+
+        lista.innerHTML = consejosFinales
+          .map((consejo) => `<li>${consejo}</li>`)
+          .join("");
+      }
+      // Cerrar modal al hacer clic fuera
+      window.onclick = function (event) {
+        const modal = document.getElementById("modalCompletar");
+        if (event.target === modal) {
+          cerrarModal();
         }
-
-        // Consejo sobre transporte
-        if (categorias["Transporte"] && categorias["Transporte"] / total > 0.3) {
-          consejos.push(
-            "🚗 Tus gastos en transporte son altos. Evalúa opciones como compartir vehículo o usar transporte público."
-          );
-        }
-      }
-
-      // Consejos sobre objetivos
-      if (objetivos.length === 0) {
-        consejos.push(
-          "🎯 No tienes objetivos de ahorro definidos. Establecer metas te ayudará a mantener la motivación y el enfoque."
-        );
-      } else if (objetivos.length > 5) {
-        consejos.push(
-          "📋 Tienes muchos objetivos simultáneos. Considera priorizar los más importantes para enfocarte mejor."
-        );
-      }
-
-      // Función para mezclar array aleatoriamente
-      function mezclarArray(array) {
-        const nuevoArray = [...array];
-        for (let i = nuevoArray.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [nuevoArray[i], nuevoArray[j]] = [nuevoArray[j], nuevoArray[i]];
-        }
-        return nuevoArray;
-      }
-
-      // Mezclar consejos generales y tomar algunos aleatorios
-      const consejosAleatorios = mezclarArray(consejosGenerales).slice(0, 8);
-
-      // Combinar consejos personalizados con aleatorios
-      const todosLosConsejos = [...consejos, ...consejosAleatorios];
-
-      // Mezclar todos los consejos
-      const consejosFinales = mezclarArray(todosLosConsejos);
-
-      lista.innerHTML = consejosFinales
-        .map((consejo) => `<li>${consejo}</li>`)
-        .join("");
-    }
-    // Cerrar modal al hacer clic fuera
-    window.onclick = function (event) {
-      const modal = document.getElementById("modalCompletar");
-      if (event.target === modal) {
-        cerrarModal();
-      }
-    };
-    function backToMenu() {
-      window.location.href = "dashboard.html";
-    }
-    // Inicializar
-    cargarDatos();
-  </script>
-</body>
-
+      };
+      // Inicializar
+      cargarDatos();
+    </script>
+  </body>
 </html>

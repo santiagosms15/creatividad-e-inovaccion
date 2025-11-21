@@ -197,7 +197,7 @@
 
       <div class="welcome-text">Hola, <span id="userName">Usuario</span></div>
 
-      <a href="inicio.html" class="logout-btn" id="logoutBtn">Cerrar sesión</a>
+      <a href="/inicio" class="logout-btn" id="logoutBtn">Cerrar sesión</a>
     </header>
 
     <!-- Contenido -->
@@ -205,7 +205,7 @@
       <h1 class="page-title">Panel de Control</h1>
 
       <div class="cards-grid">
-        <a href="administrar.html" class="card">
+        <a href="/administrar" class="card">
           <img
             src="img/finanzas.jpg"
             class="card-img"
@@ -219,7 +219,7 @@
           </div>
         </a>
 
-        <a href="metas.html" class="card">
+        <a href="/metas" class="card">
           <img src="img/metas.jpg" class="card-img" alt="Metas" />
           <div class="card-content">
             <div class="card-title">Mis Metas</div>
@@ -229,7 +229,7 @@
           </div>
         </a>
 
-        <a href="objetivos.html" class="card">
+        <a href="/objetivos" class="card">
           <img
             src="img/logros.jpg"
             class="card-img"
@@ -242,7 +242,7 @@
             </div>
           </div>
         </a>
-        <a href="juegos.html" class="card">
+        <a href="/juegos" class="card">
           <img src="img/juegos.jpg" class="card-img" alt="Minijuegos" />
           <div class="card-content">
             <div class="card-title">Jugar Minijuegos</div>
@@ -253,7 +253,7 @@
           </div>
         </a>
 
-        <a href="asistente.html" class="card">
+        <a href="/asistente" class="card">
           <img
             src="img/fondoAI.jpg"
             class="card-img"
@@ -262,12 +262,13 @@
           <div class="card-content">
             <div class="card-title">Asistentes Financieros</div>
             <div class="card-description">
-              Chatea con nuestros asesores para obtener consejos y análisis de tus finanzas.
+              Chatea con nuestros asesores para obtener consejos y análisis de
+              tus finanzas.
             </div>
           </div>
         </a>
 
-        <a href="calculadora.html" class="card">
+        <a href="/calculadora" class="card">
           <img
             src="img/calculadora.jpg"
             class="card-img"
@@ -276,11 +277,12 @@
           <div class="card-content">
             <div class="card-title">Calculadora Financiera</div>
             <div class="card-description">
-              Proyecta tus ahorros e inversiones con nuestra calculadora de interés compuesto.
+              Proyecta tus ahorros e inversiones con nuestra calculadora de
+              interés compuesto.
             </div>
           </div>
         </a>
-        <a href="quienes-somos.html" class="card">
+        <a href="/quienes-somos" class="card">
           <img
             src="img/quienes-somos.jpg"
             class="card-img"
@@ -302,7 +304,7 @@
       if (usuario) {
         document.getElementById("userName").textContent = usuario.nombre;
       } else {
-        window.location.href = "inicio.html";
+        window.location.href = "/inicio";
       }
 
       document
@@ -310,7 +312,7 @@
         .addEventListener("click", function (e) {
           e.preventDefault();
           sessionStorage.removeItem("usuario");
-          window.location.href = "inicio.html";
+          window.location.href = "/inicio";
         });
     </script>
   </body>

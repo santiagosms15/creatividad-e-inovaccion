@@ -523,9 +523,7 @@
   <body>
     <div class="container">
       <div class="header">
-        <button class="btn back-btn" onclick="backToMenu()">
-          ← Volver al Menú
-        </button>
+        <a href="/dashboard" class="btn-volver"> ← Volver al Menú </a>
         <h1>🎉 Objetivos Cumplidos</h1>
         <p>Celebra tus logros y mantén la motivación</p>
       </div>
@@ -651,8 +649,8 @@
                 <div class="empty-state">
                     <div class="icon">🎯</div>
                     <h3>Aún no has cumplido ningún objetivo</h3>
-                    <p>¡Comienza ahora y celebra tus primeros logros!</p>
-                    <a href="index.html" class="btn-nueva-meta">
+                    <p>¡Define y completa tu primera meta para verla aquí!</p>
+                    <a href="/metas" class="btn-nueva-meta">
                         Crear Nueva Meta
                     </a>
                 </div>
@@ -928,15 +926,11 @@
       // Cargar logros al iniciar
       cargarLogros();
 
-      // Volver al menú con la tecla Escape
       document.addEventListener("keydown", (event) => {
         if (event.key === "Escape") {
-          window.location.href = "index.html";
+          window.location.href = "/dashboard";
         }
       });
-      function backToMenu() {
-      window.location.href = "dashboard.html";
-    }
     </script>
   </body>
 </html>

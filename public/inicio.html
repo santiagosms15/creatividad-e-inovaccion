@@ -260,10 +260,10 @@
 
         <p class="register-link">
           ¿No tienes cuenta?
-          <a href="/registro.html" id="registerLink">Regístrate aquí</a>
+          <a href="/registro" id="registerLink">Regístrate aquí</a>
         </p>
         <p class="register-link">
-          <a href="/recuperar.html">¿Olvidaste tu contraseña?</a>
+          <a href="/recuperar">¿Olvidaste tu contraseña?</a>
         </p>
       </div>
 
@@ -291,14 +291,12 @@
           return;
         }
 
-        // Simulación de registro exitoso
-        // Enviar datos al backend
         const credenciales = {
           usuario: usuario,
           contrasena: contrasena,
         };
 
-        fetch("http://localhost:3000/api/login", {
+        fetch("/api/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -316,12 +314,12 @@
                   "¡Inicio de sesión exitoso! Bienvenido, " +
                     data.usuario.nombre
                 );
-                // Guardar sesión
+
+                // ✅ Guardar el objeto usuario completo (que incluye el id)
                 sessionStorage.setItem("usuario", JSON.stringify(data.usuario));
+
                 // Redirigir al dashboard
-                window.location.href = "dashboard.html";
-                // Aquí puedes redirigir a la página principal
-                // window.location.href = 'dashboard.html';
+                window.location.href = "/dashboard";
               }, 100);
             } else {
               alert("Error: " + data.message);
@@ -350,7 +348,7 @@
       });
       registerLink.addEventListener("click", function (e) {
         e.preventDefault();
-        window.location.href = "/registro.html";
+        window.location.href = "/registro";
       });
     </script>
   </body>
