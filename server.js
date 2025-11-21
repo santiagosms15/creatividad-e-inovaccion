@@ -12,7 +12,6 @@ const PORT = 3000;
 // Middleware global
 app.use(cors());
 app.use(express.json());
-app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
 // ========== BASE DE DATOS ==========
@@ -126,6 +125,21 @@ function crearTablasFinanzas() {
     )
   `;
 
+  const sqlLogros = `
+    CREATE TABLE IF NOT EXISTS logros (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      usuario_id INTEGER NOT NULL,
+      objetivo_id INTEGER NOT NULL,
+      nombre TEXT NOT NULL,
+      monto REAL NOT NULL,
+      fecha_inicio DATE NOT NULL,
+      fecha_cumplida DATE NOT NULL,
+      prioridad TEXT NOT NULL,
+      nota TEXT,
+      tiempo_meses REAL,
+      FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+    )
+  `;
   db.run(sqlGastos, (err) => {
     if (err) console.error("❌ Error al crear tabla gastos:", err);
     else console.log("📌 Tabla 'gastos' lista");
@@ -140,10 +154,85 @@ function crearTablasFinanzas() {
     if (err) console.error("❌ Error al crear tabla objetivos_ahorro:", err);
     else console.log("📌 Tabla 'objetivos_ahorro' lista");
   });
+  // ✅ Crear tabla de logros
+  db.run(sqlLogros, (err) => {
+    if (err) console.error("❌ Error al crear tabla logros:", err);
+    else console.log("📌 Tabla 'logros' lista");
+  });
 }
 // ========== API GASTOS ==========
 
 // Obtener todos los gastos de un usuario
+app.get("/api/logros/:usuarioId", (req, res) => {
+  const { usuarioId } = req.params;
+  const sql = `SELECT * FROM logros WHERE usuario_id = ? ORDER BY fecha_cumplida DESC`;
+
+  db.all(sql, [usuarioId], (err, logros) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al obtener logros" });
+    }
+    res.json({ success: true, logros: logros || [] });
+  });
+});
+
+app.post("/api/logros", (req, res) => {
+  const {
+    usuarioId,
+    objetivoId,
+    nombre,
+    monto,
+    fechaInicio,
+    fechaCumplida,
+    prioridad,
+    nota,
+    tiempoMeses,
+  } = req.body;
+
+  if (
+    !usuarioId ||
+    !objetivoId ||
+    !nombre ||
+    !monto ||
+    !fechaInicio ||
+    !fechaCumplida ||
+    !prioridad
+  ) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Faltan campos requeridos" });
+  }
+
+  const sql = `INSERT INTO logros (usuario_id, objetivo_id, nombre, monto, fecha_inicio, fecha_cumplida, prioridad, nota, tiempo_meses) 
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+  db.run(
+    sql,
+    [
+      usuarioId,
+      objetivoId,
+      nombre,
+      monto,
+      fechaInicio,
+      fechaCumplida,
+      prioridad,
+      nota,
+      tiempoMeses,
+    ],
+    function (err) {
+      if (err) {
+        console.error("Error al crear logro:", err);
+        return res
+          .status(500)
+          .json({ success: false, message: "Error al crear logro" });
+      }
+      res
+        .status(201)
+        .json({ success: true, message: "Logro guardado", id: this.lastID });
+    }
+  );
+});
 app.get("/api/gastos/:usuarioId", (req, res) => {
   const { usuarioId } = req.params;
   const sql = `SELECT * FROM gastos WHERE usuario_id = ? ORDER BY fecha DESC`;
@@ -157,7 +246,20 @@ app.get("/api/gastos/:usuarioId", (req, res) => {
     res.json({ success: true, gastos: gastos || [] });
   });
 });
+// Eliminar un logro
+app.delete("/api/logros/:id", (req, res) => {
+  const { id } = req.params;
+  const sql = `DELETE FROM logros WHERE id = ?`;
 
+  db.run(sql, [id], function (err) {
+    if (err) {
+      return res
+        .status(500)
+        .json({ success: false, message: "Error al eliminar logro" });
+    }
+    res.json({ success: true, message: "Logro eliminado" });
+  });
+});
 // Crear un nuevo gasto
 app.post("/api/gastos", (req, res) => {
   const { usuarioId, descripcion, monto, categoria, fecha } = req.body;
@@ -321,20 +423,6 @@ app.delete("/api/objetivos-ahorro/:id", (req, res) => {
     res.json({ success: true, message: "Objetivo eliminado" });
   });
 });
-// ========== RUTAS HTML LIMPIAS ==========
-const sendPage = (res, file) =>
-  res.sendFile(path.join(__dirname, "public", file));
-
-app.get("/", (req, res) => sendPage(res, "inicio.html"));
-app.get("/inicio", (req, res) => sendPage(res, "inicio.html"));
-app.get("/dashboard", (req, res) => sendPage(res, "dashboard.html"));
-app.get("/registro", (req, res) => sendPage(res, "registro.html"));
-app.get("/metas", (req, res) => sendPage(res, "metas.html"));
-app.get("/restablecer.html", (req, res) => sendPage(res, "restablecer.html"));
-app.get("/administrar", (req, res) => sendPage(res, "administrar.html"));
-app.get("/asistente", (req, res) => sendPage(res, "asistente.html"));
-app.get("/calculadora", (req, res) => sendPage(res, "calculadora.html"));
-app.get("/quienes-somos", (req, res) => sendPage(res, "quienes-somos.html"));
 
 // ========== API REGISTRO ==========
 app.post("/api/registro", async (req, res) => {
@@ -744,6 +832,21 @@ app.post("/api/chat-ia", async (req, res) => {
     });
   }
 });
+app.use(express.static("public"));
+// ========== RUTAS HTML LIMPIAS ==========
+const sendPage = (res, file) =>
+  res.sendFile(path.join(__dirname, "public", file));
+
+app.get("/", (req, res) => sendPage(res, "inicio.html"));
+app.get("/inicio", (req, res) => sendPage(res, "inicio.html"));
+app.get("/dashboard", (req, res) => sendPage(res, "dashboard.html"));
+app.get("/registro", (req, res) => sendPage(res, "registro.html"));
+app.get("/metas", (req, res) => sendPage(res, "metas.html"));
+app.get("/restablecer.html", (req, res) => sendPage(res, "restablecer.html"));
+app.get("/administrar", (req, res) => sendPage(res, "administrar.html"));
+app.get("/asistente", (req, res) => sendPage(res, "asistente.html"));
+app.get("/calculadora", (req, res) => sendPage(res, "calculadora.html"));
+app.get("/quienes-somos", (req, res) => sendPage(res, "quienes-somos.html"));
 
 // ========== RUTA 404 ==========
 app.use((req, res) => {

@@ -634,7 +634,6 @@
     </style>
   </head>
   <body>
-    <!-- Header -->
     <header class="header">
       <div class="header-content">
         <div class="nav-top">
@@ -749,61 +748,49 @@
 
     <script>
       let objetivosCumplidos = [];
+      let usuarioId = null;
 
-      async function cargarLogros() {
+      // ✅ OBTENER USUARIO AL CARGAR LA PÁGINA
+      function obtenerUsuario() {
+        let usuario = localStorage.getItem("usuario");
+        if (!usuario) {
+          usuario = sessionStorage.getItem("usuario");
+        }
+
+        if (!usuario) {
+          alert("⚠️ Debes iniciar sesión para ver tus logros");
+          window.location.href = "/inicio";
+          return null;
+        }
+
         try {
-          let resultLista;
-          try {
-            resultLista = await window.storage.get("logros:lista", true);
-          } catch (e) {
-            console.log("No hay logros guardados aún");
-            mostrarEstadoVacio();
-            return;
+          const usuarioObj = JSON.parse(usuario);
+          if (!usuarioObj || !usuarioObj.id) {
+            alert("⚠️ Error al cargar datos de usuario");
+            window.location.href = "/inicio";
+            return null;
           }
 
-          const listaIds = JSON.parse(resultLista.value);
-
-          if (listaIds.length === 0) {
-            mostrarEstadoVacio();
-            return;
-          }
-
-          objetivosCumplidos = [];
-          for (const id of listaIds) {
-            try {
-              const resultLogro = await window.storage.get(`logro:${id}`, true);
-              if (resultLogro) {
-                objetivosCumplidos.push(JSON.parse(resultLogro.value));
-              }
-            } catch (e) {
-              console.log("Error cargando logro:", id, e);
-            }
-          }
-
-          if (objetivosCumplidos.length === 0) {
-            mostrarEstadoVacio();
-            return;
-          }
-
-          calcularEstadisticas();
-          actualizarMedallas();
-          mostrarTimeline();
-          mostrarGaleria();
+          usuarioId = usuarioObj.id;
+          document.getElementById("userName").textContent = usuarioObj.nombre;
+          return usuarioObj;
         } catch (error) {
-          console.log("Primera vez usando la app:", error);
-          mostrarEstadoVacio();
+          console.error("Error al parsear usuario:", error);
+          alert("⚠️ Error al cargar datos de usuario");
+          window.location.href = "/inicio";
+          return null;
         }
       }
 
       function mostrarEstadoVacio() {
         document.getElementById("galeriaLogros").innerHTML = `
-          <div class="empty-state">
-            <div class="empty-icon">🎯</div>
-            <h3>Aún no has cumplido ningún objetivo</h3>
-            <p>¡Define y completa tu primera meta para verla aquí!</p>
-            <a href="metas.html" class="btn-nueva-meta">Crear Nueva Meta</a>
-          </div>
-        `;
+        <div class="empty-state">
+          <div class="empty-icon">🎯</div>
+          <h3>Aún no has cumplido ningún objetivo</h3>
+          <p>¡Define y completa tu primera meta para verla aquí!</p>
+          <a href="metas.html" class="btn-nueva-meta">Crear Nueva Meta</a>
+        </div>
+      `;
         document.getElementById("timelineContainer").innerHTML =
           '<p style="color: #94a3b8; text-align: center;">No hay logros para mostrar</p>';
       }
@@ -909,12 +896,12 @@
         document.getElementById("medallas").innerHTML = medallas
           .map(
             (m) => `
-            <div class="medal ${m.desbloqueada ? "unlocked" : "locked"}">
-              <span class="medal-icon">${m.icon}</span>
-              <div class="medal-name">${m.nombre}</div>
-              <div class="medal-desc">${m.desc}</div>
-            </div>
-          `
+          <div class="medal ${m.desbloqueada ? "unlocked" : "locked"}">
+            <span class="medal-icon">${m.icon}</span>
+            <div class="medal-name">${m.nombre}</div>
+            <div class="medal-desc">${m.desc}</div>
+          </div>
+        `
           )
           .join("");
       }
@@ -966,31 +953,31 @@
             const mes = meses[fecha.getMonth()];
 
             return `
-              <div class="timeline-item">
-                <div class="timeline-marker">
-                  <div class="timeline-day">${dia}</div>
-                  <div class="timeline-month">${mes}</div>
-                </div>
-                <div class="timeline-content">
-                  <h3 class="timeline-title">✅ ${obj.nombre}</h3>
-                  <p class="timeline-date">${formatearFecha(obj.fechaCumplida)}</p>
-                  <div class="timeline-stats">
-                    <div class="timeline-stat">
-                      <div class="timeline-stat-value">${obj.monto.toLocaleString()}</div>
-                      <div class="timeline-stat-label">Monto Ahorrado</div>
-                    </div>
-                    <div class="timeline-stat">
-                      <div class="timeline-stat-value">${dias} días</div>
-                      <div class="timeline-stat-label">Tiempo Invertido</div>
-                    </div>
-                    <div class="timeline-stat">
-                      <div class="timeline-stat-value">${(obj.monto / obj.tiempoMeses).toFixed(0)}</div>
-                      <div class="timeline-stat-label">Ahorro/Mes</div>
-                    </div>
+            <div class="timeline-item">
+              <div class="timeline-marker">
+                <div class="timeline-day">${dia}</div>
+                <div class="timeline-month">${mes}</div>
+              </div>
+              <div class="timeline-content">
+                <h3 class="timeline-title">✅ ${obj.nombre}</h3>
+                <p class="timeline-date">${formatearFecha(obj.fechaCumplida)}</p>
+                <div class="timeline-stats">
+                  <div class="timeline-stat">
+                    <div class="timeline-stat-value">${obj.monto.toLocaleString()}</div>
+                    <div class="timeline-stat-label">Monto Ahorrado</div>
+                  </div>
+                  <div class="timeline-stat">
+                    <div class="timeline-stat-value">${dias} días</div>
+                    <div class="timeline-stat-label">Tiempo Invertido</div>
+                  </div>
+                  <div class="timeline-stat">
+                    <div class="timeline-stat-value">${(obj.monto / obj.tiempoMeses).toFixed(0)}</div>
+                    <div class="timeline-stat-label">Ahorro/Mes</div>
                   </div>
                 </div>
               </div>
-            `;
+            </div>
+          `;
           })
           .join("");
       }
@@ -1014,46 +1001,46 @@
             const ahorroDiario = obj.monto / dias;
 
             return `
-              <div class="logro-card">
-                <div class="logro-header">
-                  <div class="logro-fecha">${formatearFecha(obj.fechaCumplida)}</div>
-                  <div class="logro-nombre">${obj.nombre}</div>
-                  <div class="logro-monto">${obj.monto.toLocaleString()}</div>
-                </div>
-                <div class="logro-body">
-                  <div class="logro-detalles">
-                    <div class="detalle-item">
-                      <div class="detalle-label">Duración</div>
-                      <div class="detalle-value">${dias} días</div>
-                    </div>
-                    <div class="detalle-item">
-                      <div class="detalle-label">Prioridad</div>
-                      <div class="detalle-value">${obj.prioridad}</div>
-                    </div>
-                    <div class="detalle-item">
-                      <div class="detalle-label">Ahorro/Mes</div>
-                      <div class="detalle-value">${ahorroMensual.toFixed(0)}</div>
-                    </div>
-                    <div class="detalle-item">
-                      <div class="detalle-label">Ahorro/Día</div>
-                      <div class="detalle-value">${ahorroDiario.toFixed(0)}</div>
-                    </div>
-                  </div>
-                  ${
-                    obj.nota
-                      ? `
-                    <div class="logro-nota">
-                      <strong>📝 Nota:</strong> ${obj.nota}
-                    </div>
-                  `
-                      : ""
-                  }
-                  <button class="btn-compartir" onclick="compartirLogro(${obj.id})">
-                    📤 Compartir Logro
-                  </button>
-                </div>
+            <div class="logro-card">
+              <div class="logro-header">
+                <div class="logro-fecha">${formatearFecha(obj.fechaCumplida)}</div>
+                <div class="logro-nombre">${obj.nombre}</div>
+                <div class="logro-monto">${obj.monto.toLocaleString()}</div>
               </div>
-            `;
+              <div class="logro-body">
+                <div class="logro-detalles">
+                  <div class="detalle-item">
+                    <div class="detalle-label">Duración</div>
+                    <div class="detalle-value">${dias} días</div>
+                  </div>
+                  <div class="detalle-item">
+                    <div class="detalle-label">Prioridad</div>
+                    <div class="detalle-value">${obj.prioridad}</div>
+                  </div>
+                  <div class="detalle-item">
+                    <div class="detalle-label">Ahorro/Mes</div>
+                    <div class="detalle-value">${ahorroMensual.toFixed(0)}</div>
+                  </div>
+                  <div class="detalle-item">
+                    <div class="detalle-label">Ahorro/Día</div>
+                    <div class="detalle-value">${ahorroDiario.toFixed(0)}</div>
+                  </div>
+                </div>
+                ${
+                  obj.nota
+                    ? `
+                  <div class="logro-nota">
+                    <strong>📝 Nota:</strong> ${obj.nota}
+                  </div>
+                `
+                    : ""
+                }
+                <button class="btn-compartir" onclick="compartirLogro(${obj.id})">
+                  📤 Compartir Logro
+                </button>
+              </div>
+            </div>
+          `;
           })
           .join("");
       }
@@ -1083,14 +1070,10 @@
         }
       }
 
-      // Cargar usuario
-      const usuario = JSON.parse(sessionStorage.getItem("usuario"));
-      if (usuario) {
-        document.getElementById("userName").textContent = usuario.nombre;
+      // ✅ INICIALIZAR AL CARGAR LA PÁGINA
+      if (obtenerUsuario()) {
+        cargarLogros();
       }
-
-      // Cargar logros al iniciar
-      cargarLogros();
 
       // Atajo de teclado para volver
       document.addEventListener("keydown", (event) => {

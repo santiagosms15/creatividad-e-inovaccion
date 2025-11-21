@@ -1381,64 +1381,55 @@
         if (!objetivo) return;
 
         const nota = document.getElementById("notaLogro").value;
+        const fechaCumplida = new Date().toISOString().split("T")[0];
 
         const logro = {
-          id: objetivo.id,
+          usuarioId: usuarioActual.id,
+          objetivoId: objetivo.id,
           nombre: objetivo.nombre,
           monto: objetivo.monto,
-          fechaInicio:
-            objetivo.fechaInicio || new Date().toISOString().split("T")[0],
-          fechaCumplida: new Date().toISOString().split("T")[0],
+          fechaInicio: objetivo.fechaInicio || fechaCumplida,
+          fechaCumplida: fechaCumplida,
           prioridad: objetivo.prioridad,
           nota: nota || `Objetivo cumplido: ${objetivo.nombre}`,
           tiempoMeses: calcularMeses(
-            objetivo.fechaInicio || new Date().toISOString().split("T")[0],
-            new Date().toISOString().split("T")[0]
+            objetivo.fechaInicio || fechaCumplida,
+            fechaCumplida
           ),
         };
 
         try {
-          // Guardar usando window.appStorage (sistema de logros compartido)
-          let listaLogros = [];
-          try {
-            const resultLista = await window.appStorage.get(
-              "logros:lista",
-              true
-            );
-            if (resultLista && resultLista.value) {
-              listaLogros = JSON.parse(resultLista.value);
-            }
-          } catch (e) {
-            listaLogros = [];
-          }
+          // Guardar el logro en la base de datos
+          const resLogro = await fetch("/api/logros", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(logro),
+          });
 
-          if (!listaLogros.includes(logro.id)) {
-            listaLogros.push(logro.id);
-          }
+          const dataLogro = await resLogro.json();
 
-          const keyLogro = `logro:${logro.id}`;
-          await window.appStorage.set(keyLogro, JSON.stringify(logro), true);
-          await window.appStorage.set(
-            "logros:lista",
-            JSON.stringify(listaLogros),
-            true
-          );
+          if (!dataLogro.success) {
+            alert("Error al guardar el logro: " + dataLogro.message);
+            return;
+          }
 
           // Eliminar de objetivos activos en la BD
-          const res = await fetch(
+          const resDelete = await fetch(
             `/api/objetivos-ahorro/${objetivoACompletar}`,
             {
               method: "DELETE",
             }
           );
 
-          if (res.ok) {
+          const dataDelete = await resDelete.json();
+
+          if (dataDelete.success) {
             objetivos = objetivos.filter((o) => o.id !== objetivoACompletar);
             cerrarModal();
             mostrarObjetivos();
-            alert(
-              '🎉 ¡Felicidades! Tu logro ha sido guardado. Puedes verlo en la página de "Objetivos Cumplidos".'
-            );
+            alert("🎉 ¡Felicidades! Tu logro ha sido guardado exitosamente.");
+          } else {
+            alert("Error al eliminar el objetivo: " + dataDelete.message);
           }
         } catch (error) {
           console.error("Error guardando logro:", error);
