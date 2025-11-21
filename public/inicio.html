@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>finansys</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <title>FinanSYS</title>
     <style>
       * {
         margin: 0;
@@ -185,9 +186,9 @@
         border-bottom-color: #a8d5d3;
       }
       .logo-img {
-        width: 250px;
-        margin-bottom: 80px;
-        filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+        width: 550px;
+        margin-bottom: 100px;
+        filter: drop-shadow(0 4px 1000px rgba(0, 0, 0, 0.3));
       }
 
       /* Animaciones */
@@ -238,12 +239,6 @@
     </style>
   </head>
   <body>
-    <div class="background-shapes">
-      <div class="shape shape1"></div>
-      <div class="shape shape2"></div>
-      <div class="shape shape3"></div>
-    </div>
-
     <div class="container">
       <img src="img/LogoFinanSYS.png" class="logo-img" alt="logo" />
       <div class="form-container">
@@ -264,7 +259,11 @@
         </form>
 
         <p class="register-link">
-          ¿No tienes cuenta? <a href="#" id="registerLink">Regístrate aquí</a>
+          ¿No tienes cuenta?
+          <a href="/registro.html" id="registerLink">Regístrate aquí</a>
+        </p>
+        <p class="register-link">
+          <a href="/recuperar.html">¿Olvidaste tu contraseña?</a>
         </p>
       </div>
 
@@ -351,7 +350,7 @@
       });
       registerLink.addEventListener("click", function (e) {
         e.preventDefault();
-        window.location.href = "registro.html";
+        window.location.href = "/registro.html";
       });
     </script>
   </body>

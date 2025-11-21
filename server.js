@@ -3,6 +3,8 @@ const sqlite3 = require("sqlite3").verbose();
 const bcrypt = require("bcrypt");
 const cors = require("cors");
 const path = require("path");
+require("dotenv").config();
+const Groq = require("groq-sdk");
 
 const app = express();
 const PORT = 3000;
@@ -13,7 +15,7 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
-// ---------- BASE DE DATOS ----------
+// ========== BASE DE DATOS ==========
 const db = new sqlite3.Database("./usuarios.db", (err) => {
   if (err) {
     console.error("❌ Error al conectar a SQLite:", err);
@@ -41,7 +43,7 @@ function crearTabla() {
   });
 }
 
-// ---------- RUTAS HTML LIMPIAS ----------
+// ========== RUTAS HTML LIMPIAS ==========
 const sendPage = (res, file) =>
   res.sendFile(path.join(__dirname, "public", file));
 
@@ -50,16 +52,21 @@ app.get("/inicio", (req, res) => sendPage(res, "inicio.html"));
 app.get("/dashboard", (req, res) => sendPage(res, "dashboard.html"));
 app.get("/registro", (req, res) => sendPage(res, "registro.html"));
 app.get("/metas", (req, res) => sendPage(res, "metas.html"));
+app.get("/restablecer.html", (req, res) => sendPage(res, "restablecer.html"));
 app.get("/administrar", (req, res) => sendPage(res, "administrar.html"));
+app.get("/asistente", (req, res) => sendPage(res, "asistente.html"));
+app.get("/calculadora", (req, res) => sendPage(res, "calculadora.html"));
+app.get("/quienes-somos", (req, res) => sendPage(res, "quienes-somos.html"));
 
-// ---------- API: REGISTRO ----------
+// ========== API REGISTRO ==========
 app.post("/api/registro", async (req, res) => {
   const { nombre, email, usuario, contrasena } = req.body;
 
   if (!nombre || !email || !usuario || !contrasena) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Todos los campos son requeridos" });
+    return res.status(400).json({
+      success: false,
+      message: "Todos los campos son requeridos",
+    });
   }
 
   try {
@@ -94,12 +101,15 @@ app.post("/api/registro", async (req, res) => {
   }
 });
 
-// ---------- API: LOGIN ----------
+// ========== API LOGIN ==========
 app.post("/api/login", (req, res) => {
   const { usuario, contrasena } = req.body;
 
   if (!usuario || !contrasena) {
-    return res.status(400).json({ success: false, message: "Faltan datos" });
+    return res.status(400).json({
+      success: false,
+      message: "Faltan datos",
+    });
   }
 
   const sql = `SELECT * FROM usuarios WHERE usuario = ? OR email = ?`;
@@ -119,9 +129,10 @@ app.post("/api/login", (req, res) => {
     const valida = await bcrypt.compare(contrasena, row.contrasena);
 
     if (!valida) {
-      return res
-        .status(401)
-        .json({ success: false, message: "Usuario o contraseña incorrectos" });
+      return res.status(401).json({
+        success: false,
+        message: "Usuario o contraseña incorrectos",
+      });
     }
 
     res.json({
@@ -137,7 +148,59 @@ app.post("/api/login", (req, res) => {
   });
 });
 
-// ---------- OBTENER USUARIOS (solo pruebas) ----------
+// ========== API RECUPERAR CONTRASEÑA ==========
+
+// 1. Verificar si el usuario existe
+app.post("/api/verificar-usuario", (req, res) => {
+  const { usuario } = req.body;
+
+  if (!usuario) {
+    return res.status(400).json({ success: false, message: "Falta el nombre de usuario" });
+  }
+
+  const sql = `SELECT id FROM usuarios WHERE usuario = ?`;
+  db.get(sql, [usuario], (err, row) => {
+    if (err) {
+      return res.status(500).json({ success: false, message: "Error en el servidor" });
+    }
+    if (!row) {
+      return res.status(404).json({ success: false, message: "El usuario no fue encontrado" });
+    }
+    res.json({ success: true });
+  });
+});
+
+// 2. Restablecer la contraseña
+app.post("/api/restablecer-contrasena", async (req, res) => {
+  const { usuario, nuevaContrasena } = req.body;
+
+  if (!usuario || !nuevaContrasena) {
+    return res.status(400).json({ success: false, message: "Faltan datos" });
+  }
+
+  if (nuevaContrasena.length < 6) {
+    return res.status(400).json({ success: false, message: "La contraseña debe tener al menos 6 caracteres" });
+  }
+
+  try {
+    const hash = await bcrypt.hash(nuevaContrasena, 10);
+    const sql = `UPDATE usuarios SET contrasena = ? WHERE usuario = ?`;
+
+    db.run(sql, [hash, usuario], function (err) {
+      if (err) {
+        return res.status(500).json({ success: false, message: "Error al actualizar la contraseña" });
+      }
+      if (this.changes === 0) {
+        return res.status(404).json({ success: false, message: "Usuario no encontrado para actualizar" });
+      }
+      res.json({ success: true, message: "Contraseña actualizada con éxito" });
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error en el servidor" });
+  }
+});
+
+// ========== OBTENER USUARIOS ==========
 app.get("/api/usuarios", (req, res) => {
   const sql = `SELECT id, nombre, email, usuario, fecha_registro FROM usuarios`;
 
@@ -151,12 +214,53 @@ app.get("/api/usuarios", (req, res) => {
   });
 });
 
-// ---------- MANEJO DE RUTAS INVÁLIDAS ----------
+// ========== IA: GROQ ==========
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+app.post("/api/chat-ia", async (req, res) => {
+  const { message, gastos, objetivos } = req.body;
+
+  if (!message) {
+    return res.status(400).json({
+      success: false,
+      reply: "No recibí ningún mensaje.",
+    });
+  }
+
+  try {
+    const completion = await groq.chat.completions.create({
+      model: "llama-3.1-8b-instant",
+      messages: [
+        {
+          role: "system",
+          content: `Eres un asistente financiero experto.
+          Usa un tono cálido, profesional y claro.
+          Datos del usuario:
+          Gastos: ${JSON.stringify(gastos)}
+          Objetivos: ${JSON.stringify(objetivos)}
+          `,
+        },
+        { role: "user", content: message },
+      ],
+    });
+
+    const respuesta = completion.choices[0].message.content;
+    res.json({ success: true, reply: respuesta });
+  } catch (error) {
+    console.error("🔥 Error IA (Groq):", error);
+    res.status(500).json({
+      success: false,
+      reply: "Hubo un problema con la IA. Inténtalo de nuevo.",
+    });
+  }
+});
+
+// ========== RUTA 404 ==========
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, "public", "404.html"));
 });
 
-// ---------- INICIO DEL SERVIDOR ----------
+// ========== INICIO DEL SERVIDOR ==========
 app.listen(PORT, () => {
   console.log(`🚀 Servidor en ejecución: http://localhost:${PORT}`);
   console.log("📂 Archivos estáticos desde: /public");
