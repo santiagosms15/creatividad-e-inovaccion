@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Asistente IA - FinanSYS</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <title>Asistentes Virtuales</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
@@ -24,7 +25,7 @@
 
       body {
         font-family: "Inter", sans-serif;
-        background-image: url("img/fondoAI.jpg");
+        background-image: url("img/fondo4.jpg");
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
@@ -134,12 +135,35 @@
         font-weight: 600;
         cursor: pointer;
       }
+
+      .back-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background-color: var(--secondary);
+        color: var(--text-secondary);
+        font-size: 1em;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s ease, color 0.2s ease;
+        text-decoration: none;
+        margin-bottom: 25px;
+      }
+
+      .back-btn:hover {
+        background-color: var(--accent);
+        color: var(--text-primary);
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <div class="card">
         <h1>Asistente Financiero Virtual</h1>
+        <button class="btn back-btn" onclick="backToMenu()">
+          ← Volver al Menú
+        </button>
         <div class="chat-window" id="chatWindow">
           <div class="chat-message ai-message">
             ¡Hola! Soy tu asistente financiero. Estoy analizando tus datos para
@@ -193,6 +217,10 @@
           console.error("Error al cargar el contexto financiero:", error);
         }
       }
+
+      function backToMenu() {
+      window.location.href = "dashboard.html";
+    }
 
       async function enviarMensajeIA() {
         const input = document.getElementById("chatInput");

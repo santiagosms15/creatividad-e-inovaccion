@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FinanSYS - Juegos</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <title>Juegos Financieros</title>
     <style>
       * {
         margin: 0;
@@ -129,8 +130,18 @@
       }
 
       .back-btn {
-        background: #e74c3c;
+        background: #f8f9fa;
+        color: #764ba2;
+        border: 2px solid #e9ecef;
         margin-bottom: 20px;
+        text-transform: none;
+        font-weight: 500;
+      }
+
+      .back-btn:hover {
+        background: #e9ecef;
+        color: #667eea;
+        transform: scale(1.02);
       }
 
       .game-header {
@@ -642,6 +653,9 @@
     <div class="container">
       <div class="header">
         <h1>FinanSYS Games</h1>
+        <button class="btn back-btn" onclick="backToMenu()">
+          ← Volver al Menú
+        </button>
         <p>Aprende finanzas mientras te diviertes</p>
       </div>
 
@@ -678,8 +692,8 @@
 
       <!-- Juego 1: Desafío Presupuesto (MANTENIDO COMO ESTABA) -->
       <div id="game1" class="game-screen">
-        <button class="btn back-btn" onclick="backToMenu()">
-          ← Volver al Menú
+        <button class="btn back-btn" onclick="backToMenuJuegos()">
+          ← Volver al Menú de juegos
         </button>
         <div class="game-header">
           <h2>💰 Desafío Presupuesto</h2>
@@ -711,8 +725,8 @@
 
       <!-- Juego 2: Ruleta del Ahorro - INTERFAZ MEJORADA -->
       <div id="game2" class="game-screen">
-        <button class="btn back-btn" onclick="backToMenu()">
-          ← Volver al Menú
+        <button class="btn back-btn" onclick="backToMenuJuegos()">
+          ← Volver al Menú de juegos
         </button>
 
         <div class="savings-wheel-container">
@@ -1360,6 +1374,31 @@
 
         initializeWheelGame();
       }
+       function backToMenu() {
+      window.location.href = "dashboard.html";
+    }
+    function backToMenuJuegos() {
+      document.querySelectorAll(".game-screen").forEach((screen) => {
+        screen.classList.remove("active");
+      });
+      document.getElementById("gamesMenu").style.display = "grid";
+
+      // Reset games
+      game1State = {
+        level: 1,
+        points: 0,
+        income: 3000,
+        remaining: 3000,
+        savingGoal: 500,
+        scenarios: game1State.scenarios,
+        currentScenario: 0,
+      };
+
+      wheelState.currentQuestion = 0;
+      wheelState.score = 0;
+      wheelState.streak = 0;
+      wheelState.correctAnswers = 0;
+    }
     </script>
   </body>
 </html>

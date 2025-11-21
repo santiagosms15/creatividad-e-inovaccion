@@ -52,8 +52,11 @@ app.get("/inicio", (req, res) => sendPage(res, "inicio.html"));
 app.get("/dashboard", (req, res) => sendPage(res, "dashboard.html"));
 app.get("/registro", (req, res) => sendPage(res, "registro.html"));
 app.get("/metas", (req, res) => sendPage(res, "metas.html"));
+app.get("/restablecer.html", (req, res) => sendPage(res, "restablecer.html"));
 app.get("/administrar", (req, res) => sendPage(res, "administrar.html"));
 app.get("/asistente", (req, res) => sendPage(res, "asistente.html"));
+app.get("/calculadora", (req, res) => sendPage(res, "calculadora.html"));
+app.get("/quienes-somos", (req, res) => sendPage(res, "quienes-somos.html"));
 
 // ========== API REGISTRO ==========
 app.post("/api/registro", async (req, res) => {
@@ -143,6 +146,58 @@ app.post("/api/login", (req, res) => {
       },
     });
   });
+});
+
+// ========== API RECUPERAR CONTRASEÑA ==========
+
+// 1. Verificar si el usuario existe
+app.post("/api/verificar-usuario", (req, res) => {
+  const { usuario } = req.body;
+
+  if (!usuario) {
+    return res.status(400).json({ success: false, message: "Falta el nombre de usuario" });
+  }
+
+  const sql = `SELECT id FROM usuarios WHERE usuario = ?`;
+  db.get(sql, [usuario], (err, row) => {
+    if (err) {
+      return res.status(500).json({ success: false, message: "Error en el servidor" });
+    }
+    if (!row) {
+      return res.status(404).json({ success: false, message: "El usuario no fue encontrado" });
+    }
+    res.json({ success: true });
+  });
+});
+
+// 2. Restablecer la contraseña
+app.post("/api/restablecer-contrasena", async (req, res) => {
+  const { usuario, nuevaContrasena } = req.body;
+
+  if (!usuario || !nuevaContrasena) {
+    return res.status(400).json({ success: false, message: "Faltan datos" });
+  }
+
+  if (nuevaContrasena.length < 6) {
+    return res.status(400).json({ success: false, message: "La contraseña debe tener al menos 6 caracteres" });
+  }
+
+  try {
+    const hash = await bcrypt.hash(nuevaContrasena, 10);
+    const sql = `UPDATE usuarios SET contrasena = ? WHERE usuario = ?`;
+
+    db.run(sql, [hash, usuario], function (err) {
+      if (err) {
+        return res.status(500).json({ success: false, message: "Error al actualizar la contraseña" });
+      }
+      if (this.changes === 0) {
+        return res.status(404).json({ success: false, message: "Usuario no encontrado para actualizar" });
+      }
+      res.json({ success: true, message: "Contraseña actualizada con éxito" });
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error en el servidor" });
+  }
 });
 
 // ========== OBTENER USUARIOS ==========

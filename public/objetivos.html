@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <title>Objetivos Cumplidos</title>
     <style>
       * {
@@ -522,7 +523,9 @@
   <body>
     <div class="container">
       <div class="header">
-        <a href="index.html" class="btn-volver">← Volver a Finanzas</a>
+        <button class="btn back-btn" onclick="backToMenu()">
+          ← Volver al Menú
+        </button>
         <h1>🎉 Objetivos Cumplidos</h1>
         <p>Celebra tus logros y mantén la motivación</p>
       </div>
@@ -924,6 +927,16 @@
 
       // Cargar logros al iniciar
       cargarLogros();
+
+      // Volver al menú con la tecla Escape
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          window.location.href = "index.html";
+        }
+      });
+      function backToMenu() {
+      window.location.href = "dashboard.html";
+    }
     </script>
   </body>
 </html>
