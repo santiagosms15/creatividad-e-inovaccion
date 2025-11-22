@@ -144,6 +144,12 @@
       border-color: rgba(255, 255, 255, 0.6);
     }
 
+    .btn-submit:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+      transform: translateY(0);
+    }
+
     .back-link {
       text-align: center;
       color: rgba(255, 255, 255, 0.7);
@@ -175,6 +181,8 @@
         transform: translateY(-20px);
       }
     }
+
+    .visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
   </style>
 </head>
 
@@ -192,11 +200,12 @@
     </p>
 
     <div class="form-container">
-      <form id="recoverForm">
+      <form id="recoverForm" novalidate>
         <div class="input-group">
-          <input type="text" id="usuario" placeholder="Nombre de Usuario" required />
+          <label for="usuario" class="visually-hidden">Nombre de Usuario</label>
+          <input type="text" id="usuario" placeholder="Nombre de Usuario" required autocomplete="username" />
         </div>
-        <button type="submit" class="btn-submit">Verificar Usuario</button>
+        <button type="submit" class="btn-submit" id="submitButton">Verificar Usuario</button>
       </form>
 
       <p class="back-link">
@@ -208,12 +217,16 @@
   <script>
     document.getElementById('recoverForm').addEventListener('submit', async function (e) {
       e.preventDefault();
+      const submitButton = document.getElementById('submitButton');
       const usuario = document.getElementById('usuario').value.trim();
 
       if (!usuario) {
         alert('Por favor, ingresa tu nombre de usuario.');
         return;
       }
+
+      submitButton.disabled = true;
+      submitButton.textContent = 'Verificando...';
 
       try {
         const response = await fetch('/api/verificar-usuario', {
@@ -230,6 +243,9 @@
         }
       } catch (error) {
         alert('Error al conectar con el servidor. Inténtalo de nuevo.');
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Verificar Usuario';
       }
     });
   </script>

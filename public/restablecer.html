@@ -136,6 +136,12 @@
       border-color: rgba(255, 255, 255, 0.6);
     }
 
+    .btn-submit:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+      transform: translateY(0);
+    }
+
     .back-link {
       text-align: center;
       color: rgba(255, 255, 255, 0.7);
@@ -167,6 +173,8 @@
         transform: translateY(-20px);
       }
     }
+
+    .visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
   </style>
 </head>
 
@@ -180,14 +188,16 @@
     <h1>Nueva Contraseña</h1>
 
     <div class="form-container">
-      <form id="resetForm">
+      <form id="resetForm" novalidate>
         <div class="input-group">
-          <input type="password" id="nuevaContrasena" placeholder="Nueva Contraseña" required />
+          <label for="nuevaContrasena" class="visually-hidden">Nueva Contraseña</label>
+          <input type="password" id="nuevaContrasena" placeholder="Nueva Contraseña" required autocomplete="new-password" />
         </div>
         <div class="input-group">
-          <input type="password" id="confirmarContrasena" placeholder="Confirmar Contraseña" required />
+          <label for="confirmarContrasena" class="visually-hidden">Confirmar Contraseña</label>
+          <input type="password" id="confirmarContrasena" placeholder="Confirmar Contraseña" required autocomplete="new-password" />
         </div>
-        <button type="submit" class="btn-submit">Actualizar Contraseña</button>
+        <button type="submit" class="btn-submit" id="submitButton">Actualizar Contraseña</button>
       </form>
 
       <p class="back-link">
@@ -199,6 +209,7 @@
   <script>
     document.getElementById('resetForm').addEventListener('submit', async function (e) {
       e.preventDefault();
+      const submitButton = document.getElementById('submitButton');
 
       const nuevaContrasena = document.getElementById('nuevaContrasena').value;
       const confirmarContrasena = document.getElementById('confirmarContrasena').value;
@@ -222,6 +233,9 @@
         return;
       }
 
+      submitButton.disabled = true;
+      submitButton.textContent = 'Actualizando...';
+
       try {
         const response = await fetch('/api/restablecer-contrasena', {
           method: 'POST',
@@ -238,6 +252,9 @@
         }
       } catch (error) {
         alert('Error al conectar con el servidor. Inténtalo de nuevo.');
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Actualizar Contraseña';
       }
     });
   </script>

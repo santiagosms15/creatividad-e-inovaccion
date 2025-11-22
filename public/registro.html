@@ -121,6 +121,12 @@
       transform: translateY(-2px);
     }
 
+    .btn-submit:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+      transform: translateY(0);
+    }
+
     .btn-submit {
       width: 100%;
       padding: 18px;
@@ -226,6 +232,8 @@
       animation-delay: 0.2s;
     }
 
+    .visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+
     .error-message {
       color: #ff6b6b;
       font-size: 0.85rem;
@@ -306,6 +314,7 @@
     const usuarioInput = document.getElementById("usuario");
     const contrasenaInput = document.getElementById("contrasena");
     const confirmarInput = document.getElementById("confirmarContrasena");
+    const submitButton = document.getElementById("submitButton");
 
     // Función para validar email
     function validarEmail(email) {
@@ -313,72 +322,63 @@
       return regex.test(email);
     }
 
-    // Función para mostrar error
-    function mostrarError(inputGroup) {
+    function showError(elementId, message) {
+      const errorElement = document.getElementById(elementId);
+      const inputGroup = errorElement.parentElement;
+      errorElement.textContent = message;
       inputGroup.classList.add("error");
     }
 
-    // Función para limpiar error
-    function limpiarError(inputGroup) {
-      inputGroup.classList.remove("error");
-    }
-
-    // Limpiar errores al escribir
-    [
-      nombreInput,
-      emailInput,
-      usuarioInput,
-      contrasenaInput,
-      confirmarInput,
-    ].forEach((input) => {
-      input.addEventListener("input", function () {
-        limpiarError(this.parentElement);
+    function clearErrors() {
+      document.querySelectorAll(".error-message").forEach((el) => {
+        el.textContent = "";
+        el.parentElement.classList.remove("error");
       });
-    });
+    }
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-
-      // Limpiar errores previos
-      document.querySelectorAll(".input-group").forEach((group) => {
-        limpiarError(group);
-      });
+      clearErrors();
 
       let valido = true;
 
       // Validar nombre
       if (nombreInput.value.trim().length < 3) {
-        mostrarError(document.getElementById("nombreGroup"));
+        showError("nombreError", "Por favor ingresa tu nombre completo.");
         valido = false;
       }
 
       // Validar email
       if (!validarEmail(emailInput.value.trim())) {
-        mostrarError(document.getElementById("emailGroup"));
+        showError("emailError", "Por favor ingresa un correo válido.");
         valido = false;
       }
 
       // Validar usuario
       if (usuarioInput.value.trim().length < 4) {
-        mostrarError(document.getElementById("usuarioGroup"));
+        showError("usuarioError", "El usuario debe tener al menos 4 caracteres.");
         valido = false;
       }
 
       // Validar contraseña
       if (contrasenaInput.value.length < 6) {
-        mostrarError(document.getElementById("contrasenaGroup"));
+        showError("contrasenaError", "La contraseña debe tener al menos 6 caracteres.");
         valido = false;
       }
 
       // Validar confirmación de contraseña
       if (contrasenaInput.value !== confirmarInput.value) {
-        mostrarError(document.getElementById("confirmarGroup"));
+        showError("confirmarError", "Las contraseñas no coinciden.");
         valido = false;
       }
 
       if (!valido) {
         return;
       }
+
+      // Deshabilitar botón y mostrar estado de carga
+      submitButton.disabled = true;
+      submitButton.textContent = "Registrando...";
 
       // Enviar datos al backend
       const datosUsuario = {
@@ -398,24 +398,27 @@
       })
         .then((response) => response.json())
         .then((data) => {
+          submitButton.disabled = false;
+          submitButton.textContent = "Registrarme";
           if (data.success) {
-            // Animación de éxito
-            form.style.transform = "scale(0.95)";
-            setTimeout(() => {
-              form.style.transform = "scale(1)";
-              alert("¡Registro exitoso! Bienvenido, " + datosUsuario.nombre);
-              // Redirigir al inicio de sesión
-              window.location.href = "inicio.html";
-            }, 100);
+            alert("¡Registro exitoso! Bienvenido, " + datosUsuario.nombre + ". Serás redirigido para iniciar sesión.");
+            window.location.href = "inicio.html";
           } else {
-            alert("Error: " + data.message);
+            // Mostrar error específico del backend
+            if (data.message.includes("usuario")) {
+              showError("usuarioError", data.message);
+            } else if (data.message.includes("correo")) {
+              showError("emailError", data.message);
+            } else {
+              alert("Error en el registro: " + data.message);
+            }
           }
         })
         .catch((error) => {
           console.error("Error:", error);
-          alert(
-            "Error al conectar con el servidor. Asegúrate de que esté corriendo."
-          );
+          alert("Error al conectar con el servidor. Asegúrate de que esté corriendo.");
+          submitButton.disabled = false;
+          submitButton.textContent = "Registrarme";
         });
     });
 

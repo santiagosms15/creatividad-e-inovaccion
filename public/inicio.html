@@ -115,6 +115,12 @@
       transition: all 0.3s ease;
     }
 
+    input:focus {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.7);
+      outline: none;
+    }
+
     .btn-submit {
       width: 100%;
       padding: clamp(12px, 3vw, 18px);
@@ -132,6 +138,17 @@
       backdrop-filter: blur(10px);
     }
 
+    .btn-submit:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.7);
+    }
+
+    .btn-submit:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+
     .register-link {
       margin-top: 20px;
       font-size: 0.95rem;
@@ -144,6 +161,19 @@
       text-decoration: none;
       border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     }
+
+    /* Estilos para mensajes de error */
+    .error-message {
+      color: #ffdddd;
+      font-size: 0.85rem;
+      margin-top: 5px;
+      text-align: left;
+      padding-left: 20px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+      height: 1.2em; /* Reservar espacio para evitar saltos */
+    }
+
+    .visually-hidden { /* Para accesibilidad de labels */ position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
 
     /* Animaciones */
     @keyframes float {
@@ -230,14 +260,18 @@
     </p>
 
     <div class="form-container">
-      <form id="registerForm">
+      <form id="loginForm" novalidate>
         <div class="input-group">
-          <input type="text" id="usuario" placeholder="Usuario" required />
+          <label for="usuario" class="visually-hidden">Usuario</label>
+          <input type="text" id="usuario" placeholder="Usuario" required autocomplete="username" />
+          <div class="error-message" id="usuarioError"></div>
         </div>
         <div class="input-group">
-          <input type="password" id="contrasena" placeholder="Contraseña" required />
+          <label for="contrasena" class="visually-hidden">Contraseña</label>
+          <input type="password" id="contrasena" placeholder="Contraseña" required autocomplete="current-password" />
+          <div class="error-message" id="contrasenaError"></div>
         </div>
-        <button type="submit" class="btn-submit">Iniciar Sesión</button>
+        <button type="submit" class="btn-submit" id="submitButton">Iniciar Sesión</button>
       </form>
 
       <p class="register-link">
@@ -250,43 +284,73 @@
   </div>
 
   <script>
-    const form = document.getElementById("registerForm");
+    const form = document.getElementById("loginForm");
     const usuarioInput = document.getElementById("usuario");
     const contrasenaInput = document.getElementById("contrasena");
-    const registerLink = document.getElementById("registerLink");
+    const submitButton = document.getElementById("submitButton");
+    const usuarioError = document.getElementById("usuarioError");
+    const contrasenaError = document.getElementById("contrasenaError");
+
+    const showError = (element, message) => {
+      element.textContent = message;
+    };
+
+    const clearErrors = () => {
+      usuarioError.textContent = "";
+      contrasenaError.textContent = "";
+    };
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      clearErrors();
 
       const usuario = usuarioInput.value.trim();
       const contrasena = contrasenaInput.value;
+      let isValid = true;
 
-      if (!usuario || !contrasena) {
-        alert("Por favor, completa todos los campos");
+      if (!usuario) {
+        showError(usuarioError, "Por favor, ingresa tu usuario.");
+        isValid = false;
+      }
+
+      if (!contrasena) {
+        showError(contrasenaError, "Por favor, ingresa tu contraseña.");
+        isValid = false;
+      } else if (contrasena.length < 6) {
+        showError(contrasenaError, "La contraseña debe tener al menos 6 caracteres.");
+        isValid = false;
+      }
+
+      if (!isValid) {
         return;
       }
 
-      if (contrasena.length < 6) {
-        alert("La contraseña debe tener al menos 6 caracteres");
-        return;
-      }
+      // Deshabilitar botón y mostrar estado de carga
+      submitButton.disabled = true;
+      submitButton.textContent = "Iniciando...";
 
       fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ usuario, contrasena }),
       })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.success) {
-            alert(`Bienvenido, ${data.usuario.nombre}`);
-            sessionStorage.setItem("usuario", JSON.stringify(data.usuario));
-            window.location.href = "/dashboard";
-          } else {
-            alert("Error: " + data.message);
+        .then((res) => {
+          if (!res.ok) {
+            // Si el servidor responde con un error (4xx, 5xx)
+            return res.json().then(err => Promise.reject(err));
           }
+          return res.json();
         })
-        .catch(() => alert("No se pudo conectar con el servidor."));
+        .then((data) => {
+          // El backend debería devolver el nombre en la respuesta
+          sessionStorage.setItem("usuario", JSON.stringify(data.usuario));
+          window.location.href = "/dashboard";
+        })
+        .catch((err) => {
+          showError(contrasenaError, err.message || "Usuario o contraseña incorrectos.");
+          submitButton.disabled = false; // Reactivar botón
+          submitButton.textContent = "Iniciar Sesión";
+        });
     });
   </script>
 </body>
