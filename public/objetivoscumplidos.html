@@ -1,789 +1,787 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <title>Objetivos Cumplidos</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
 
-      body {
-        min-height: 100vh;
-        background-image: url("img/objetivoscumplidos.jpg");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        overflow-x: hidden;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <title>Objetivos Cumplidos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-      /* Header Premium */
-      .header {
-        padding: 0.2rem 0.5rem;
+    body {
+      min-height: 100vh;
+      background-image: url("img/objetivoscumplidos.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      overflow-x: hidden;
+    }
 
-        position: relative;
-        overflow: hidden;
-      }
+    /* Header Premium */
+    .header {
+      padding: 0.2rem 0.5rem;
 
-      .header::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 400px;
-        height: 400px;
-        background: radial-gradient(
-          circle,
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle,
           rgba(59, 130, 246, 0.15) 0%,
-          transparent 70%
-        );
-        border-radius: 50%;
-        transform: translate(30%, -50%);
+          transparent 70%);
+      border-radius: 50%;
+      transform: translate(30%, -50%);
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .btn-volver {
+      padding: 0.75rem 1.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-volver:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .user-info {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.95rem;
+    }
+
+    .header-title {
+      text-align: center;
+    }
+
+    .header-title h1 {
+      color: white;
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .header-title p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1.1rem;
+      font-weight: 400;
+    }
+
+    /* Container Principal */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2.5rem;
+    }
+
+    /* Stats Cards Premium */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(5px);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .stat-label {
+      color: #64748b;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .stat-card.highlight {
+      background: rgba(59, 130, 246, 0.25);
+      backdrop-filter: blur(10px);
+      color: white;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+    }
+
+    .stat-card.highlight::before {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .stat-card.highlight .stat-icon {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .stat-card.highlight .stat-value,
+    .stat-card.highlight .stat-label {
+      color: white;
+    }
+
+    /* Secciones */
+    .section {
+      background: white;
+      border-radius: 20px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #f1f5f9;
+    }
+
+    .section-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    /* Medallas */
+    .medals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .medal {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 2rem 1.5rem;
+      border-radius: 16px;
+      text-align: center;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+      position: relative;
+    }
+
+    .medal.unlocked {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+      border-color: #fbbf24;
+      box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+    }
+
+    .medal.locked {
+      opacity: 0.4;
+      filter: grayscale(100%);
+    }
+
+    .medal:hover.unlocked {
+      transform: scale(1.05);
+    }
+
+    .medal-icon {
+      font-size: 3rem;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .medal-name {
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .medal-desc {
+      font-size: 0.8rem;
+      color: #64748b;
+      line-height: 1.4;
+    }
+
+    /* Análisis Grid */
+    .analisis-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .analisis-card {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 1.75rem;
+      border-radius: 16px;
+      border-left: 4px solid #3b82f6;
+      transition: all 0.3s;
+    }
+
+    .analisis-card:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .analisis-label {
+      color: #64748b;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .analisis-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .analisis-desc {
+      color: #64748b;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: 31px;
+      top: 64px;
+      bottom: -2.5rem;
+      width: 2px;
+      background: linear-gradient(180deg, #3b82f6 0%, #e2e8f0 100%);
+    }
+
+    .timeline-item:last-child::before {
+      display: none;
+    }
+
+    .timeline-marker {
+      min-width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      flex-shrink: 0;
+      z-index: 1;
+    }
+
+    .timeline-day {
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .timeline-month {
+      font-size: 0.75rem;
+      opacity: 0.9;
+      text-transform: uppercase;
+    }
+
+    .timeline-content {
+      flex: 1;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 1.75rem;
+      border-radius: 16px;
+      border-left: 4px solid #3b82f6;
+    }
+
+    .timeline-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-date {
+      color: #64748b;
+      font-size: 0.875rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .timeline-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+    }
+
+    .timeline-stat {
+      background: white;
+      padding: 1rem;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .timeline-stat-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #10b981;
+      margin-bottom: 0.25rem;
+    }
+
+    .timeline-stat-label {
+      font-size: 0.75rem;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    /* Galería de Logros */
+    .galeria-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 2rem;
+    }
+
+    .logro-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .logro-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    }
+
+    .logro-header {
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      padding: 2rem;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logro-header::after {
+      content: "✨";
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 2rem;
+      opacity: 0.3;
+    }
+
+    .logro-fecha {
+      font-size: 0.875rem;
+      opacity: 0.9;
+      margin-bottom: 0.75rem;
+      font-weight: 500;
+    }
+
+    .logro-nombre {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      line-height: 1.3;
+    }
+
+    .logro-monto {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .logro-body {
+      padding: 1.75rem;
+    }
+
+    .logro-detalles {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .detalle-item {
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 1rem;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .detalle-label {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .detalle-value {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: #3b82f6;
+    }
+
+    .logro-nota {
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      padding: 1rem;
+      border-radius: 12px;
+      border-left: 4px solid #3b82f6;
+      font-size: 0.875rem;
+      color: #1e40af;
+      margin-bottom: 1.25rem;
+      line-height: 1.6;
+    }
+
+    .btn-compartir {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-compartir:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.3);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 5rem 2rem;
+    }
+
+    .empty-icon {
+      font-size: 6rem;
+      margin-bottom: 1.5rem;
+      opacity: 0.5;
+    }
+
+    .empty-state h3 {
+      color: #0f172a;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+      color: #64748b;
+      margin-bottom: 2rem;
+      font-size: 1.05rem;
+    }
+
+    .btn-nueva-meta {
+      display: inline-block;
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      color: white;
+      border-radius: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .btn-nueva-meta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
       }
 
-      .header-content {
-        max-width: 1400px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 1;
-      }
-
-      .nav-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 2rem;
-      }
-
-      .btn-volver {
-        padding: 0.75rem 1.5rem;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 12px;
-        text-decoration: none;
-        font-weight: 500;
-        transition: all 0.3s;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .btn-volver:hover {
-        background: rgba(255, 255, 255, 0.2);
-        transform: translateY(-2px);
-      }
-
-      .user-info {
-        color: rgba(255, 255, 255, 0.9);
-        font-size: 0.95rem;
-      }
-
-      .header-title {
-        text-align: center;
+      .header {
+        padding: 1.5rem;
       }
 
       .header-title h1 {
-        color: white;
-        font-size: 2.5rem;
-        font-weight: 800;
-        margin-bottom: 0.5rem;
-        letter-spacing: -0.02em;
+        font-size: 1.75rem;
       }
 
-      .header-title p {
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 1.1rem;
-        font-weight: 400;
-      }
-
-      /* Container Principal */
-      .container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 2.5rem;
-      }
-
-      /* Stats Cards Premium */
-      .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 2.5rem;
-      }
-
-      .stat-card {
-        background: rgba(255, 255, 255, 0.25);
-        backdrop-filter: blur(10px);
-        padding: 2rem;
-        border-radius: 16px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        transition: all 0.3s;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .stat-card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-      }
-
-      .stat-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-        background: rgba(255, 255, 255, 0.35);
-      }
-
-      .stat-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-      }
-
-      .stat-icon {
-        width: 48px;
-        height: 48px;
-        background: rgba(255, 255, 255, 0.4);
-        backdrop-filter: blur(5px);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-      }
-
-      .stat-value {
-        font-size: 2rem;
-        font-weight: 800;
-        color: #0f172a;
-        margin-bottom: 0.25rem;
-        letter-spacing: -0.02em;
-      }
-
-      .stat-label {
-        color: #64748b;
-        font-size: 0.875rem;
-        font-weight: 500;
-      }
-
-      .stat-card.highlight {
-        background: rgba(59, 130, 246, 0.25);
-        backdrop-filter: blur(10px);
-        color: white;
-        border: 1px solid rgba(59, 130, 246, 0.4);
-      }
-
-      .stat-card.highlight::before {
-        background: rgba(255, 255, 255, 0.2);
-      }
-
-      .stat-card.highlight .stat-icon {
-        background: rgba(255, 255, 255, 0.3);
-      }
-
-      .stat-card.highlight .stat-value,
-      .stat-card.highlight .stat-label {
-        color: white;
-      }
-
-      /* Secciones */
-      .section {
-        background: white;
-        border-radius: 20px;
-        padding: 2.5rem;
-        margin-bottom: 2rem;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        border: 1px solid rgba(226, 232, 240, 0.8);
-      }
-
-      .section-header {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 2rem;
-        padding-bottom: 1rem;
-        border-bottom: 2px solid #f1f5f9;
-      }
-
-      .section-icon {
-        width: 40px;
-        height: 40px;
-        background: linear-gradient(135deg, #eff6ff, #dbeafe);
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.25rem;
-      }
-
-      .section-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #0f172a;
-      }
-
-      /* Medallas */
-      .medals-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 1.5rem;
-      }
-
-      .medal {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        padding: 2rem 1.5rem;
-        border-radius: 16px;
-        text-align: center;
-        transition: all 0.3s;
-        border: 2px solid transparent;
-        position: relative;
-      }
-
-      .medal.unlocked {
-        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-        border-color: #fbbf24;
-        box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
-      }
-
-      .medal.locked {
-        opacity: 0.4;
-        filter: grayscale(100%);
-      }
-
-      .medal:hover.unlocked {
-        transform: scale(1.05);
-      }
-
-      .medal-icon {
-        font-size: 3rem;
-        margin-bottom: 0.75rem;
-        display: block;
-      }
-
-      .medal-name {
-        font-weight: 700;
-        color: #0f172a;
-        margin-bottom: 0.5rem;
-        font-size: 0.95rem;
-      }
-
-      .medal-desc {
-        font-size: 0.8rem;
-        color: #64748b;
-        line-height: 1.4;
-      }
-
-      /* Análisis Grid */
-      .analisis-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-      }
-
-      .analisis-card {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        padding: 1.75rem;
-        border-radius: 16px;
-        border-left: 4px solid #3b82f6;
-        transition: all 0.3s;
-      }
-
-      .analisis-card:hover {
-        transform: translateX(4px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      }
-
-      .analisis-label {
-        color: #64748b;
-        font-size: 0.875rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-
-      .analisis-value {
-        font-size: 2rem;
-        font-weight: 800;
-        color: #0f172a;
-        margin-bottom: 0.5rem;
-        letter-spacing: -0.02em;
-      }
-
-      .analisis-desc {
-        color: #64748b;
-        font-size: 0.875rem;
-        line-height: 1.5;
-      }
-
-      /* Timeline */
-      .timeline {
-        position: relative;
+      .stats-grid,
+      .medals-grid,
+      .galeria-grid {
+        grid-template-columns: 1fr;
       }
 
       .timeline-item {
-        display: flex;
-        gap: 2rem;
-        margin-bottom: 2.5rem;
-        position: relative;
+        flex-direction: column;
+        gap: 1rem;
       }
 
       .timeline-item::before {
-        content: "";
-        position: absolute;
         left: 31px;
-        top: 64px;
-        bottom: -2.5rem;
-        width: 2px;
-        background: linear-gradient(180deg, #3b82f6 0%, #e2e8f0 100%);
+        top: 80px;
       }
 
-      .timeline-item:last-child::before {
-        display: none;
+      .section {
+        padding: 1.5rem;
       }
+    }
+  </style>
+</head>
 
-      .timeline-marker {
-        min-width: 64px;
-        height: 64px;
-        background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-        border-radius: 16px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: 700;
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        flex-shrink: 0;
-        z-index: 1;
-      }
-
-      .timeline-day {
-        font-size: 1.5rem;
-        line-height: 1;
-      }
-
-      .timeline-month {
-        font-size: 0.75rem;
-        opacity: 0.9;
-        text-transform: uppercase;
-      }
-
-      .timeline-content {
-        flex: 1;
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        padding: 1.75rem;
-        border-radius: 16px;
-        border-left: 4px solid #3b82f6;
-      }
-
-      .timeline-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #0f172a;
-        margin-bottom: 0.5rem;
-      }
-
-      .timeline-date {
-        color: #64748b;
-        font-size: 0.875rem;
-        margin-bottom: 1.25rem;
-      }
-
-      .timeline-stats {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-        gap: 1rem;
-      }
-
-      .timeline-stat {
-        background: white;
-        padding: 1rem;
-        border-radius: 12px;
-        text-align: center;
-      }
-
-      .timeline-stat-value {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: #10b981;
-        margin-bottom: 0.25rem;
-      }
-
-      .timeline-stat-label {
-        font-size: 0.75rem;
-        color: #64748b;
-        font-weight: 500;
-      }
-
-      /* Galería de Logros */
-      .galeria-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-        gap: 2rem;
-      }
-
-      .logro-card {
-        background: white;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s;
-        border: 1px solid rgba(226, 232, 240, 0.8);
-      }
-
-      .logro-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
-      }
-
-      .logro-header {
-        background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-        padding: 2rem;
-        color: white;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .logro-header::after {
-        content: "✨";
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        font-size: 2rem;
-        opacity: 0.3;
-      }
-
-      .logro-fecha {
-        font-size: 0.875rem;
-        opacity: 0.9;
-        margin-bottom: 0.75rem;
-        font-weight: 500;
-      }
-
-      .logro-nombre {
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 0.75rem;
-        line-height: 1.3;
-      }
-
-      .logro-monto {
-        font-size: 2rem;
-        font-weight: 800;
-        letter-spacing: -0.02em;
-      }
-
-      .logro-body {
-        padding: 1.75rem;
-      }
-
-      .logro-detalles {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-        margin-bottom: 1.25rem;
-      }
-
-      .detalle-item {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        padding: 1rem;
-        border-radius: 12px;
-        text-align: center;
-      }
-
-      .detalle-label {
-        font-size: 0.75rem;
-        color: #64748b;
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-
-      .detalle-value {
-        font-size: 1.125rem;
-        font-weight: 700;
-        color: #3b82f6;
-      }
-
-      .logro-nota {
-        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-        padding: 1rem;
-        border-radius: 12px;
-        border-left: 4px solid #3b82f6;
-        font-size: 0.875rem;
-        color: #1e40af;
-        margin-bottom: 1.25rem;
-        line-height: 1.6;
-      }
-
-      .btn-compartir {
-        width: 100%;
-        padding: 1rem;
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        font-size: 0.95rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-      }
-
-      .btn-compartir:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.3);
-      }
-
-      /* Empty State */
-      .empty-state {
-        text-align: center;
-        padding: 5rem 2rem;
-      }
-
-      .empty-icon {
-        font-size: 6rem;
-        margin-bottom: 1.5rem;
-        opacity: 0.5;
-      }
-
-      .empty-state h3 {
-        color: #0f172a;
-        font-size: 1.75rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-      }
-
-      .empty-state p {
-        color: #64748b;
-        margin-bottom: 2rem;
-        font-size: 1.05rem;
-      }
-
-      .btn-nueva-meta {
-        display: inline-block;
-        padding: 1rem 2rem;
-        background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-        color: white;
-        border-radius: 12px;
-        font-weight: 600;
-        text-decoration: none;
-        transition: all 0.3s;
-      }
-
-      .btn-nueva-meta:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-      }
-
-      /* Responsive */
-      @media (max-width: 768px) {
-        .container {
-          padding: 1.5rem;
-        }
-
-        .header {
-          padding: 1.5rem;
-        }
-
-        .header-title h1 {
-          font-size: 1.75rem;
-        }
-
-        .stats-grid,
-        .medals-grid,
-        .galeria-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .timeline-item {
-          flex-direction: column;
-          gap: 1rem;
-        }
-
-        .timeline-item::before {
-          left: 31px;
-          top: 80px;
-        }
-
-        .section {
-          padding: 1.5rem;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <header class="header">
-      <div class="header-content">
-        <div class="nav-top">
-          <a href="dashboard.html" class="btn-volver">
-            <span>←</span>
-            <span>Volver</span>
-          </a>
-          <div class="user-info">
-            <span id="userName">Usuario</span>
-          </div>
-        </div>
-        <div class="header-title">
-          <h1>🏆 Objetivos Cumplidos</h1>
-          <p>Celebra tus logros y mantén la motivación</p>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <div class="nav-top">
+        <a href="dashboard.html" class="btn-volver">
+          <span>←</span>
+          <span>Volver</span>
+        </a>
+        <div class="user-info">
+          <span id="userName">Usuario</span>
         </div>
       </div>
-    </header>
+      <div class="header-title">
+        <h1>🏆 Objetivos Cumplidos</h1>
+        <p>Celebra tus logros y mantén la motivación</p>
+      </div>
+    </div>
+  </header>
 
-    <div class="container">
-      <!-- Stats Cards -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-header">
-            <div class="stat-icon">🏆</div>
-          </div>
-          <div class="stat-value" id="totalLogros">0</div>
-          <div class="stat-label">Objetivos Cumplidos</div>
+  <div class="container">
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon">🏆</div>
         </div>
-
-        <div class="stat-card">
-          <div class="stat-header">
-            <div class="stat-icon">💰</div>
-          </div>
-          <div class="stat-value" id="totalAhorrado">$0</div>
-          <div class="stat-label">Total Ahorrado</div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-header">
-            <div class="stat-icon">⏱️</div>
-          </div>
-          <div class="stat-value" id="tiempoPromedio">0</div>
-          <div class="stat-label">Meses Promedio</div>
-        </div>
-
-        <div class="stat-card highlight">
-          <div class="stat-header">
-            <div class="stat-icon">🔥</div>
-          </div>
-          <div class="stat-value" id="rachaActual">0</div>
-          <div class="stat-label">Racha de Cumplimiento</div>
-        </div>
+        <div class="stat-value" id="totalLogros">0</div>
+        <div class="stat-label">Objetivos Cumplidos</div>
       </div>
 
-      <!-- Medallas -->
-      <div class="section">
-        <div class="section-header">
-          <div class="section-icon">🏅</div>
-          <h2 class="section-title">Medallas e Insignias</h2>
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon">💰</div>
         </div>
-        <div class="medals-grid" id="medallas"></div>
+        <div class="stat-value" id="totalAhorrado">$0</div>
+        <div class="stat-label">Total Ahorrado</div>
       </div>
 
-      <!-- Análisis -->
-      <div class="section">
-        <div class="section-header">
-          <div class="section-icon">📊</div>
-          <h2 class="section-title">Análisis de Rendimiento</h2>
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon">⏱️</div>
         </div>
-        <div class="analisis-grid">
-          <div class="analisis-card">
-            <div class="analisis-label">Tiempo de Cumplimiento</div>
-            <div class="analisis-value" id="tiempoMasRapido">0 días</div>
-            <div class="analisis-desc">Tu objetivo más rápido de cumplir</div>
-          </div>
-          <div class="analisis-card">
-            <div class="analisis-label">Mayor Ahorro</div>
-            <div class="analisis-value" id="mayorAhorro">$0</div>
-            <div class="analisis-desc">Tu objetivo de mayor valor</div>
-          </div>
-          <div class="analisis-card">
-            <div class="analisis-label">Tasa de Éxito</div>
-            <div class="analisis-value" id="tasaExito">100%</div>
-            <div class="analisis-desc">Objetivos cumplidos vs. totales</div>
-          </div>
-          <div class="analisis-card">
-            <div class="analisis-label">Ahorro Mensual</div>
-            <div class="analisis-value" id="ahorroMensual">$0</div>
-            <div class="analisis-desc">Tu capacidad de ahorro promedio</div>
-          </div>
-        </div>
+        <div class="stat-value" id="tiempoPromedio">0</div>
+        <div class="stat-label">Meses Promedio</div>
       </div>
 
-      <!-- Timeline -->
-      <div class="section">
-        <div class="section-header">
-          <div class="section-icon">📅</div>
-          <h2 class="section-title">Línea de Tiempo</h2>
+      <div class="stat-card highlight">
+        <div class="stat-header">
+          <div class="stat-icon">🔥</div>
         </div>
-        <div class="timeline" id="timelineContainer"></div>
-      </div>
-
-      <!-- Galería -->
-      <div class="section">
-        <div class="section-header">
-          <div class="section-icon">🎯</div>
-          <h2 class="section-title">Galería de Logros</h2>
-        </div>
-        <div class="galeria-grid" id="galeriaLogros"></div>
+        <div class="stat-value" id="rachaActual">0</div>
+        <div class="stat-label">Racha de Cumplimiento</div>
       </div>
     </div>
 
-    <script>
-      let objetivosCumplidos = [];
-      let usuarioId = null;
+    <!-- Medallas -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">🏅</div>
+        <h2 class="section-title">Medallas e Insignias</h2>
+      </div>
+      <div class="medals-grid" id="medallas"></div>
+    </div>
 
-      // ✅ OBTENER USUARIO AL CARGAR LA PÁGINA
-      function obtenerUsuario() {
-        let usuario = localStorage.getItem("usuario");
-        if (!usuario) {
-          usuario = sessionStorage.getItem("usuario");
-        }
+    <!-- Análisis -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">📊</div>
+        <h2 class="section-title">Análisis de Rendimiento</h2>
+      </div>
+      <div class="analisis-grid">
+        <div class="analisis-card">
+          <div class="analisis-label">Tiempo de Cumplimiento</div>
+          <div class="analisis-value" id="tiempoMasRapido">0 días</div>
+          <div class="analisis-desc">Tu objetivo más rápido de cumplir</div>
+        </div>
+        <div class="analisis-card">
+          <div class="analisis-label">Mayor Ahorro</div>
+          <div class="analisis-value" id="mayorAhorro">$0</div>
+          <div class="analisis-desc">Tu objetivo de mayor valor</div>
+        </div>
+        <div class="analisis-card">
+          <div class="analisis-label">Tasa de Éxito</div>
+          <div class="analisis-value" id="tasaExito">100%</div>
+          <div class="analisis-desc">Objetivos cumplidos vs. totales</div>
+        </div>
+        <div class="analisis-card">
+          <div class="analisis-label">Ahorro Mensual</div>
+          <div class="analisis-value" id="ahorroMensual">$0</div>
+          <div class="analisis-desc">Tu capacidad de ahorro promedio</div>
+        </div>
+      </div>
+    </div>
 
-        if (!usuario) {
-          alert("⚠️ Debes iniciar sesión para ver tus logros");
-          window.location.href = "/inicio";
-          return null;
-        }
+    <!-- Timeline -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">📅</div>
+        <h2 class="section-title">Línea de Tiempo</h2>
+      </div>
+      <div class="timeline" id="timelineContainer"></div>
+    </div>
 
-        try {
-          const usuarioObj = JSON.parse(usuario);
-          if (!usuarioObj || !usuarioObj.id) {
-            alert("⚠️ Error al cargar datos de usuario");
-            window.location.href = "/inicio";
-            return null;
-          }
+    <!-- Galería -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">🎯</div>
+        <h2 class="section-title">Galería de Logros</h2>
+      </div>
+      <div class="galeria-grid" id="galeriaLogros"></div>
+    </div>
+  </div>
 
-          usuarioId = usuarioObj.id;
-          document.getElementById("userName").textContent = usuarioObj.nombre;
-          return usuarioObj;
-        } catch (error) {
-          console.error("Error al parsear usuario:", error);
+  <script>
+    let objetivosCumplidos = [];
+    let usuarioId = null;
+
+    // ✅ OBTENER USUARIO AL CARGAR LA PÁGINA
+    function obtenerUsuario() {
+      let usuario = localStorage.getItem("usuario");
+      if (!usuario) {
+        usuario = sessionStorage.getItem("usuario");
+      }
+
+      if (!usuario) {
+        alert("⚠️ Debes iniciar sesión para ver tus logros");
+        window.location.href = "/inicio";
+        return null;
+      }
+
+      try {
+        const usuarioObj = JSON.parse(usuario);
+        if (!usuarioObj || !usuarioObj.id) {
           alert("⚠️ Error al cargar datos de usuario");
           window.location.href = "/inicio";
           return null;
         }
-      }
 
-      function mostrarEstadoVacio() {
-        document.getElementById("galeriaLogros").innerHTML = `
+        usuarioId = usuarioObj.id;
+        document.getElementById("userName").textContent = usuarioObj.nombre;
+        return usuarioObj;
+      } catch (error) {
+        console.error("Error al parsear usuario:", error);
+        alert("⚠️ Error al cargar datos de usuario");
+        window.location.href = "/inicio";
+        return null;
+      }
+    }
+
+    function mostrarEstadoVacio() {
+      document.getElementById("galeriaLogros").innerHTML = `
         <div class="empty-state">
           <div class="empty-icon">🎯</div>
           <h3>Aún no has cumplido ningún objetivo</h3>
@@ -791,168 +789,168 @@
           <a href="metas.html" class="btn-nueva-meta">Crear Nueva Meta</a>
         </div>
       `;
-        document.getElementById("timelineContainer").innerHTML =
-          '<p style="color: #94a3b8; text-align: center;">No hay logros para mostrar</p>';
-      }
+      document.getElementById("timelineContainer").innerHTML =
+        '<p style="color: #94a3b8; text-align: center;">No hay logros para mostrar</p>';
+    }
 
-      function calcularEstadisticas() {
-        const total = objetivosCumplidos.length;
-        const totalAhorrado = objetivosCumplidos.reduce(
-          (sum, obj) => sum + obj.monto,
-          0
-        );
-        const tiempoPromedio =
-          objetivosCumplidos.reduce((sum, obj) => sum + obj.tiempoMeses, 0) /
-          total;
+    function calcularEstadisticas() {
+      const total = objetivosCumplidos.length;
+      const totalAhorrado = objetivosCumplidos.reduce(
+        (sum, obj) => sum + obj.monto,
+        0
+      );
+      const tiempoPromedio =
+        objetivosCumplidos.reduce((sum, obj) => sum + obj.tiempoMeses, 0) /
+        total;
 
-        const tiempos = objetivosCumplidos.map((obj) => {
-          const inicio = new Date(obj.fechaInicio);
-          const fin = new Date(obj.fechaCumplida);
-          return Math.ceil((fin - inicio) / (1000 * 60 * 60 * 24));
-        });
-        const tiempoMasRapido = Math.min(...tiempos);
-        const mayorAhorro = Math.max(
-          ...objetivosCumplidos.map((obj) => obj.monto)
-        );
+      const tiempos = objetivosCumplidos.map((obj) => {
+        const inicio = new Date(obj.fechaInicio);
+        const fin = new Date(obj.fechaCumplida);
+        return Math.ceil((fin - inicio) / (1000 * 60 * 60 * 24));
+      });
+      const tiempoMasRapido = Math.min(...tiempos);
+      const mayorAhorro = Math.max(
+        ...objetivosCumplidos.map((obj) => obj.monto)
+      );
 
-        const tresMesesAtras = new Date();
-        tresMesesAtras.setMonth(tresMesesAtras.getMonth() - 3);
-        const racha = objetivosCumplidos.filter(
-          (obj) => new Date(obj.fechaCumplida) >= tresMesesAtras
-        ).length;
+      const tresMesesAtras = new Date();
+      tresMesesAtras.setMonth(tresMesesAtras.getMonth() - 3);
+      const racha = objetivosCumplidos.filter(
+        (obj) => new Date(obj.fechaCumplida) >= tresMesesAtras
+      ).length;
 
-        const ahorroMensual =
-          totalAhorrado /
-          objetivosCumplidos.reduce((sum, obj) => sum + obj.tiempoMeses, 0);
+      const ahorroMensual =
+        totalAhorrado /
+        objetivosCumplidos.reduce((sum, obj) => sum + obj.tiempoMeses, 0);
 
-        document.getElementById("totalLogros").textContent = total;
-        document.getElementById("totalAhorrado").textContent =
-          `$${totalAhorrado.toLocaleString()}`;
-        document.getElementById("tiempoPromedio").textContent =
-          tiempoPromedio.toFixed(1);
-        document.getElementById("rachaActual").textContent = racha;
-        document.getElementById("tiempoMasRapido").textContent =
-          `${tiempoMasRapido} días`;
-        document.getElementById("mayorAhorro").textContent =
-          `$${mayorAhorro.toLocaleString()}`;
-        document.getElementById("tasaExito").textContent = "100%";
-        document.getElementById("ahorroMensual").textContent =
-          `$${ahorroMensual.toFixed(0)}`;
-      }
+      document.getElementById("totalLogros").textContent = total;
+      document.getElementById("totalAhorrado").textContent =
+        `$${totalAhorrado.toLocaleString()}`;
+      document.getElementById("tiempoPromedio").textContent =
+        tiempoPromedio.toFixed(1);
+      document.getElementById("rachaActual").textContent = racha;
+      document.getElementById("tiempoMasRapido").textContent =
+        `${tiempoMasRapido} días`;
+      document.getElementById("mayorAhorro").textContent =
+        `$${mayorAhorro.toLocaleString()}`;
+      document.getElementById("tasaExito").textContent = "100%";
+      document.getElementById("ahorroMensual").textContent =
+        `$${ahorroMensual.toFixed(0)}`;
+    }
 
-      function actualizarMedallas() {
-        const total = objetivosCumplidos.length;
-        const totalAhorrado = objetivosCumplidos.reduce(
-          (sum, obj) => sum + obj.monto,
-          0
-        );
+    function actualizarMedallas() {
+      const total = objetivosCumplidos.length;
+      const totalAhorrado = objetivosCumplidos.reduce(
+        (sum, obj) => sum + obj.monto,
+        0
+      );
 
-        const tiempos = objetivosCumplidos.map((obj) => {
-          const inicio = new Date(obj.fechaInicio);
-          const fin = new Date(obj.fechaCumplida);
-          return Math.ceil((fin - inicio) / (1000 * 60 * 60 * 24));
-        });
-        const tieneRapido = tiempos.some((t) => t < 90);
+      const tiempos = objetivosCumplidos.map((obj) => {
+        const inicio = new Date(obj.fechaInicio);
+        const fin = new Date(obj.fechaCumplida);
+        return Math.ceil((fin - inicio) / (1000 * 60 * 60 * 24));
+      });
+      const tieneRapido = tiempos.some((t) => t < 90);
 
-        const medallas = [
-          {
-            icon: "🥇",
-            nombre: "Primera Meta",
-            desc: "Completaste tu primer objetivo",
-            desbloqueada: total >= 1,
-          },
-          {
-            icon: "💪",
-            nombre: "Persistente",
-            desc: "5 objetivos cumplidos",
-            desbloqueada: total >= 5,
-          },
-          {
-            icon: "⚡",
-            nombre: "Rápido",
-            desc: "Meta en menos de 3 meses",
-            desbloqueada: tieneRapido,
-          },
-          {
-            icon: "🌟",
-            nombre: "Maestro",
-            desc: "10 objetivos cumplidos",
-            desbloqueada: total >= 10,
-          },
-          {
-            icon: "💎",
-            nombre: "Diamante",
-            desc: "Ahorra $50,000 en total",
-            desbloqueada: totalAhorrado >= 50000,
-          },
-          {
-            icon: "👑",
-            nombre: "Leyenda",
-            desc: "20 objetivos cumplidos",
-            desbloqueada: total >= 20,
-          },
-        ];
+      const medallas = [
+        {
+          icon: "🥇",
+          nombre: "Primera Meta",
+          desc: "Completaste tu primer objetivo",
+          desbloqueada: total >= 1,
+        },
+        {
+          icon: "💪",
+          nombre: "Persistente",
+          desc: "5 objetivos cumplidos",
+          desbloqueada: total >= 5,
+        },
+        {
+          icon: "⚡",
+          nombre: "Rápido",
+          desc: "Meta en menos de 3 meses",
+          desbloqueada: tieneRapido,
+        },
+        {
+          icon: "🌟",
+          nombre: "Maestro",
+          desc: "10 objetivos cumplidos",
+          desbloqueada: total >= 10,
+        },
+        {
+          icon: "💎",
+          nombre: "Diamante",
+          desc: "Ahorra $50,000 en total",
+          desbloqueada: totalAhorrado >= 50000,
+        },
+        {
+          icon: "👑",
+          nombre: "Leyenda",
+          desc: "20 objetivos cumplidos",
+          desbloqueada: total >= 20,
+        },
+      ];
 
-        document.getElementById("medallas").innerHTML = medallas
-          .map(
-            (m) => `
+      document.getElementById("medallas").innerHTML = medallas
+        .map(
+          (m) => `
           <div class="medal ${m.desbloqueada ? "unlocked" : "locked"}">
             <span class="medal-icon">${m.icon}</span>
             <div class="medal-name">${m.nombre}</div>
             <div class="medal-desc">${m.desc}</div>
           </div>
         `
-          )
-          .join("");
+        )
+        .join("");
+    }
+
+    function formatearFecha(fecha) {
+      const opciones = { year: "numeric", month: "long", day: "numeric" };
+      return new Date(fecha).toLocaleDateString("es-ES", opciones);
+    }
+
+    function calcularDuracion(fechaInicio, fechaFin) {
+      const inicio = new Date(fechaInicio);
+      const fin = new Date(fechaFin);
+      const diferencia = fin - inicio;
+      return Math.ceil(diferencia / (1000 * 60 * 60 * 24));
+    }
+
+    function mostrarTimeline() {
+      const container = document.getElementById("timelineContainer");
+
+      if (objetivosCumplidos.length === 0) {
+        container.innerHTML =
+          '<p style="color: #94a3b8; text-align: center;">Aún no hay objetivos cumplidos</p>';
+        return;
       }
 
-      function formatearFecha(fecha) {
-        const opciones = { year: "numeric", month: "long", day: "numeric" };
-        return new Date(fecha).toLocaleDateString("es-ES", opciones);
-      }
+      const ordenados = [...objetivosCumplidos].sort(
+        (a, b) => new Date(b.fechaCumplida) - new Date(a.fechaCumplida)
+      );
 
-      function calcularDuracion(fechaInicio, fechaFin) {
-        const inicio = new Date(fechaInicio);
-        const fin = new Date(fechaFin);
-        const diferencia = fin - inicio;
-        return Math.ceil(diferencia / (1000 * 60 * 60 * 24));
-      }
+      container.innerHTML = ordenados
+        .map((obj) => {
+          const dias = calcularDuracion(obj.fechaInicio, obj.fechaCumplida);
+          const fecha = new Date(obj.fechaCumplida);
+          const dia = fecha.getDate();
+          const meses = [
+            "Ene",
+            "Feb",
+            "Mar",
+            "Abr",
+            "May",
+            "Jun",
+            "Jul",
+            "Ago",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dic",
+          ];
+          const mes = meses[fecha.getMonth()];
 
-      function mostrarTimeline() {
-        const container = document.getElementById("timelineContainer");
-
-        if (objetivosCumplidos.length === 0) {
-          container.innerHTML =
-            '<p style="color: #94a3b8; text-align: center;">Aún no hay objetivos cumplidos</p>';
-          return;
-        }
-
-        const ordenados = [...objetivosCumplidos].sort(
-          (a, b) => new Date(b.fechaCumplida) - new Date(a.fechaCumplida)
-        );
-
-        container.innerHTML = ordenados
-          .map((obj) => {
-            const dias = calcularDuracion(obj.fechaInicio, obj.fechaCumplida);
-            const fecha = new Date(obj.fechaCumplida);
-            const dia = fecha.getDate();
-            const meses = [
-              "Ene",
-              "Feb",
-              "Mar",
-              "Abr",
-              "May",
-              "Jun",
-              "Jul",
-              "Ago",
-              "Sep",
-              "Oct",
-              "Nov",
-              "Dic",
-            ];
-            const mes = meses[fecha.getMonth()];
-
-            return `
+          return `
             <div class="timeline-item">
               <div class="timeline-marker">
                 <div class="timeline-day">${dia}</div>
@@ -978,29 +976,29 @@
               </div>
             </div>
           `;
-          })
-          .join("");
+        })
+        .join("");
+    }
+
+    function mostrarGaleria() {
+      const container = document.getElementById("galeriaLogros");
+
+      if (objetivosCumplidos.length === 0) {
+        mostrarEstadoVacio();
+        return;
       }
 
-      function mostrarGaleria() {
-        const container = document.getElementById("galeriaLogros");
+      const ordenados = [...objetivosCumplidos].sort(
+        (a, b) => new Date(b.fechaCumplida) - new Date(a.fechaCumplida)
+      );
 
-        if (objetivosCumplidos.length === 0) {
-          mostrarEstadoVacio();
-          return;
-        }
+      container.innerHTML = ordenados
+        .map((obj) => {
+          const dias = calcularDuracion(obj.fechaInicio, obj.fechaCumplida);
+          const ahorroMensual = obj.monto / obj.tiempoMeses;
+          const ahorroDiario = obj.monto / dias;
 
-        const ordenados = [...objetivosCumplidos].sort(
-          (a, b) => new Date(b.fechaCumplida) - new Date(a.fechaCumplida)
-        );
-
-        container.innerHTML = ordenados
-          .map((obj) => {
-            const dias = calcularDuracion(obj.fechaInicio, obj.fechaCumplida);
-            const ahorroMensual = obj.monto / obj.tiempoMeses;
-            const ahorroDiario = obj.monto / dias;
-
-            return `
+          return `
             <div class="logro-card">
               <div class="logro-header">
                 <div class="logro-fecha">${formatearFecha(obj.fechaCumplida)}</div>
@@ -1026,61 +1024,61 @@
                     <div class="detalle-value">${ahorroDiario.toFixed(0)}</div>
                   </div>
                 </div>
-                ${
-                  obj.nota
-                    ? `
+                ${obj.nota
+              ? `
                   <div class="logro-nota">
                     <strong>📝 Nota:</strong> ${obj.nota}
                   </div>
                 `
-                    : ""
-                }
+              : ""
+            }
                 <button class="btn-compartir" onclick="compartirLogro(${obj.id})">
                   📤 Compartir Logro
                 </button>
               </div>
             </div>
           `;
+        })
+        .join("");
+    }
+
+    function compartirLogro(id) {
+      const objetivo = objetivosCumplidos.find((obj) => obj.id === id);
+      const texto = `🎉 ¡Logré mi objetivo "${objetivo.nombre}"!\n💰 Ahorré ${objetivo.monto.toLocaleString()} en ${calcularDuracion(objetivo.fechaInicio, objetivo.fechaCumplida)} días.\n\n¡Tú también puedes lograrlo! 💪`;
+
+      if (navigator.share) {
+        navigator
+          .share({
+            title: "Mi Logro Financiero",
+            text: texto,
           })
-          .join("");
+          .catch((err) => console.log("Error al compartir:", err));
+      } else {
+        navigator.clipboard
+          .writeText(texto)
+          .then(() => {
+            alert(
+              "✅ Texto copiado al portapapeles. ¡Compártelo donde quieras!"
+            );
+          })
+          .catch(() => {
+            alert("Texto para compartir:\n\n" + texto);
+          });
       }
+    }
 
-      function compartirLogro(id) {
-        const objetivo = objetivosCumplidos.find((obj) => obj.id === id);
-        const texto = `🎉 ¡Logré mi objetivo "${objetivo.nombre}"!\n💰 Ahorré ${objetivo.monto.toLocaleString()} en ${calcularDuracion(objetivo.fechaInicio, objetivo.fechaCumplida)} días.\n\n¡Tú también puedes lograrlo! 💪`;
+    // ✅ INICIALIZAR AL CARGAR LA PÁGINA
+    if (obtenerUsuario()) {
+      cargarLogros();
+    }
 
-        if (navigator.share) {
-          navigator
-            .share({
-              title: "Mi Logro Financiero",
-              text: texto,
-            })
-            .catch((err) => console.log("Error al compartir:", err));
-        } else {
-          navigator.clipboard
-            .writeText(texto)
-            .then(() => {
-              alert(
-                "✅ Texto copiado al portapapeles. ¡Compártelo donde quieras!"
-              );
-            })
-            .catch(() => {
-              alert("Texto para compartir:\n\n" + texto);
-            });
-        }
+    // Atajo de teclado para volver
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        window.location.href = "dashboard.html";
       }
+    });
+  </script>
+</body>
 
-      // ✅ INICIALIZAR AL CARGAR LA PÁGINA
-      if (obtenerUsuario()) {
-        cargarLogros();
-      }
-
-      // Atajo de teclado para volver
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-          window.location.href = "dashboard.html";
-        }
-      });
-    </script>
-  </body>
 </html>

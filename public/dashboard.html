@@ -1,319 +1,302 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <title>Menú Principal</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Fuente Profesional -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <title>Menú Principal</title>
 
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+  <!-- Fuente Profesional -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
 
-      body {
-        font-family: "Montserrat", sans-serif;
-        background-image: url("img/fondo-dashboard.jpg");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        min-height: 100vh;
-      }
-      body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background: rgba(255, 255, 255, 0.6); /* aclarar */
-        backdrop-filter: blur(2px);
-        z-index: -1;
-      }
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-      /* Header estilo corporativo */
+    body {
+      font-family: "Montserrat", sans-serif;
+      background-image: url("img/fondo-dashboard.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.6);
+      /* aclarar */
+      backdrop-filter: blur(2px);
+      z-index: -1;
+    }
+
+    /* Header estilo corporativo */
+    .header {
+      width: 100%;
+      background: #0a380e;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .logo span {
+      color: #ffc600;
+    }
+
+    .welcome-text {
+      font-size: 1.1rem;
+      font-weight: 400;
+    }
+
+    .logout-btn {
+      background: #ffc600;
+      padding: 10px 25px;
+      border-radius: 30px;
+      font-weight: 600;
+      color: #0033a0;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+
+    .logout-btn:hover {
+      background: #ffdb4d;
+      transform: translateY(-2px);
+    }
+
+    /* Contenido */
+    .main-container {
+      padding: 50px 40px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .page-title {
+      text-align: center;
+      font-size: 2.3rem;
+      color: #0033a0;
+      font-weight: 700;
+      margin-bottom: 40px;
+    }
+
+    /* Tarjetas estilo app Bancolombia */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 0 0 25px 0;
+      text-decoration: none;
+      color: black;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      transition: 0.25s ease;
+      border: 2px solid transparent;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      border-color: #ffc600;
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+    }
+
+    .card-content {
+      padding: 25px;
+    }
+
+    .card-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #0033a0;
+      margin-bottom: 10px;
+    }
+
+    .card-description {
+      color: #555;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
       .header {
-        width: 100%;
-        background: #0a380e;
-        padding: 15px 40px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        color: white;
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
       }
 
-      .logo {
-        font-size: 1.8rem;
-        font-weight: 700;
-      }
-
-      .logo span {
-        color: #ffc600;
-      }
-
-      .welcome-text {
-        font-size: 1.1rem;
-        font-weight: 400;
-      }
-
-      .logout-btn {
-        background: #ffc600;
-        padding: 10px 25px;
-        border-radius: 30px;
-        font-weight: 600;
-        color: #0033a0;
-        text-decoration: none;
-        transition: 0.3s;
-      }
-
-      .logout-btn:hover {
-        background: #ffdb4d;
-        transform: translateY(-2px);
-      }
-
-      /* Contenido */
       .main-container {
-        padding: 50px 40px;
-        max-width: 1200px;
-        margin: auto;
+        padding: 30px;
       }
 
       .page-title {
-        text-align: center;
-        font-size: 2.3rem;
-        color: #0033a0;
-        font-weight: 700;
-        margin-bottom: 40px;
+        font-size: 1.9rem;
       }
 
-      /* Tarjetas estilo app Bancolombia */
-      .cards-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 30px;
-      }
-
-      .card {
+      .btn-games {
+        width: 100%;
         background: white;
         border-radius: 20px;
-        padding: 0 0 25px 0;
-        text-decoration: none;
-        color: black;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        transition: 0.25s ease;
         border: 2px solid transparent;
-        display: flex;
-        flex-direction: column;
+        padding: 25px;
+        margin-top: 40px;
+        color: #0033a0;
+        font-size: 1.3rem;
+        font-weight: 600;
+        text-decoration: none;
+        text-align: center;
+        cursor: pointer;
+        display: block;
+
+        /* SOMBRA igual a card */
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+
+        transition: 0.25s ease;
       }
 
-      .card:hover {
+      .btn-games:hover {
         transform: translateY(-8px);
         border-color: #ffc600;
         box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
       }
+    }
+  </style>
+</head>
 
-      .card-img {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
-        border-top-left-radius: 20px;
-        border-top-right-radius: 20px;
-      }
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">Finan<span>Sys</span></div>
 
-      .card-content {
-        padding: 25px;
-      }
+    <div class="welcome-text">Hola, <span id="userName">Usuario</span></div>
 
-      .card-title {
-        font-size: 1.4rem;
-        font-weight: 600;
-        color: #0033a0;
-        margin-bottom: 10px;
-      }
+    <a href="/inicio" class="logout-btn" id="logoutBtn">Cerrar sesión</a>
+  </header>
 
-      .card-description {
-        color: #555;
-        font-size: 0.95rem;
-        line-height: 1.5;
-      }
+  <!-- Contenido -->
+  <div class="main-container">
+    <h1 class="page-title">Panel de Control</h1>
 
-      @media (max-width: 768px) {
-        .header {
-          flex-direction: column;
-          gap: 10px;
-          text-align: center;
-        }
-
-        .main-container {
-          padding: 30px;
-        }
-
-        .page-title {
-          font-size: 1.9rem;
-        }
-        .btn-games {
-          width: 100%;
-          background: white;
-          border-radius: 20px;
-          border: 2px solid transparent;
-          padding: 25px;
-          margin-top: 40px;
-          color: #0033a0;
-          font-size: 1.3rem;
-          font-weight: 600;
-          text-decoration: none;
-          text-align: center;
-          cursor: pointer;
-          display: block;
-
-          /* SOMBRA igual a card */
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-
-          transition: 0.25s ease;
-        }
-
-        .btn-games:hover {
-          transform: translateY(-8px);
-          border-color: #ffc600;
-          box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <!-- Header -->
-    <header class="header">
-      <div class="logo">Finan<span>Sys</span></div>
-
-      <div class="welcome-text">Hola, <span id="userName">Usuario</span></div>
-
-      <a href="/inicio" class="logout-btn" id="logoutBtn">Cerrar sesión</a>
-    </header>
-
-    <!-- Contenido -->
-    <div class="main-container">
-      <h1 class="page-title">Panel de Control</h1>
-
-      <div class="cards-grid">
-        <a href="/administrar" class="card">
-          <img
-            src="img/finanzas.jpg"
-            class="card-img"
-            alt="Administrar Finanzas"
-          />
-          <div class="card-content">
-            <div class="card-title">Administrar Finanzas</div>
-            <div class="card-description">
-              Controla ingresos, gastos y organiza tu presupuesto fácilmente.
-            </div>
+    <div class="cards-grid">
+      <a href="/administrar" class="card">
+        <img src="img/finanzas.jpg" class="card-img" alt="Administrar Finanzas" />
+        <div class="card-content">
+          <div class="card-title">Administrar Finanzas</div>
+          <div class="card-description">
+            Controla ingresos, gastos y organiza tu presupuesto fácilmente.
           </div>
-        </a>
+        </div>
+      </a>
 
-        <a href="/metas" class="card">
-          <img src="img/metas.jpg" class="card-img" alt="Metas" />
-          <div class="card-content">
-            <div class="card-title">Mis Metas</div>
-            <div class="card-description">
-              Define metas financieras y sigue tu progreso.
-            </div>
+      <a href="/metas" class="card">
+        <img src="img/metas.jpg" class="card-img" alt="Metas" />
+        <div class="card-content">
+          <div class="card-title">Mis Metas</div>
+          <div class="card-description">
+            Define metas financieras y sigue tu progreso.
           </div>
-        </a>
+        </div>
+      </a>
 
-        <a href="objetivoscumplidos.html" class="card">
-          <img
-            src="img/logros.jpg"
-            class="card-img"
-            alt="Objetivos Cumplidos"
-          />
-          <div class="card-content">
-            <div class="card-title">Objetivos Cumplidos</div>
-            <div class="card-description">
-              Revisa y celebra tus logros alcanzados.
-            </div>
+      <a href="objetivoscumplidos.html" class="card">
+        <img src="img/logros.jpg" class="card-img" alt="Objetivos Cumplidos" />
+        <div class="card-content">
+          <div class="card-title">Objetivos Cumplidos</div>
+          <div class="card-description">
+            Revisa y celebra tus logros alcanzados.
           </div>
-        </a>
-        <a href="juegos.html" class="card">
-          <img src="img/juegos.jpg" class="card-img" alt="Minijuegos" />
-          <div class="card-content">
-            <div class="card-title">Jugar Minijuegos</div>
-            <div class="card-description">
-              Diviértete mientras aprendes sobre finanzas con juegos
-              interactivos.
-            </div>
+        </div>
+      </a>
+      <a href="juegos.html" class="card">
+        <img src="img/juegos.jpg" class="card-img" alt="Minijuegos" />
+        <div class="card-content">
+          <div class="card-title">Jugar Minijuegos</div>
+          <div class="card-description">
+            Diviértete mientras aprendes sobre finanzas con juegos
+            interactivos.
           </div>
-        </a>
+        </div>
+      </a>
 
-        <a href="/asistente" class="card">
-          <img
-            src="img/fondoAI.jpg"
-            class="card-img"
-            alt="Asistente Financiero IA"
-          />
-          <div class="card-content">
-            <div class="card-title">Asistentes Financieros</div>
-            <div class="card-description">
-              Chatea con nuestros asesores para obtener consejos y análisis de
-              tus finanzas.
-            </div>
+      <a href="/asistente" class="card">
+        <img src="img/fondoAI.jpg" class="card-img" alt="Asistente Financiero IA" />
+        <div class="card-content">
+          <div class="card-title">Asistentes Financieros</div>
+          <div class="card-description">
+            Chatea con nuestros asesores para obtener consejos y análisis de
+            tus finanzas.
           </div>
-        </a>
+        </div>
+      </a>
 
-        <a href="/calculadora" class="card">
-          <img
-            src="img/calculadora.jpg"
-            class="card-img"
-            alt="Calculadora Financiera"
-          />
-          <div class="card-content">
-            <div class="card-title">Calculadora Financiera</div>
-            <div class="card-description">
-              Proyecta tus ahorros e inversiones con nuestra calculadora de
-              interés compuesto.
-            </div>
+      <a href="/calculadora" class="card">
+        <img src="img/calculadora.jpg" class="card-img" alt="Calculadora Financiera" />
+        <div class="card-content">
+          <div class="card-title">Calculadora Financiera</div>
+          <div class="card-description">
+            Proyecta tus ahorros e inversiones con nuestra calculadora de
+            interés compuesto.
           </div>
-        </a>
-        <a href="/quienes-somos" class="card">
-          <img
-            src="img/quienes-somos.jpg"
-            class="card-img"
-            alt="Quiénes Somos"
-          />
-          <div class="card-content">
-            <div class="card-title">Quiénes Somos</div>
-            <div class="card-description">
-              Conoce nuestra misión, visión y lo que hacemos en FinanSYS.
-            </div>
+        </div>
+      </a>
+      <a href="/quienes-somos" class="card">
+        <img src="img/quienes-somos.jpg" class="card-img" alt="Quiénes Somos" />
+        <div class="card-content">
+          <div class="card-title">Quiénes Somos</div>
+          <div class="card-description">
+            Conoce nuestra misión, visión y lo que hacemos en FinanSYS.
           </div>
-        </a>
-      </div>
+        </div>
+      </a>
     </div>
+  </div>
 
-    <script>
-      const usuario = JSON.parse(sessionStorage.getItem("usuario"));
+  <script>
+    const usuario = JSON.parse(sessionStorage.getItem("usuario"));
 
-      if (usuario) {
-        document.getElementById("userName").textContent = usuario.nombre;
-      } else {
+    if (usuario) {
+      document.getElementById("userName").textContent = usuario.nombre;
+    } else {
+      window.location.href = "/inicio";
+    }
+
+    document
+      .getElementById("logoutBtn")
+      .addEventListener("click", function (e) {
+        e.preventDefault();
+        sessionStorage.removeItem("usuario");
         window.location.href = "/inicio";
-      }
+      });
+  </script>
+</body>
 
-      document
-        .getElementById("logoutBtn")
-        .addEventListener("click", function (e) {
-          e.preventDefault();
-          sessionStorage.removeItem("usuario");
-          window.location.href = "/inicio";
-        });
-    </script>
-  </body>
 </html>

@@ -1,238 +1,246 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <title>Restablecer Contraseña</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
 
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        height: 100vh;
-        overflow: hidden;
-        background: linear-gradient(
-          135deg,
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <title>Restablecer Contraseña</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(135deg,
           #2c5f5d 0%,
           #1a3d3b 50%,
-          #0d2726 100%
-        );
-        position: relative;
+          #0d2726 100%);
+      position: relative;
+    }
+
+    .background-shapes {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.15;
+      animation: float 15s ease-in-out infinite;
+    }
+
+    .shape1 {
+      width: 600px;
+      height: 600px;
+      background: #4a8886;
+      bottom: -200px;
+      left: -100px;
+      border-radius: 40% 60% 50% 50%;
+    }
+
+    .shape2 {
+      width: 400px;
+      height: 400px;
+      background: #5a9896;
+      top: -100px;
+      right: -50px;
+      border-radius: 50% 50% 40% 60%;
+      animation-duration: 12s;
+      animation-direction: reverse;
+    }
+
+    .container {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #fff;
+      font-size: 2.5rem;
+      margin-bottom: 40px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-weight: 300;
+      text-align: center;
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .input-group {
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      padding: 18px 25px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50px;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
+
+    input:focus {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-radius: 50px;
+      color: #fff;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+      backdrop-filter: blur(10px);
+      font-weight: 300;
+    }
+
+    .btn-submit:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    .back-link {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 30px;
+      font-size: 0.95rem;
+    }
+
+    .back-link a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+      transition: all 0.3s ease;
+    }
+
+    .back-link a:hover {
+      color: #a8d5d3;
+      border-bottom-color: #a8d5d3;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0px);
       }
 
-      .background-shapes {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
+      50% {
+        transform: translateY(-20px);
       }
+    }
+  </style>
+</head>
 
-      .shape {
-        position: absolute;
-        border-radius: 50%;
-        opacity: 0.15;
-        animation: float 15s ease-in-out infinite;
-      }
+<body>
+  <div class="background-shapes">
+    <div class="shape shape1"></div>
+    <div class="shape shape2"></div>
+  </div>
 
-      .shape1 {
-        width: 600px;
-        height: 600px;
-        background: #4a8886;
-        bottom: -200px;
-        left: -100px;
-        border-radius: 40% 60% 50% 50%;
-      }
+  <div class="container">
+    <h1>Nueva Contraseña</h1>
 
-      .shape2 {
-        width: 400px;
-        height: 400px;
-        background: #5a9896;
-        top: -100px;
-        right: -50px;
-        border-radius: 50% 50% 40% 60%;
-        animation-duration: 12s;
-        animation-direction: reverse;
-      }
+    <div class="form-container">
+      <form id="resetForm">
+        <div class="input-group">
+          <input type="password" id="nuevaContrasena" placeholder="Nueva Contraseña" required />
+        </div>
+        <div class="input-group">
+          <input type="password" id="confirmarContrasena" placeholder="Confirmar Contraseña" required />
+        </div>
+        <button type="submit" class="btn-submit">Actualizar Contraseña</button>
+      </form>
 
-      .container {
-        position: relative;
-        z-index: 10;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        padding: 20px;
-      }
-
-      h1 {
-        color: #fff;
-        font-size: 2.5rem;
-        margin-bottom: 40px;
-        text-transform: uppercase;
-        letter-spacing: 3px;
-        font-weight: 300;
-        text-align: center;
-      }
-
-      .form-container {
-        width: 100%;
-        max-width: 400px;
-      }
-
-      .input-group {
-        margin-bottom: 25px;
-        position: relative;
-      }
-
-      input {
-        width: 100%;
-        padding: 18px 25px;
-        background: rgba(255, 255, 255, 0.1);
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        border-radius: 50px;
-        color: #fff;
-        font-size: 1rem;
-        outline: none;
-        transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
-      }
-
-      input::placeholder {
-        color: rgba(255, 255, 255, 0.6);
-        text-transform: uppercase;
-        font-size: 0.9rem;
-        letter-spacing: 1px;
-      }
-
-      input:focus {
-        background: rgba(255, 255, 255, 0.15);
-        border-color: rgba(255, 255, 255, 0.5);
-      }
-
-      .btn-submit {
-        width: 100%;
-        padding: 18px;
-        background: rgba(255, 255, 255, 0.1);
-        border: 2px solid rgba(255, 255, 255, 0.4);
-        border-radius: 50px;
-        color: #fff;
-        font-size: 1.1rem;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        margin-top: 20px;
-        backdrop-filter: blur(10px);
-        font-weight: 300;
-      }
-
-      .btn-submit:hover {
-        background: rgba(255, 255, 255, 0.2);
-        border-color: rgba(255, 255, 255, 0.6);
-      }
-
-      .back-link {
-        text-align: center;
-        color: rgba(255, 255, 255, 0.7);
-        margin-top: 30px;
-        font-size: 0.95rem;
-      }
-
-      .back-link a {
-        color: #fff;
-        text-decoration: none;
-        font-weight: 500;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-        transition: all 0.3s ease;
-      }
-
-      .back-link a:hover {
-        color: #a8d5d3;
-        border-bottom-color: #a8d5d3;
-      }
-
-      @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-20px); }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="background-shapes">
-      <div class="shape shape1"></div>
-      <div class="shape shape2"></div>
+      <p class="back-link">
+        <a href="/inicio.html">Volver a Iniciar Sesión</a>
+      </p>
     </div>
+  </div>
 
-    <div class="container">
-      <h1>Nueva Contraseña</h1>
+  <script>
+    document.getElementById('resetForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
 
-      <div class="form-container">
-        <form id="resetForm">
-          <div class="input-group">
-            <input type="password" id="nuevaContrasena" placeholder="Nueva Contraseña" required />
-          </div>
-          <div class="input-group">
-            <input type="password" id="confirmarContrasena" placeholder="Confirmar Contraseña" required />
-          </div>
-          <button type="submit" class="btn-submit">Actualizar Contraseña</button>
-        </form>
+      const nuevaContrasena = document.getElementById('nuevaContrasena').value;
+      const confirmarContrasena = document.getElementById('confirmarContrasena').value;
 
-        <p class="back-link">
-          <a href="/inicio.html">Volver a Iniciar Sesión</a>
-        </p>
-      </div>
-    </div>
+      if (nuevaContrasena.length < 6) {
+        alert('La contraseña debe tener al menos 6 caracteres.');
+        return;
+      }
 
-    <script>
-      document.getElementById('resetForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
+      if (nuevaContrasena !== confirmarContrasena) {
+        alert('Las contraseñas no coinciden.');
+        return;
+      }
 
-        const nuevaContrasena = document.getElementById('nuevaContrasena').value;
-        const confirmarContrasena = document.getElementById('confirmarContrasena').value;
+      const params = new URLSearchParams(window.location.search);
+      const usuario = params.get('usuario');
 
-        if (nuevaContrasena.length < 6) {
-          alert('La contraseña debe tener al menos 6 caracteres.');
-          return;
+      if (!usuario) {
+        alert('Error: No se encontró el usuario. Por favor, inicia el proceso de nuevo.');
+        window.location.href = '/recuperar.html';
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/restablecer-contrasena', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ usuario, nuevaContrasena }),
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          alert('¡Contraseña actualizada con éxito! Ya puedes iniciar sesión.');
+          window.location.href = '/inicio.html';
+        } else {
+          alert(data.message);
         }
+      } catch (error) {
+        alert('Error al conectar con el servidor. Inténtalo de nuevo.');
+      }
+    });
+  </script>
+</body>
 
-        if (nuevaContrasena !== confirmarContrasena) {
-          alert('Las contraseñas no coinciden.');
-          return;
-        }
-
-        const params = new URLSearchParams(window.location.search);
-        const usuario = params.get('usuario');
-
-        if (!usuario) {
-          alert('Error: No se encontró el usuario. Por favor, inicia el proceso de nuevo.');
-          window.location.href = '/recuperar.html';
-          return;
-        }
-
-        try {
-          const response = await fetch('/api/restablecer-contrasena', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ usuario, nuevaContrasena }),
-          });
-          const data = await response.json();
-
-          if (data.success) {
-            alert('¡Contraseña actualizada con éxito! Ya puedes iniciar sesión.');
-            window.location.href = '/inicio.html';
-          } else {
-            alert(data.message);
-          }
-        } catch (error) {
-          alert('Error al conectar con el servidor. Inténtalo de nuevo.');
-        }
-      });
-    </script>
-  </body>
 </html>

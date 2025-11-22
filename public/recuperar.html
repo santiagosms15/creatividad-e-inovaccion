@@ -1,230 +1,238 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <title>Recuperar Contraseña</title>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
 
-      body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        height: 100vh;
-        overflow: hidden;
-        background: linear-gradient(
-          135deg,
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <title>Recuperar Contraseña</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      background: linear-gradient(135deg,
           #2c5f5d 0%,
           #1a3d3b 50%,
-          #0d2726 100%
-        );
-        position: relative;
+          #0d2726 100%);
+      position: relative;
+    }
+
+    .background-shapes {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.15;
+      animation: float 15s ease-in-out infinite;
+    }
+
+    .shape1 {
+      width: 600px;
+      height: 600px;
+      background: #4a8886;
+      bottom: -200px;
+      left: -100px;
+      border-radius: 40% 60% 50% 50%;
+    }
+
+    .shape2 {
+      width: 400px;
+      height: 400px;
+      background: #5a9896;
+      top: -100px;
+      right: -50px;
+      border-radius: 50% 50% 40% 60%;
+      animation-duration: 12s;
+      animation-direction: reverse;
+    }
+
+    .container {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #fff;
+      font-size: 2.5rem;
+      margin-bottom: 40px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-weight: 300;
+      text-align: center;
+    }
+
+    p.instructions {
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 40px;
+      max-width: 400px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .input-group {
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      padding: 18px 25px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50px;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
+
+    input:focus {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 18px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-radius: 50px;
+      color: #fff;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+      backdrop-filter: blur(10px);
+      font-weight: 300;
+    }
+
+    .btn-submit:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    .back-link {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 30px;
+      font-size: 0.95rem;
+    }
+
+    .back-link a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+      transition: all 0.3s ease;
+    }
+
+    .back-link a:hover {
+      color: #a8d5d3;
+      border-bottom-color: #a8d5d3;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0px);
       }
 
-      .background-shapes {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
+      50% {
+        transform: translateY(-20px);
       }
+    }
+  </style>
+</head>
 
-      .shape {
-        position: absolute;
-        border-radius: 50%;
-        opacity: 0.15;
-        animation: float 15s ease-in-out infinite;
-      }
+<body>
+  <div class="background-shapes">
+    <div class="shape shape1"></div>
+    <div class="shape shape2"></div>
+  </div>
 
-      .shape1 {
-        width: 600px;
-        height: 600px;
-        background: #4a8886;
-        bottom: -200px;
-        left: -100px;
-        border-radius: 40% 60% 50% 50%;
-      }
+  <div class="container">
+    <h1>Recuperar Contraseña</h1>
+    <p class="instructions">
+      Ingresa tu nombre de usuario para continuar con el proceso de
+      recuperación de contraseña.
+    </p>
 
-      .shape2 {
-        width: 400px;
-        height: 400px;
-        background: #5a9896;
-        top: -100px;
-        right: -50px;
-        border-radius: 50% 50% 40% 60%;
-        animation-duration: 12s;
-        animation-direction: reverse;
-      }
+    <div class="form-container">
+      <form id="recoverForm">
+        <div class="input-group">
+          <input type="text" id="usuario" placeholder="Nombre de Usuario" required />
+        </div>
+        <button type="submit" class="btn-submit">Verificar Usuario</button>
+      </form>
 
-      .container {
-        position: relative;
-        z-index: 10;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        padding: 20px;
-      }
-
-      h1 {
-        color: #fff;
-        font-size: 2.5rem;
-        margin-bottom: 40px;
-        text-transform: uppercase;
-        letter-spacing: 3px;
-        font-weight: 300;
-        text-align: center;
-      }
-
-      p.instructions {
-        color: rgba(255, 255, 255, 0.8);
-        margin-bottom: 40px;
-        max-width: 400px;
-        text-align: center;
-        line-height: 1.6;
-      }
-
-      .form-container {
-        width: 100%;
-        max-width: 400px;
-      }
-
-      .input-group {
-        margin-bottom: 25px;
-        position: relative;
-      }
-
-      input {
-        width: 100%;
-        padding: 18px 25px;
-        background: rgba(255, 255, 255, 0.1);
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        border-radius: 50px;
-        color: #fff;
-        font-size: 1rem;
-        outline: none;
-        transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
-      }
-
-      input::placeholder {
-        color: rgba(255, 255, 255, 0.6);
-        text-transform: uppercase;
-        font-size: 0.9rem;
-        letter-spacing: 1px;
-      }
-
-      input:focus {
-        background: rgba(255, 255, 255, 0.15);
-        border-color: rgba(255, 255, 255, 0.5);
-      }
-
-      .btn-submit {
-        width: 100%;
-        padding: 18px;
-        background: rgba(255, 255, 255, 0.1);
-        border: 2px solid rgba(255, 255, 255, 0.4);
-        border-radius: 50px;
-        color: #fff;
-        font-size: 1.1rem;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        margin-top: 20px;
-        backdrop-filter: blur(10px);
-        font-weight: 300;
-      }
-
-      .btn-submit:hover {
-        background: rgba(255, 255, 255, 0.2);
-        border-color: rgba(255, 255, 255, 0.6);
-      }
-
-      .back-link {
-        text-align: center;
-        color: rgba(255, 255, 255, 0.7);
-        margin-top: 30px;
-        font-size: 0.95rem;
-      }
-
-      .back-link a {
-        color: #fff;
-        text-decoration: none;
-        font-weight: 500;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-        transition: all 0.3s ease;
-      }
-
-      .back-link a:hover {
-        color: #a8d5d3;
-        border-bottom-color: #a8d5d3;
-      }
-
-      @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-20px); }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="background-shapes">
-      <div class="shape shape1"></div>
-      <div class="shape shape2"></div>
-    </div>
-
-    <div class="container">
-      <h1>Recuperar Contraseña</h1>
-      <p class="instructions">
-        Ingresa tu nombre de usuario para continuar con el proceso de
-        recuperación de contraseña.
+      <p class="back-link">
+        <a href="/inicio.html">Volver a Iniciar Sesión</a>
       </p>
-
-      <div class="form-container">
-        <form id="recoverForm">
-          <div class="input-group">
-            <input type="text" id="usuario" placeholder="Nombre de Usuario" required />
-          </div>
-          <button type="submit" class="btn-submit">Verificar Usuario</button>
-        </form>
-
-        <p class="back-link">
-          <a href="/inicio.html">Volver a Iniciar Sesión</a>
-        </p>
-      </div>
     </div>
+  </div>
 
-    <script>
-      document.getElementById('recoverForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const usuario = document.getElementById('usuario').value.trim();
+  <script>
+    document.getElementById('recoverForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const usuario = document.getElementById('usuario').value.trim();
 
-        if (!usuario) {
-          alert('Por favor, ingresa tu nombre de usuario.');
-          return;
+      if (!usuario) {
+        alert('Por favor, ingresa tu nombre de usuario.');
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/verificar-usuario', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ usuario }),
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          window.location.href = `/restablecer.html?usuario=${encodeURIComponent(usuario)}`;
+        } else {
+          alert(data.message);
         }
+      } catch (error) {
+        alert('Error al conectar con el servidor. Inténtalo de nuevo.');
+      }
+    });
+  </script>
+</body>
 
-        try {
-          const response = await fetch('/api/verificar-usuario', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ usuario }),
-          });
-          const data = await response.json();
-
-          if (data.success) {
-            window.location.href = `/restablecer.html?usuario=${encodeURIComponent(usuario)}`;
-          } else {
-            alert(data.message);
-          }
-        } catch (error) {
-          alert('Error al conectar con el servidor. Inténtalo de nuevo.');
-        }
-      });
-    </script>
-  </body>
 </html>

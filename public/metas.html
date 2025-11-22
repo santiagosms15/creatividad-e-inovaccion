@@ -1,1096 +1,989 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Metas Financieras - Panel Pro</title>
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Metas Financieras - Panel Pro</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
 
-       body {
-        min-height: 100vh;
-        background-image: url("img/fondometas.jpg");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        overflow-x: hidden;
-      }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-      body::before {
-        content: "";
-        position: fixed;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(
-          circle,
+    body {
+      min-height: 100vh;
+      background-image: url("img/fondometas.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle,
           rgba(255, 255, 255, 0.1) 1px,
-          transparent 1px
-        );
-        background-size: 50px 50px;
-        animation: gridMove 20s linear infinite;
-        pointer-events: none;
+          transparent 1px);
+      background-size: 50px 50px;
+      animation: gridMove 20s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes gridMove {
+      0% {
+        transform: translate(0, 0);
       }
 
-      @keyframes gridMove {
-        0% {
-          transform: translate(0, 0);
-        }
-        100% {
-          transform: translate(50px, 50px);
-        }
+      100% {
+        transform: translate(50px, 50px);
+      }
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header Moderno */
+    .header {
+      margin-bottom: 50px;
+      animation: fadeInDown 0.8s ease;
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
       }
 
-      .container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 40px 20px;
-        position: relative;
-        z-index: 1;
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo-icon {
+      width: 50px;
+      height: 50px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .header-title h1 {
+      color: white;
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .header-title p {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1rem;
+      margin-top: 5px;
+    }
+
+    .btn-nueva-meta {
+      background: white;
+      color: #667eea;
+      padding: 16px 32px;
+      border: none;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-nueva-meta::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(102, 126, 234, 0.1);
+      transform: translate(-50%, -50%);
+      transition:
+        width 0.6s,
+        height 0.6s;
+    }
+
+    .btn-nueva-meta:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-nueva-meta:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Stats Cards Glassmorphism */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-bottom: 50px;
+      animation: fadeInUp 0.8s ease 0.2s backwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
       }
 
-      /* Header Moderno */
-      .header {
-        margin-bottom: 50px;
-        animation: fadeInDown 0.8s ease;
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 25px;
+      padding: 35px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      cursor: pointer;
+    }
+
+    .stat-card::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle,
+          rgba(255, 255, 255, 0.1) 0%,
+          transparent 70%);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .stat-card:hover::before {
+      opacity: 1;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .stat-icon {
+      width: 60px;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .stat-value {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+      opacity: 0.9;
+      font-weight: 500;
+    }
+
+    .stat-change {
+      margin-top: 12px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: #4ade80;
+    }
+
+    /* Metas Grid */
+    .metas-section-title {
+      color: white;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 25px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .metas-grid {
+      display: grid;
+      gap: 25px;
+      animation: fadeInUp 0.8s ease 0.4s backwards;
+    }
+
+    .meta-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 30px;
+      overflow: hidden;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .meta-card::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .meta-card:hover::after {
+      transform: scaleX(1);
+    }
+
+    .meta-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
+    }
+
+    .meta-content {
+      padding: 40px;
+    }
+
+    .meta-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 30px;
+    }
+
+    .meta-info h3 {
+      font-size: 1.8rem;
+      color: #1a1a2e;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .meta-badges {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-categoria {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .badge-prioridad {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .meta-icon-btn {
+      width: 45px;
+      height: 45px;
+      background: #f3f4f6;
+      border: none;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #667eea;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .meta-icon-btn:hover {
+      background: #667eea;
+      color: white;
+      transform: rotate(90deg);
+    }
+
+    /* Progress Section Mejorada */
+    .progress-section {
+      margin-bottom: 30px;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 15px;
+    }
+
+    .progress-amounts {
+      display: flex;
+      gap: 25px;
+    }
+
+    .amount-item span {
+      display: block;
+      font-size: 0.8rem;
+      color: #6b7280;
+      font-weight: 600;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .amount-item strong {
+      font-size: 1.5rem;
+      color: #1a1a2e;
+      font-weight: 800;
+    }
+
+    .progress-percentage-big {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+
+    .progress-bar-container {
+      position: relative;
+      height: 16px;
+      background: #e5e7eb;
+      border-radius: 50px;
+      overflow: visible;
+      margin-bottom: 15px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg,
+          #667eea 0%,
+          #764ba2 50%,
+          #f093fb 100%);
+      border-radius: 50px;
+      position: relative;
+      transition: width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .progress-bar-fill::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: 0;
+      width: 24px;
+      height: 24px;
+      background: white;
+      border: 4px solid #667eea;
+      border-radius: 50%;
+      transform: translate(50%, -50%);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Meta Stats Grid */
+    .meta-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      padding: 25px;
+      background: #f9fafb;
+      border-radius: 20px;
+    }
+
+    .stat-box {
+      text-align: center;
+      padding: 15px;
+      background: white;
+      border-radius: 15px;
+      transition: all 0.3s;
+    }
+
+    .stat-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-box-label {
+      font-size: 0.75rem;
+      color: #6b7280;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .stat-box-value {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #1a1a2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header-title h1 {
+        font-size: 2rem;
       }
 
-      @keyframes fadeInDown {
-        from {
-          opacity: 0;
-          transform: translateY(-30px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .header-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 30px;
-        flex-wrap: wrap;
-        gap: 20px;
-      }
-
-      .logo-section {
-        display: flex;
-        align-items: center;
+      .meta-stats {
+        grid-template-columns: 1fr;
         gap: 15px;
       }
 
-      .logo-icon {
-        width: 50px;
-        height: 50px;
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
-        border-radius: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-      }
-
-      .header-title h1 {
-        color: white;
-        font-size: 2.5rem;
-        font-weight: 800;
-        letter-spacing: -1px;
-        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
-      }
-
-      .header-title p {
-        color: rgba(255, 255, 255, 0.9);
-        font-size: 1rem;
-        margin-top: 5px;
-      }
-
-      .btn-nueva-meta {
-        background: white;
-        color: #667eea;
-        padding: 16px 32px;
-        border: none;
-        border-radius: 50px;
-        font-weight: 700;
-        font-size: 1rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .btn-nueva-meta::before {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        border-radius: 50%;
-        background: rgba(102, 126, 234, 0.1);
-        transform: translate(-50%, -50%);
-        transition:
-          width 0.6s,
-          height 0.6s;
-      }
-
-      .btn-nueva-meta:hover::before {
-        width: 300px;
-        height: 300px;
-      }
-
-      .btn-nueva-meta:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-      }
-
-      /* Stats Cards Glassmorphism */
-      .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 25px;
-        margin-bottom: 50px;
-        animation: fadeInUp 0.8s ease 0.2s backwards;
-      }
-
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(30px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .stat-card {
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        border-radius: 25px;
-        padding: 35px;
-        color: white;
-        position: relative;
-        overflow: hidden;
-        transition: all 0.4s ease;
-        cursor: pointer;
-      }
-
-      .stat-card::before {
-        content: "";
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(
-          circle,
-          rgba(255, 255, 255, 0.1) 0%,
-          transparent 70%
-        );
-        opacity: 0;
-        transition: opacity 0.4s;
-      }
-
-      .stat-card:hover::before {
-        opacity: 1;
-      }
-
-      .stat-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-        border-color: rgba(255, 255, 255, 0.4);
-      }
-
-      .stat-icon {
-        width: 60px;
-        height: 60px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 20px;
-      }
-
-      .stat-value {
-        font-size: 3rem;
-        font-weight: 800;
-        margin-bottom: 8px;
-        line-height: 1;
-      }
-
-      .stat-label {
-        font-size: 1rem;
-        opacity: 0.9;
-        font-weight: 500;
-      }
-
-      .stat-change {
-        margin-top: 12px;
-        font-size: 0.85rem;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        color: #4ade80;
-      }
-
-      /* Metas Grid */
-      .metas-section-title {
-        color: white;
-        font-size: 1.8rem;
-        font-weight: 700;
-        margin-bottom: 25px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .metas-grid {
-        display: grid;
-        gap: 25px;
-        animation: fadeInUp 0.8s ease 0.4s backwards;
-      }
-
-      .meta-card {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 30px;
-        overflow: hidden;
-        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        cursor: pointer;
-        position: relative;
-      }
-
-      .meta-card::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 5px;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform 0.4s ease;
-      }
-
-      .meta-card:hover::after {
-        transform: scaleX(1);
-      }
-
-      .meta-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.25);
-      }
-
-      .meta-content {
-        padding: 40px;
-      }
-
-      .meta-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 30px;
-      }
-
-      .meta-info h3 {
-        font-size: 1.8rem;
-        color: #1a1a2e;
-        font-weight: 700;
-        margin-bottom: 12px;
-      }
-
-      .meta-badges {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-      }
-
-      .badge {
-        padding: 8px 16px;
-        border-radius: 50px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .badge-categoria {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-      }
-
-      .badge-prioridad {
-        background: #fef3c7;
-        color: #92400e;
-      }
-
-      .meta-icon-btn {
-        width: 45px;
-        height: 45px;
-        background: #f3f4f6;
-        border: none;
-        border-radius: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #667eea;
-        cursor: pointer;
-        transition: all 0.3s;
-      }
-
-      .meta-icon-btn:hover {
-        background: #667eea;
-        color: white;
-        transform: rotate(90deg);
-      }
-
-      /* Progress Section Mejorada */
-      .progress-section {
-        margin-bottom: 30px;
-      }
-
-      .progress-info {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        margin-bottom: 15px;
-      }
-
       .progress-amounts {
-        display: flex;
-        gap: 25px;
-      }
-
-      .amount-item span {
-        display: block;
-        font-size: 0.8rem;
-        color: #6b7280;
-        font-weight: 600;
-        margin-bottom: 5px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-
-      .amount-item strong {
-        font-size: 1.5rem;
-        color: #1a1a2e;
-        font-weight: 800;
+        flex-direction: column;
+        gap: 15px;
       }
 
       .progress-percentage-big {
-        font-size: 3rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        line-height: 1;
+        font-size: 2rem;
       }
 
-      .progress-bar-container {
-        position: relative;
-        height: 16px;
-        background: #e5e7eb;
-        border-radius: 50px;
-        overflow: visible;
-        margin-bottom: 15px;
-      }
-
-      .progress-bar-fill {
-        height: 100%;
-        background: linear-gradient(
-          90deg,
-          #667eea 0%,
-          #764ba2 50%,
-          #f093fb 100%
-        );
-        border-radius: 50px;
-        position: relative;
-        transition: width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-      }
-
-      .progress-bar-fill::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        right: 0;
-        width: 24px;
-        height: 24px;
-        background: white;
-        border: 4px solid #667eea;
-        border-radius: 50%;
-        transform: translate(50%, -50%);
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-      }
-
-      /* Meta Stats Grid */
-      .meta-stats {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
+      .meta-content {
         padding: 25px;
-        background: #f9fafb;
-        border-radius: 20px;
+      }
+    }
+
+    /* Animación de carga */
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
       }
 
-      .stat-box {
-        text-align: center;
-        padding: 15px;
-        background: white;
-        border-radius: 15px;
-        transition: all 0.3s;
+      50% {
+        opacity: 0.5;
       }
+    }
 
-      .stat-box:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      }
+    .loading {
+      animation: pulse 2s infinite;
+    }
 
-      .stat-box-label {
-        font-size: 0.75rem;
-        color: #6b7280;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 8px;
-      }
+    /* Detalle de Meta - Mejorado */
+    .detalle-meta {
+      animation: fadeInUp 0.6s ease;
+    }
 
-      .stat-box-value {
-        font-size: 1.3rem;
-        font-weight: 800;
-        color: #1a1a2e;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-      }
+    .btn-volver {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 30px;
+      transition: all 0.3s;
+    }
 
-      .hidden {
-        display: none !important;
-      }
+    .btn-volver:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateX(-5px);
+    }
 
-      /* Responsive */
-      @media (max-width: 768px) {
-        .header-title h1 {
-          font-size: 2rem;
-        }
+    .detalle-hero {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 35px;
+      padding: 60px;
+      color: white;
+      margin-bottom: 40px;
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
 
-        .meta-stats {
-          grid-template-columns: 1fr;
-          gap: 15px;
-        }
-
-        .progress-amounts {
-          flex-direction: column;
-          gap: 15px;
-        }
-
-        .progress-percentage-big {
-          font-size: 2rem;
-        }
-
-        .meta-content {
-          padding: 25px;
-        }
-      }
-
-      /* Animación de carga */
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.5;
-        }
-      }
-
-      .loading {
-        animation: pulse 2s infinite;
-      }
-
-      /* Detalle de Meta - Mejorado */
-      .detalle-meta {
-        animation: fadeInUp 0.6s ease;
-      }
-
-      .btn-volver {
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        color: white;
-        padding: 14px 28px;
-        border-radius: 50px;
-        font-weight: 600;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 30px;
-        transition: all 0.3s;
-      }
-
-      .btn-volver:hover {
-        background: rgba(255, 255, 255, 0.3);
-        transform: translateX(-5px);
-      }
-
-      .detalle-hero {
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        border-radius: 35px;
-        padding: 60px;
-        color: white;
-        margin-bottom: 40px;
-        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
-        position: relative;
-        overflow: hidden;
-      }
-
-      .detalle-hero::before {
-        content: "";
-        position: absolute;
-        top: -50%;
-        right: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(
-          circle,
+    .detalle-hero::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle,
           rgba(255, 255, 255, 0.1) 0%,
-          transparent 70%
-        );
-        animation: rotate 20s linear infinite;
+          transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      from {
+        transform: rotate(0deg);
       }
 
-      @keyframes rotate {
-        from {
-          transform: rotate(0deg);
-        }
-        to {
-          transform: rotate(360deg);
-        }
+      to {
+        transform: rotate(360deg);
       }
+    }
 
-      .detalle-hero-content {
-        position: relative;
-        z-index: 1;
-      }
+    .detalle-hero-content {
+      position: relative;
+      z-index: 1;
+    }
 
-      .detalle-title {
-        font-size: 3.5rem;
-        font-weight: 800;
-        margin-bottom: 20px;
-        text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
-      }
+    .detalle-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+    }
 
-      .detalle-progress-big {
-        font-size: 5rem;
-        font-weight: 900;
-        margin: 30px 0;
-        text-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
-      }
+    .detalle-progress-big {
+      font-size: 5rem;
+      font-weight: 900;
+      margin: 30px 0;
+      text-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+    }
 
-      .info-cards-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 25px;
-        margin-top: 40px;
-      }
+    .info-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      margin-top: 40px;
+    }
 
-      .info-card {
-        background: white;
-        border-radius: 25px;
-        padding: 35px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s;
-      }
+    .info-card {
+      background: white;
+      border-radius: 25px;
+      padding: 35px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s;
+    }
 
-      .info-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-      }
+    .info-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    }
 
-      .info-card-title {
-        font-size: 1.1rem;
-        color: #6b7280;
-        font-weight: 600;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
+    .info-card-title {
+      font-size: 1.1rem;
+      color: #6b7280;
+      font-weight: 600;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-      .info-card-value {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: #1a1a2e;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-      }
+    .info-card-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #1a1a2e;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
 
-      .actions-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px;
-        margin-top: 40px;
-      }
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
 
-      .btn-action {
-        padding: 25px;
-        border: none;
-        border-radius: 20px;
-        font-weight: 700;
-        font-size: 1.1rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        transition: all 0.3s;
-        color: white;
-        position: relative;
-        overflow: hidden;
-      }
+    .btn-action {
+      padding: 25px;
+      border: none;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      transition: all 0.3s;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
 
-      .btn-action.primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-      }
+    .btn-action.primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
 
-      .btn-action.success {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
-      }
+    .btn-action.success {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+    }
 
-      .btn-action:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <!-- Dashboard -->
-      <div id="dashboard">
-        <div class="header">
-          <div class="header-top">
-            <div class="logo-section">
-              <div class="logo-icon">
-                <svg
-                  width="28"
-                  height="28"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="white"
-                  stroke-width="2"
-                >
-                  <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                  <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
-                </svg>
-              </div>
-              <div class="header-title">
-                <h1>Mis Metas Financieras</h1>
-                <p>Transforma tus sueños en realidad 🚀</p>
-              </div>
-            </div>
-            <button class="btn-nueva-meta" onclick="crearNuevaMeta()">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-              >
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-              Nueva Meta
-            </button>
-          </div>
-        </div>
+    .btn-action:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
 
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon">
-              <svg
-                width="28"
-                height="28"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+    .back-btn {
+      padding: 10px 18px;
+      background: #ffffff;
+      color: #333;
+      border: 1px solid #ddd;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 500;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .back-btn:hover {
+      background: #f1f1f1;
+    }
+
+    .back-btn:active {
+      transform: scale(0.96);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Dashboard -->
+    <div id="dashboard">
+      <div class="header">
+        <div class="header-top">
+          <div class="logo-section">
+            <div class="logo-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
               </svg>
             </div>
-            <div class="stat-value">3</div>
-            <div class="stat-label">Metas Activas</div>
-            <div class="stat-change">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <polyline points="18 15 12 9 6 15"></polyline>
-              </svg>
-              +2 este mes
+            <div class="header-title">
+              <h1>Mis Metas Financieras</h1>
+              <button class="btn back-btn" onclick="backToMenu()">
+                ← Volver al Menú
+              </button>
+              <p>Transforma tus sueños en realidad 🚀</p>
             </div>
           </div>
-
-          <div class="stat-card">
-            <div class="stat-icon">
-              <svg
-                width="28"
-                height="28"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                <polyline points="17 6 23 6 23 12"></polyline>
-              </svg>
-            </div>
-            <div class="stat-value">58%</div>
-            <div class="stat-label">Progreso Promedio</div>
-            <div class="stat-change">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <polyline points="18 15 12 9 6 15"></polyline>
-              </svg>
-              +12% vs mes anterior
-            </div>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-icon">
-              <svg
-                width="28"
-                height="28"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <line x1="12" y1="1" x2="12" y2="23"></line>
-                <path
-                  d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
-                ></path>
-              </svg>
-            </div>
-            <div class="stat-value">$7.2M</div>
-            <div class="stat-label">Total Ahorrado</div>
-            <div class="stat-change">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <polyline points="18 15 12 9 6 15"></polyline>
-              </svg>
-              +$450K este mes
-            </div>
-          </div>
-        </div>
-
-        <h2 class="metas-section-title">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <polygon
-              points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
-            ></polygon>
-          </svg>
-          Tus Objetivos
-        </h2>
-
-        <div class="metas-grid">
-          <!-- Meta 1: Laptop Nueva -->
+          <button class="btn-nueva-meta" onclick="crearNuevaMeta()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Nueva Meta
+          </button>
         </div>
       </div>
 
-      <!-- Detalle de Meta -->
-      <div id="detalle" class="detalle-meta hidden">
-        <button class="btn-volver" onclick="volverDashboard()">
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <polyline points="15 18 9 12 15 6"></polyline>
-          </svg>
-          Volver a mis metas
-        </button>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+          </div>
+          <div class="stat-value">3</div>
+          <div class="stat-label">Metas Activas</div>
+          <div class="stat-change">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+            +2 este mes
+          </div>
+        </div>
 
-        <div class="detalle-hero">
-          <div class="detalle-hero-content">
-            <h2 class="detalle-title">💻 Laptop Nueva</h2>
-            <div class="meta-badges">
-              <span class="badge badge-categoria">Tecnología</span>
-              <span class="badge badge-prioridad">Alta prioridad</span>
-            </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+              <polyline points="17 6 23 6 23 12"></polyline>
+            </svg>
+          </div>
+          <div class="stat-value">58%</div>
+          <div class="stat-label">Progreso Promedio</div>
+          <div class="stat-change">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+            +12% vs mes anterior
+          </div>
+        </div>
 
-            <div class="detalle-progress-big">66%</div>
-            <p style="font-size: 1.2rem; opacity: 0.9; margin-bottom: 30px">
-              de tu objetivo completado • En camino al éxito 🎯
-            </p>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+          </div>
+          <div class="stat-value">$7.2M</div>
+          <div class="stat-label">Total Ahorrado</div>
+          <div class="stat-change">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="18 15 12 9 6 15"></polyline>
+            </svg>
+            +$450K este mes
+          </div>
+        </div>
+      </div>
 
-            <div class="progress-bar-container" style="height: 20px">
-              <div class="progress-bar-fill" style="width: 66%"></div>
-            </div>
+      <h2 class="metas-section-title">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon
+            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+          </polygon>
+        </svg>
+        Tus Objetivos
+      </h2>
 
-            <div
-              style="
+      <div class="metas-grid">
+        <!-- Meta 1: Laptop Nueva -->
+      </div>
+    </div>
+
+    <!-- Detalle de Meta -->
+    <div id="detalle" class="detalle-meta hidden">
+      <button class="btn-volver" onclick="volverDashboard()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        Volver a mis metas
+      </button>
+
+      <div class="detalle-hero">
+        <div class="detalle-hero-content">
+          <h2 class="detalle-title">💻 Laptop Nueva</h2>
+          <div class="meta-badges">
+            <span class="badge badge-categoria">Tecnología</span>
+            <span class="badge badge-prioridad">Alta prioridad</span>
+          </div>
+
+          <div class="detalle-progress-big">66%</div>
+          <p style="font-size: 1.2rem; opacity: 0.9; margin-bottom: 30px">
+            de tu objetivo completado • En camino al éxito 🎯
+          </p>
+
+          <div class="progress-bar-container" style="height: 20px">
+            <div class="progress-bar-fill" style="width: 66%"></div>
+          </div>
+
+          <div style="
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
                 gap: 30px;
                 margin-top: 40px;
-              "
-            >
-              <div>
-                <div style="opacity: 0.8; margin-bottom: 8px">Actual</div>
-                <div style="font-size: 2.5rem; font-weight: 800">
-                  $1.650.000
-                </div>
+              ">
+            <div>
+              <div style="opacity: 0.8; margin-bottom: 8px">Actual</div>
+              <div style="font-size: 2.5rem; font-weight: 800">
+                $1.650.000
               </div>
-              <div>
-                <div style="opacity: 0.8; margin-bottom: 8px">Objetivo</div>
-                <div style="font-size: 2.5rem; font-weight: 800">
-                  $2.500.000
-                </div>
+            </div>
+            <div>
+              <div style="opacity: 0.8; margin-bottom: 8px">Objetivo</div>
+              <div style="font-size: 2.5rem; font-weight: 800">
+                $2.500.000
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="info-cards-grid">
-          <div class="info-card">
-            <div class="info-card-title">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#667eea"
-                stroke-width="2"
-              >
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-              </svg>
-              Ahorro Semanal Sugerido
-            </div>
-            <div class="info-card-value">$14.912</div>
-            <p style="color: #6b7280; margin-top: 12px; font-size: 0.9rem">
-              Mantén este ritmo para cumplir tu meta a tiempo
-            </p>
+      <div class="info-cards-grid">
+        <div class="info-card">
+          <div class="info-card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#667eea" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            Ahorro Semanal Sugerido
           </div>
+          <div class="info-card-value">$14.912</div>
+          <p style="color: #6b7280; margin-top: 12px; font-size: 0.9rem">
+            Mantén este ritmo para cumplir tu meta a tiempo
+          </p>
+        </div>
 
-          <div class="info-card">
-            <div class="info-card-title">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#667eea"
-                stroke-width="2"
-              >
-                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
-                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
-              </svg>
-              Ahorro Mensual Sugerido
-            </div>
-            <div class="info-card-value">$59.648</div>
-            <p style="color: #6b7280; margin-top: 12px; font-size: 0.9rem">
-              Cantidad recomendada por mes
-            </p>
+        <div class="info-card">
+          <div class="info-card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#667eea" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+            Ahorro Mensual Sugerido
           </div>
+          <div class="info-card-value">$59.648</div>
+          <p style="color: #6b7280; margin-top: 12px; font-size: 0.9rem">
+            Cantidad recomendada por mes
+          </p>
+        </div>
 
-          <div class="info-card">
-            <div class="info-card-title">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#667eea"
-                stroke-width="2"
-              >
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-              </svg>
-              Fecha Proyectada
-            </div>
-            <div class="info-card-value" style="font-size: 1.8rem">
-              15 Ene 2026
-            </div>
-            <p style="color: #6b7280; margin-top: 12px; font-size: 0.9rem">
-              Faltan aproximadamente 427 días
-            </p>
+        <div class="info-card">
+          <div class="info-card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#667eea" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Fecha Proyectada
           </div>
+          <div class="info-card-value" style="font-size: 1.8rem">
+            15 Ene 2026
+          </div>
+          <p style="color: #6b7280; margin-top: 12px; font-size: 0.9rem">
+            Faltan aproximadamente 427 días
+          </p>
+        </div>
 
-          <div
-            class="info-card"
-            style="
+        <div class="info-card" style="
               background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
               border: none;
-            "
-          >
-            <div class="info-card-title" style="color: #92400e">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#92400e"
-                stroke-width="2"
-              >
-                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
-              </svg>
-              Total de Aportes
-            </div>
-            <div class="info-card-value" style="color: #92400e">4</div>
-            <p
-              style="
+            ">
+          <div class="info-card-title" style="color: #92400e">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#92400e" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+              <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+            </svg>
+            Total de Aportes
+          </div>
+          <div class="info-card-value" style="color: #92400e">4</div>
+          <p style="
                 color: #92400e;
                 margin-top: 12px;
                 font-size: 0.9rem;
                 opacity: 0.8;
-              "
-            >
-              Aportes realizados hasta ahora
-            </p>
-          </div>
+              ">
+            Aportes realizados hasta ahora
+          </p>
         </div>
+      </div>
 
-        <div
-          class="info-card"
-          style="
+      <div class="info-card" style="
             margin-top: 30px;
             background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
             border: 2px solid #c4b5fd;
-          "
-        >
-          <div class="info-card-title" style="color: #6b21a8">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#6b21a8"
-              stroke-width="2"
-            >
-              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-              <polyline points="17 6 23 6 23 12"></polyline>
-            </svg>
-            Proyección Inteligente
-          </div>
-          <p
-            style="
+          ">
+        <div class="info-card-title" style="color: #6b21a8">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b21a8" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+            <polyline points="17 6 23 6 23 12"></polyline>
+          </svg>
+          Proyección Inteligente
+        </div>
+        <p style="
               color: #581c87;
               font-size: 1.1rem;
               line-height: 1.7;
               margin-top: 15px;
-            "
-          >
-            <strong>¡Excelente progreso! 🎉</strong> Si continúas ahorrando a
-            este ritmo, completarás tu meta el
-            <strong>15 de enero de 2026</strong>. Estás ahorrando un promedio de
-            <strong>$412.500 por mes</strong>, lo cual es suficiente para
-            alcanzar tu objetivo.
-          </p>
-          <div
-            style="
+            ">
+          <strong>¡Excelente progreso! 🎉</strong> Si continúas ahorrando a
+          este ritmo, completarás tu meta el
+          <strong>15 de enero de 2026</strong>. Estás ahorrando un promedio de
+          <strong>$412.500 por mes</strong>, lo cual es suficiente para
+          alcanzar tu objetivo.
+        </p>
+        <div style="
               margin-top: 20px;
               padding: 15px;
               background: rgba(255, 255, 255, 0.6);
               border-radius: 15px;
-            "
-          >
-            <p style="color: #6b21a8; font-size: 0.95rem; margin: 0">
-              💡 <strong>Consejo:</strong> Si aumentas tu ahorro mensual a
-              $70.000, podrías completar tu meta 2 meses antes.
-            </p>
-          </div>
+            ">
+          <p style="color: #6b21a8; font-size: 0.95rem; margin: 0">
+            💡 <strong>Consejo:</strong> Si aumentas tu ahorro mensual a
+            $70.000, podrías completar tu meta 2 meses antes.
+          </p>
         </div>
+      </div>
 
-        <div class="info-card" style="margin-top: 30px">
-          <h3
-            style="
+      <div class="info-card" style="margin-top: 30px">
+        <h3 style="
               font-size: 1.5rem;
               color: #1a1a2e;
               margin-bottom: 25px;
               display: flex;
               align-items: center;
               gap: 10px;
-            "
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#667eea"
-              stroke-width="2"
-            >
-              <circle cx="12" cy="12" r="10"></circle>
-              <polyline points="12 6 12 12 16 14"></polyline>
-            </svg>
-            Historial de Aportes
-          </h3>
+            ">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#667eea" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          Historial de Aportes
+        </h3>
 
-          <div style="display: flex; flex-direction: column; gap: 15px">
-            <div
-              style="
+        <div style="display: flex; flex-direction: column; gap: 15px">
+          <div style="
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -1098,11 +991,9 @@
                 background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
                 border-radius: 18px;
                 transition: all 0.3s;
-              "
-            >
-              <div style="display: flex; align-items: center; gap: 15px">
-                <div
-                  style="
+              ">
+            <div style="display: flex; align-items: center; gap: 15px">
+              <div style="
                     width: 50px;
                     height: 50px;
                     background: white;
@@ -1111,54 +1002,39 @@
                     align-items: center;
                     justify-content: center;
                     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-                  "
-                >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#059669"
-                    stroke-width="2.5"
-                  >
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </svg>
-                </div>
-                <div>
-                  <div
-                    style="
+                  ">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </div>
+              <div>
+                <div style="
                       font-size: 1.3rem;
                       font-weight: 800;
                       color: #065f46;
                       margin-bottom: 4px;
-                    "
-                  >
-                    $400.000
-                  </div>
-                  <div
-                    style="color: #047857; font-size: 0.95rem; font-weight: 600"
-                  >
-                    15 de octubre de 2025
-                  </div>
+                    ">
+                  $400.000
+                </div>
+                <div style="color: #047857; font-size: 0.95rem; font-weight: 600">
+                  15 de octubre de 2025
                 </div>
               </div>
-              <div
-                style="
+            </div>
+            <div style="
                   background: white;
                   padding: 8px 16px;
                   border-radius: 50px;
                   color: #059669;
                   font-weight: 700;
                   font-size: 0.85rem;
-                "
-              >
-                Reciente
-              </div>
+                ">
+              Reciente
             </div>
+          </div>
 
-            <div
-              style="
+          <div style="
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -1167,13 +1043,9 @@
                 border-radius: 18px;
                 transition: all 0.3s;
                 cursor: pointer;
-              "
-              onmouseover="this.style.background='#f3f4f6'"
-              onmouseout="this.style.background='#f9fafb'"
-            >
-              <div style="display: flex; align-items: center; gap: 15px">
-                <div
-                  style="
+              " onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
+            <div style="display: flex; align-items: center; gap: 15px">
+              <div style="
                     width: 50px;
                     height: 50px;
                     background: #e5e7eb;
@@ -1181,42 +1053,29 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                  "
-                >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#6b7280"
-                    stroke-width="2"
-                  >
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </svg>
-                </div>
-                <div>
-                  <div
-                    style="
+                  ">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </div>
+              <div>
+                <div style="
                       font-size: 1.3rem;
                       font-weight: 800;
                       color: #1f2937;
                       margin-bottom: 4px;
-                    "
-                  >
-                    $350.000
-                  </div>
-                  <div
-                    style="color: #6b7280; font-size: 0.95rem; font-weight: 600"
-                  >
-                    20 de septiembre de 2025
-                  </div>
+                    ">
+                  $350.000
+                </div>
+                <div style="color: #6b7280; font-size: 0.95rem; font-weight: 600">
+                  20 de septiembre de 2025
                 </div>
               </div>
             </div>
+          </div>
 
-            <div
-              style="
+          <div style="
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -1225,13 +1084,9 @@
                 border-radius: 18px;
                 transition: all 0.3s;
                 cursor: pointer;
-              "
-              onmouseover="this.style.background='#f3f4f6'"
-              onmouseout="this.style.background='#f9fafb'"
-            >
-              <div style="display: flex; align-items: center; gap: 15px">
-                <div
-                  style="
+              " onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
+            <div style="display: flex; align-items: center; gap: 15px">
+              <div style="
                     width: 50px;
                     height: 50px;
                     background: #e5e7eb;
@@ -1239,42 +1094,29 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                  "
-                >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#6b7280"
-                    stroke-width="2"
-                  >
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </svg>
-                </div>
-                <div>
-                  <div
-                    style="
+                  ">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </div>
+              <div>
+                <div style="
                       font-size: 1.3rem;
                       font-weight: 800;
                       color: #1f2937;
                       margin-bottom: 4px;
-                    "
-                  >
-                    $450.000
-                  </div>
-                  <div
-                    style="color: #6b7280; font-size: 0.95rem; font-weight: 600"
-                  >
-                    25 de agosto de 2025
-                  </div>
+                    ">
+                  $450.000
+                </div>
+                <div style="color: #6b7280; font-size: 0.95rem; font-weight: 600">
+                  25 de agosto de 2025
                 </div>
               </div>
             </div>
+          </div>
 
-            <div
-              style="
+          <div style="
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -1283,13 +1125,9 @@
                 border-radius: 18px;
                 transition: all 0.3s;
                 cursor: pointer;
-              "
-              onmouseover="this.style.background='#f3f4f6'"
-              onmouseout="this.style.background='#f9fafb'"
-            >
-              <div style="display: flex; align-items: center; gap: 15px">
-                <div
-                  style="
+              " onmouseover="this.style.background='#f3f4f6'" onmouseout="this.style.background='#f9fafb'">
+            <div style="display: flex; align-items: center; gap: 15px">
+              <div style="
                     width: 50px;
                     height: 50px;
                     background: #e5e7eb;
@@ -1297,144 +1135,118 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                  "
-                >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#6b7280"
-                    stroke-width="2"
-                  >
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </svg>
-                </div>
-                <div>
-                  <div
-                    style="
+                  ">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </div>
+              <div>
+                <div style="
                       font-size: 1.3rem;
                       font-weight: 800;
                       color: #1f2937;
                       margin-bottom: 4px;
-                    "
-                  >
-                    $450.000
-                  </div>
-                  <div
-                    style="color: #6b7280; font-size: 0.95rem; font-weight: 600"
-                  >
-                    30 de julio de 2025
-                  </div>
+                    ">
+                  $450.000
+                </div>
+                <div style="color: #6b7280; font-size: 0.95rem; font-weight: 600">
+                  30 de julio de 2025
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-       <div class="actions-grid">
-  <button class="btn-action primary" onclick="agregarAporte()">
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2.5"
-    >
-      <line x1="12" y1="5" x2="12" y2="19"></line>
-      <line x1="5" y1="12" x2="19" y2="12"></line>
-    </svg>
-    Agregar Aporte
-  </button>
-  <button class="btn-action success" onclick="marcarCompletada()">
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2.5"
-    >
-      <polyline points="20 6 9 17 4 12"></polyline>
-    </svg>
-    Marcar Completada
-  </button>
-</div>
+      <div class="actions-grid">
+        <button class="btn-action primary" onclick="agregarAporte()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Agregar Aporte
+        </button>
+        <button class="btn-action success" onclick="marcarCompletada()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Marcar Completada
+        </button>
+      </div>
 
-    <script>
-      function mostrarDetalle() {
-        document.getElementById("dashboard").classList.add("hidden");
-        document.getElementById("detalle").classList.remove("hidden");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
-      function volverDashboard() {
-        document.getElementById("detalle").classList.add("hidden");
-        document.getElementById("dashboard").classList.remove("hidden");
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
-      // Animación de progreso al cargar
-      window.addEventListener("load", () => {
-        const progressBars = document.querySelectorAll(".progress-bar-fill");
-        progressBars.forEach((bar) => {
-          const width = bar.style.width;
-          bar.style.width = "0%";
-          setTimeout(() => {
-            bar.style.width = width;
-          }, 300);
-        });
-      });
-      // Datos de metas (simulación de base de datos)
-      // Obtener usuario actual de sessionStorage para consistencia con el login
-      const usuarioActual = JSON.parse(sessionStorage.getItem("usuario"));
-
-      // Verificar si hay usuario logueado
-      if (!usuarioActual || !usuarioActual.id) {
-        alert("Debes iniciar sesión para ver tus metas");
-        window.location.href = "/inicio";
-      }
-
-      // Variable global para almacenar las metas
-      let metas = [];
-
-      // Cargar metas del usuario al iniciar
-      async function cargarMetas() {
-        try {
-          const response = await fetch(`/api/metas/${usuarioActual.id}`);
-
-          // Verificar si la respuesta es OK
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-
-          const data = await response.json();
-
-          if (data.success) {
-            metas = data.metas;
-            renderizarMetas();
-          } else {
-            console.error("Error al cargar metas:", data.message);
-            mostrarNotificacion("No se pudieron cargar las metas", "error");
-          }
-        } catch (error) {
-          console.error("Error al cargar metas:", error);
-          mostrarNotificacion("Error al conectar con el servidor", "error");
-          // Si no hay metas, mostrar array vacío
-          metas = [];
-          renderizarMetas();
+      <script>
+        function mostrarDetalle() {
+          document.getElementById("dashboard").classList.add("hidden");
+          document.getElementById("detalle").classList.remove("hidden");
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }
-      }
 
-      // Ejecutar al cargar la página
-      cargarMetas();
+        function volverDashboard() {
+          document.getElementById("detalle").classList.add("hidden");
+          document.getElementById("dashboard").classList.remove("hidden");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
 
-      // Función para crear nueva meta
-      function crearNuevaMeta() {
-        const modal = document.createElement("div");
-        modal.style.cssText = `
+        // Animación de progreso al cargar
+        window.addEventListener("load", () => {
+          const progressBars = document.querySelectorAll(".progress-bar-fill");
+          progressBars.forEach((bar) => {
+            const width = bar.style.width;
+            bar.style.width = "0%";
+            setTimeout(() => {
+              bar.style.width = width;
+            }, 300);
+          });
+        });
+        // Datos de metas (simulación de base de datos)
+        // Obtener usuario actual de sessionStorage para consistencia con el login
+        const usuarioActual = JSON.parse(sessionStorage.getItem("usuario"));
+
+        // Verificar si hay usuario logueado
+        if (!usuarioActual || !usuarioActual.id) {
+          alert("Debes iniciar sesión para ver tus metas");
+          window.location.href = "/inicio";
+        }
+
+        // Variable global para almacenar las metas
+        let metas = [];
+
+        // Cargar metas del usuario al iniciar
+        async function cargarMetas() {
+          try {
+            const response = await fetch(`/api/metas/${usuarioActual.id}`);
+
+            // Verificar si la respuesta es OK
+            if (!response.ok) {
+              throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if (data.success) {
+              metas = data.metas;
+              renderizarMetas();
+            } else {
+              console.error("Error al cargar metas:", data.message);
+              mostrarNotificacion("No se pudieron cargar las metas", "error");
+            }
+          } catch (error) {
+            console.error("Error al cargar metas:", error);
+            mostrarNotificacion("Error al conectar con el servidor", "error");
+            // Si no hay metas, mostrar array vacío
+            metas = [];
+            renderizarMetas();
+          }
+        }
+
+        // Ejecutar al cargar la página
+        cargarMetas();
+
+        // Función para crear nueva meta
+        function crearNuevaMeta() {
+          const modal = document.createElement("div");
+          modal.style.cssText = `
           position: fixed;
           top: 0;
           left: 0;
@@ -1449,7 +1261,7 @@
           animation: fadeIn 0.3s ease;
         `;
 
-        modal.innerHTML = `
+          modal.innerHTML = `
           <div style="background: white; border-radius: 30px; padding: 40px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3); animation: slideUp 0.4s ease;">
             <h2 style="font-size: 2rem; color: #1a1a2e; margin-bottom: 10px; font-weight: 800;">✨ Nueva Meta Financiera</h2>
             <p style="color: #6b7280; margin-bottom: 30px;">Define tu próximo objetivo y comienza a ahorrar</p>
@@ -1517,122 +1329,122 @@
           </div>
         `;
 
-        document.body.appendChild(modal);
+          document.body.appendChild(modal);
 
-        // Agregar animaciones CSS
-        const style = document.createElement("style");
-        style.textContent = `
+          // Agregar animaciones CSS
+          const style = document.createElement("style");
+          style.textContent = `
           @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
           @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         `;
-        document.head.appendChild(style);
+          document.head.appendChild(style);
 
-        // Manejar envío del formulario
-        // Manejar envío del formulario
-        document.getElementById("formNuevaMeta");
-        document
-          .getElementById("formNuevaMeta")
-          .addEventListener("submit", async (e) => {
-            e.preventDefault();
+          // Manejar envío del formulario
+          // Manejar envío del formulario
+          document.getElementById("formNuevaMeta");
+          document
+            .getElementById("formNuevaMeta")
+            .addEventListener("submit", async (e) => {
+              e.preventDefault();
 
-            const emoji = document.getElementById("emojiMeta").value || "🎯";
-            const nombre = document.getElementById("nombreMeta").value;
-            const categoria = document.getElementById("categoriaMeta").value;
-            const prioridad = document.getElementById("prioridadMeta").value;
-            const montoObjetivo = parseFloat(
-              document.getElementById("montoObjetivo").value
-            );
-            const montoInicial =
-              parseFloat(document.getElementById("montoInicial").value) || 0;
-            const fechaObjetivo =
-              document.getElementById("fechaObjetivo").value;
-
-            // Validaciones
-            if (
-              !nombre ||
-              !categoria ||
-              !prioridad ||
-              !montoObjetivo ||
-              !fechaObjetivo
-            ) {
-              mostrarNotificacion(
-                "Por favor completa todos los campos requeridos",
-                "error"
+              const emoji = document.getElementById("emojiMeta").value || "🎯";
+              const nombre = document.getElementById("nombreMeta").value;
+              const categoria = document.getElementById("categoriaMeta").value;
+              const prioridad = document.getElementById("prioridadMeta").value;
+              const montoObjetivo = parseFloat(
+                document.getElementById("montoObjetivo").value
               );
-              return;
-            }
+              const montoInicial =
+                parseFloat(document.getElementById("montoInicial").value) || 0;
+              const fechaObjetivo =
+                document.getElementById("fechaObjetivo").value;
 
-            if (montoObjetivo <= 0) {
-              mostrarNotificacion(
-                "El monto objetivo debe ser mayor a 0",
-                "error"
-              );
-              return;
-            }
-
-            // Enviar al servidor
-            try {
-              const response = await fetch("/api/metas", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  usuarioId: usuarioActual.id,
-                  nombre: `${emoji} ${nombre}`,
-                  categoria,
-                  prioridad,
-                  montoObjetivo,
-                  montoInicial, // ✅ Cambiar a montoInicial (como espera el backend)
-                  fechaObjetivo,
-                }),
-              });
-
-              const data = await response.json();
-
-              if (data.success) {
-                modal.remove();
-                await cargarMetas(); // Recargar metas desde el servidor
-                mostrarNotificacion("¡Meta creada exitosamente! 🎉");
-              } else {
+              // Validaciones
+              if (
+                !nombre ||
+                !categoria ||
+                !prioridad ||
+                !montoObjetivo ||
+                !fechaObjetivo
+              ) {
                 mostrarNotificacion(
-                  data.message || "Error al crear la meta",
+                  "Por favor completa todos los campos requeridos",
                   "error"
                 );
+                return;
               }
-            } catch (error) {
-              console.error("Error al crear meta:", error);
-              mostrarNotificacion("Error al crear la meta", "error");
-            }
-          });
-      }
-      // Función para renderizar todas las metas
-      function renderizarMetas() {
-        const metasGrid = document.querySelector(".metas-grid");
-        metasGrid.innerHTML = "";
 
-        metas.forEach((meta) => {
-          // ✅ Usar snake_case como viene de la BD
-          const montoActual = meta.monto_actual || 0;
-          const montoObjetivo = meta.monto_objetivo || 0;
-          const fechaObjetivo = meta.fecha_objetivo;
+              if (montoObjetivo <= 0) {
+                mostrarNotificacion(
+                  "El monto objetivo debe ser mayor a 0",
+                  "error"
+                );
+                return;
+              }
 
-          const porcentaje =
-            montoObjetivo > 0
-              ? Math.round((montoActual / montoObjetivo) * 100)
-              : 0;
-          const falta = montoObjetivo - montoActual;
-          const diasRestantes = Math.ceil(
-            (new Date(fechaObjetivo) - new Date()) / (1000 * 60 * 60 * 24)
-          );
-          const ahorroMensual =
-            diasRestantes > 0 ? Math.ceil(falta / (diasRestantes / 30)) : 0;
+              // Enviar al servidor
+              try {
+                const response = await fetch("/api/metas", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    usuarioId: usuarioActual.id,
+                    nombre: `${emoji} ${nombre}`,
+                    categoria,
+                    prioridad,
+                    montoObjetivo,
+                    montoInicial, // ✅ Cambiar a montoInicial (como espera el backend)
+                    fechaObjetivo,
+                  }),
+                });
 
-          const metaCard = document.createElement("div");
-          metaCard.className = "meta-card";
-          metaCard.onclick = () => mostrarDetalleMeta(meta.id);
+                const data = await response.json();
 
-          metaCard.innerHTML = `
+                if (data.success) {
+                  modal.remove();
+                  await cargarMetas(); // Recargar metas desde el servidor
+                  mostrarNotificacion("¡Meta creada exitosamente! 🎉");
+                } else {
+                  mostrarNotificacion(
+                    data.message || "Error al crear la meta",
+                    "error"
+                  );
+                }
+              } catch (error) {
+                console.error("Error al crear meta:", error);
+                mostrarNotificacion("Error al crear la meta", "error");
+              }
+            });
+        }
+        // Función para renderizar todas las metas
+        function renderizarMetas() {
+          const metasGrid = document.querySelector(".metas-grid");
+          metasGrid.innerHTML = "";
+
+          metas.forEach((meta) => {
+            // ✅ Usar snake_case como viene de la BD
+            const montoActual = meta.monto_actual || 0;
+            const montoObjetivo = meta.monto_objetivo || 0;
+            const fechaObjetivo = meta.fecha_objetivo;
+
+            const porcentaje =
+              montoObjetivo > 0
+                ? Math.round((montoActual / montoObjetivo) * 100)
+                : 0;
+            const falta = montoObjetivo - montoActual;
+            const diasRestantes = Math.ceil(
+              (new Date(fechaObjetivo) - new Date()) / (1000 * 60 * 60 * 24)
+            );
+            const ahorroMensual =
+              diasRestantes > 0 ? Math.ceil(falta / (diasRestantes / 30)) : 0;
+
+            const metaCard = document.createElement("div");
+            metaCard.className = "meta-card";
+            metaCard.onclick = () => mostrarDetalleMeta(meta.id);
+
+            metaCard.innerHTML = `
   <div class="meta-content">
     <div class="meta-header">
       <div class="meta-info">
@@ -1691,192 +1503,192 @@
   </div>
 `;
 
-          metasGrid.appendChild(metaCard);
-        });
+            metasGrid.appendChild(metaCard);
+          });
 
-        actualizarEstadisticas();
-      }
-
-      // Función auxiliar para formatear moneda
-      function formatearMoneda(valor, abreviado = false) {
-        // Verificación para asegurar que el valor es un número. Si no, se usa 0.
-        const numero = Number(valor);
-        if (isNaN(numero)) {
-          valor = 0;
+          actualizarEstadisticas();
         }
 
-        if (abreviado && valor >= 1000000) {
-          return `$${(valor / 1000000).toFixed(1)}M`;
-        } else if (abreviado && valor >= 1000) {
-          return `$${Math.round(valor / 1000)}K`;
+        // Función auxiliar para formatear moneda
+        function formatearMoneda(valor, abreviado = false) {
+          // Verificación para asegurar que el valor es un número. Si no, se usa 0.
+          const numero = Number(valor);
+          if (isNaN(numero)) {
+            valor = 0;
+          }
+
+          if (abreviado && valor >= 1000000) {
+            return `$${(valor / 1000000).toFixed(1)}M`;
+          } else if (abreviado && valor >= 1000) {
+            return `$${Math.round(valor / 1000)}K`;
+          }
+          return `$${valor.toLocaleString("es-CO")}`;
         }
-        return `$${valor.toLocaleString("es-CO")}`;
-      }
 
-      // Función para mostrar detalle de una meta específica
-function mostrarDetalleMeta(metaId) {
-  const meta = metas.find((m) => m.id === metaId);
-  if (!meta) {
-    console.error("Meta no encontrada:", metaId);
-    return;
-  }
+        // Función para mostrar detalle de una meta específica
+        function mostrarDetalleMeta(metaId) {
+          const meta = metas.find((m) => m.id === metaId);
+          if (!meta) {
+            console.error("Meta no encontrada:", metaId);
+            return;
+          }
 
-  metaActualDetalle = meta;
-  cargarDetalleCompleto(meta);
-  mostrarDetalle();
-}
+          metaActualDetalle = meta;
+          cargarDetalleCompleto(meta);
+          mostrarDetalle();
+        }
 
-      // Función para actualizar estadísticas del dashboard
-      function actualizarEstadisticas() {
-        const totalActivas = metas.length;
-        const promedioProgreso =
-          metas.length > 0
-            ? Math.round(
+        // Función para actualizar estadísticas del dashboard
+        function actualizarEstadisticas() {
+          const totalActivas = metas.length;
+          const promedioProgreso =
+            metas.length > 0
+              ? Math.round(
                 metas.reduce((sum, m) => {
                   const actual = m.monto_actual || 0;
                   const objetivo = m.monto_objetivo || 1;
                   return sum + (actual / objetivo) * 100;
                 }, 0) / metas.length
               )
-            : 0;
-        const totalAhorrado = metas.reduce(
-          (sum, m) => sum + (m.monto_actual || 0),
-          0
-        );
+              : 0;
+          const totalAhorrado = metas.reduce(
+            (sum, m) => sum + (m.monto_actual || 0),
+            0
+          );
 
-        document.querySelector(
-          ".stat-card:nth-child(1) .stat-value"
-        ).textContent = totalActivas;
-        document.querySelector(
-          ".stat-card:nth-child(2) .stat-value"
-        ).textContent = `${promedioProgreso}%`;
-        document.querySelector(
-          ".stat-card:nth-child(3) .stat-value"
-        ).textContent = formatearMoneda(totalAhorrado, true);
-      }
+          document.querySelector(
+            ".stat-card:nth-child(1) .stat-value"
+          ).textContent = totalActivas;
+          document.querySelector(
+            ".stat-card:nth-child(2) .stat-value"
+          ).textContent = `${promedioProgreso}%`;
+          document.querySelector(
+            ".stat-card:nth-child(3) .stat-value"
+          ).textContent = formatearMoneda(totalAhorrado, true);
+        }
 
-      // Función para mostrar notificaciones
-      // Variable global para almacenar la meta actual en detalle
-      let metaActualDetalle = null;
+        // Función para mostrar notificaciones
+        // Variable global para almacenar la meta actual en detalle
+        let metaActualDetalle = null;
 
-      // Función para cargar todos los datos de la meta en la vista de detalle
-      // Función para cargar todos los datos de la meta en la vista de detalle
-      function cargarDetalleCompleto(meta) {
-        const montoActual = meta.monto_actual || 0;
-        const montoObjetivo = meta.monto_objetivo || 0;
-        const fechaObjetivo = meta.fecha_objetivo;
-        const porcentaje =
-          montoObjetivo > 0
-            ? Math.round((montoActual / montoObjetivo) * 100)
-            : 0;
-        const falta = montoObjetivo - montoActual;
-        const diasRestantes = Math.ceil(
-          (new Date(fechaObjetivo) - new Date()) / (1000 * 60 * 60 * 24)
-        );
+        // Función para cargar todos los datos de la meta en la vista de detalle
+        // Función para cargar todos los datos de la meta en la vista de detalle
+        function cargarDetalleCompleto(meta) {
+          const montoActual = meta.monto_actual || 0;
+          const montoObjetivo = meta.monto_objetivo || 0;
+          const fechaObjetivo = meta.fecha_objetivo;
+          const porcentaje =
+            montoObjetivo > 0
+              ? Math.round((montoActual / montoObjetivo) * 100)
+              : 0;
+          const falta = montoObjetivo - montoActual;
+          const diasRestantes = Math.ceil(
+            (new Date(fechaObjetivo) - new Date()) / (1000 * 60 * 60 * 24)
+          );
 
-        // Actualizar título
-        document.querySelector(".detalle-title").innerHTML = meta.nombre;
+          // Actualizar título
+          document.querySelector(".detalle-title").innerHTML = meta.nombre;
 
-        // Actualizar badges
-        const badgesContainer = document.querySelector(
-          ".detalle-hero .meta-badges"
-        );
-        badgesContainer.innerHTML = `
+          // Actualizar badges
+          const badgesContainer = document.querySelector(
+            ".detalle-hero .meta-badges"
+          );
+          badgesContainer.innerHTML = `
     <span class="badge badge-categoria">${meta.categoria}</span>
     <span class="badge badge-prioridad">${meta.prioridad}</span>
   `;
 
-        // Actualizar progreso
-        document.querySelector(".detalle-progress-big").textContent =
-          `${porcentaje}%`;
-        document.querySelector(".detalle-hero .progress-bar-fill").style.width =
-          `${porcentaje}%`;
+          // Actualizar progreso
+          document.querySelector(".detalle-progress-big").textContent =
+            `${porcentaje}%`;
+          document.querySelector(".detalle-hero .progress-bar-fill").style.width =
+            `${porcentaje}%`;
 
-        // Actualizar montos en el hero - usando un selector más específico
-        const detalleHeroContent = document.querySelector(
-          ".detalle-hero-content"
-        );
-        const montoDivs = detalleHeroContent.querySelectorAll(
-          'div[style*="grid-template-columns"] > div'
-        );
-
-        if (montoDivs.length >= 2) {
-          // Actualizar monto actual
-          const montoActualDiv = montoDivs[0].querySelector(
-            'div[style*="font-size: 2.5rem"]'
+          // Actualizar montos en el hero - usando un selector más específico
+          const detalleHeroContent = document.querySelector(
+            ".detalle-hero-content"
           );
-          if (montoActualDiv) {
-            montoActualDiv.textContent = formatearMoneda(montoActual);
-          }
-
-          // Actualizar monto objetivo
-          const montoObjetivoDiv = montoDivs[1].querySelector(
-            'div[style*="font-size: 2.5rem"]'
+          const montoDivs = detalleHeroContent.querySelectorAll(
+            'div[style*="grid-template-columns"] > div'
           );
-          if (montoObjetivoDiv) {
-            montoObjetivoDiv.textContent = formatearMoneda(montoObjetivo);
-          }
-        }
 
-        // Actualizar cards de información (ahorro semanal, mensual, etc.)
-        const infoCards = document.querySelectorAll(".info-card-value");
-        if (infoCards.length >= 4) {
-          // Ahorro semanal
-          const ahorroSemanal =
-            diasRestantes > 0 ? Math.ceil(falta / (diasRestantes / 7)) : 0;
-          infoCards[0].textContent = formatearMoneda(ahorroSemanal, true);
-
-          // Ahorro mensual
-          const ahorroMensual =
-            diasRestantes > 0 ? Math.ceil(falta / (diasRestantes / 30)) : 0;
-          infoCards[1].textContent = formatearMoneda(ahorroMensual, true);
-
-          // Fecha proyectada
-          const fechaProyectada = new Date(fechaObjetivo);
-          infoCards[2].textContent = fechaProyectada.toLocaleDateString(
-            "es-CO",
-            {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
+          if (montoDivs.length >= 2) {
+            // Actualizar monto actual
+            const montoActualDiv = montoDivs[0].querySelector(
+              'div[style*="font-size: 2.5rem"]'
+            );
+            if (montoActualDiv) {
+              montoActualDiv.textContent = formatearMoneda(montoActual);
             }
-          );
 
-          // Total de aportes
-          const totalAportes = meta.aportes ? meta.aportes.length : 0;
-          infoCards[3].textContent = totalAportes;
+            // Actualizar monto objetivo
+            const montoObjetivoDiv = montoDivs[1].querySelector(
+              'div[style*="font-size: 2.5rem"]'
+            );
+            if (montoObjetivoDiv) {
+              montoObjetivoDiv.textContent = formatearMoneda(montoObjetivo);
+            }
+          }
+
+          // Actualizar cards de información (ahorro semanal, mensual, etc.)
+          const infoCards = document.querySelectorAll(".info-card-value");
+          if (infoCards.length >= 4) {
+            // Ahorro semanal
+            const ahorroSemanal =
+              diasRestantes > 0 ? Math.ceil(falta / (diasRestantes / 7)) : 0;
+            infoCards[0].textContent = formatearMoneda(ahorroSemanal, true);
+
+            // Ahorro mensual
+            const ahorroMensual =
+              diasRestantes > 0 ? Math.ceil(falta / (diasRestantes / 30)) : 0;
+            infoCards[1].textContent = formatearMoneda(ahorroMensual, true);
+
+            // Fecha proyectada
+            const fechaProyectada = new Date(fechaObjetivo);
+            infoCards[2].textContent = fechaProyectada.toLocaleDateString(
+              "es-CO",
+              {
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              }
+            );
+
+            // Total de aportes
+            const totalAportes = meta.aportes ? meta.aportes.length : 0;
+            infoCards[3].textContent = totalAportes;
+          }
+
+          // Actualizar texto de días restantes
+          const infoParagraphs = document.querySelectorAll(".info-card p");
+          if (infoParagraphs.length >= 3) {
+            infoParagraphs[2].textContent = `Faltan aproximadamente ${diasRestantes} días`;
+          }
+
+          // Actualizar historial de aportes
+          actualizarHistorialAportes(meta.aportes || []);
         }
 
-        // Actualizar texto de días restantes
-        const infoParagraphs = document.querySelectorAll(".info-card p");
-        if (infoParagraphs.length >= 3) {
-          infoParagraphs[2].textContent = `Faltan aproximadamente ${diasRestantes} días`;
-        }
+        // Función para actualizar el historial de aportes
+        function actualizarHistorialAportes(aportes) {
+          // Buscar el contenedor del historial - es el div dentro del último info-card
+          const historialCards = document.querySelectorAll('.info-card');
+          if (historialCards.length === 0) {
+            console.error("No se encontró el contenedor de historial");
+            return;
+          }
 
-        // Actualizar historial de aportes
-        actualizarHistorialAportes(meta.aportes || []);
-      }
+          // El último info-card contiene el historial
+          const historialCard = historialCards[historialCards.length - 1];
+          const container = historialCard.querySelector('div[style*="display: flex; flex-direction: column"]');
 
-      // Función para actualizar el historial de aportes
-function actualizarHistorialAportes(aportes) {
-  // Buscar el contenedor del historial - es el div dentro del último info-card
-  const historialCards = document.querySelectorAll('.info-card');
-  if (historialCards.length === 0) {
-    console.error("No se encontró el contenedor de historial");
-    return;
-  }
-  
-  // El último info-card contiene el historial
-  const historialCard = historialCards[historialCards.length - 1];
-  const container = historialCard.querySelector('div[style*="display: flex; flex-direction: column"]');
-  
-  if (!container) {
-    console.error("No se encontró el contenedor específico del historial");
-    return;
-  }
+          if (!container) {
+            console.error("No se encontró el contenedor específico del historial");
+            return;
+          }
 
-  if (!aportes || aportes.length === 0) {
-    container.innerHTML = `
+          if (!aportes || aportes.length === 0) {
+            container.innerHTML = `
       <div style="text-align: center; padding: 40px; color: #6b7280;">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 15px; display: block;">
           <circle cx="12" cy="12" r="10"></circle>
@@ -1886,18 +1698,18 @@ function actualizarHistorialAportes(aportes) {
         <p>Aún no hay aportes registrados</p>
       </div>
     `;
-    return;
-  }
+            return;
+          }
 
-  container.innerHTML = aportes.map((aporte, index) => {
-    const esReciente = index === 0;
-    const fecha = new Date(aporte.fecha).toLocaleDateString('es-CO', { 
-      day: 'numeric', 
-      month: 'long', 
-      year: 'numeric' 
-    });
+          container.innerHTML = aportes.map((aporte, index) => {
+            const esReciente = index === 0;
+            const fecha = new Date(aporte.fecha).toLocaleDateString('es-CO', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric'
+            });
 
-    return `
+            return `
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 20px; background: ${esReciente ? 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)' : '#f9fafb'}; border-radius: 18px; margin-bottom: 15px; transition: all 0.3s;" ${!esReciente ? 'onmouseover="this.style.background=\'#f3f4f6\'" onmouseout="this.style.background=\'#f9fafb\'"' : ''}>
         <div style="display: flex; align-items: center; gap: 15px;">
           <div style="width: 50px; height: 50px; background: ${esReciente ? 'white' : '#e5e7eb'}; border-radius: 50%; display: flex; align-items: center; justify-content: center; ${esReciente ? 'box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);' : ''}">
@@ -1918,15 +1730,15 @@ function actualizarHistorialAportes(aportes) {
         ${esReciente ? '<div style="background: white; padding: 8px 16px; border-radius: 50px; color: #059669; font-weight: 700; font-size: 0.85rem;">Reciente</div>' : ''}
       </div>
     `;
-  }).join('');
-}
+          }).join('');
+        }
 
-      // Función para agregar un aporte
-      function agregarAporte() {
-        if (!metaActualDetalle) return;
+        // Función para agregar un aporte
+        function agregarAporte() {
+          if (!metaActualDetalle) return;
 
-        const modal = document.createElement("div");
-        modal.style.cssText = `
+          const modal = document.createElement("div");
+          modal.style.cssText = `
     position: fixed;
     top: 0;
     left: 0;
@@ -1941,11 +1753,11 @@ function actualizarHistorialAportes(aportes) {
     animation: fadeIn 0.3s ease;
   `;
 
-        const montoFaltante =
-          (metaActualDetalle.monto_objetivo || 0) -
-          (metaActualDetalle.monto_actual || 0);
+          const montoFaltante =
+            (metaActualDetalle.monto_objetivo || 0) -
+            (metaActualDetalle.monto_actual || 0);
 
-        modal.innerHTML = `
+          modal.innerHTML = `
     <div style="background: white; border-radius: 30px; padding: 40px; max-width: 500px; width: 90%; box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);">
       <h2 style="font-size: 2rem; color: #1a1a2e; margin-bottom: 10px; font-weight: 800;">💰 Agregar Aporte</h2>
       <p style="color: #6b7280; margin-bottom: 30px;">Meta: ${metaActualDetalle.nombre}</p>
@@ -1977,85 +1789,85 @@ function actualizarHistorialAportes(aportes) {
     </div>
   `;
 
-        document.body.appendChild(modal);
+          document.body.appendChild(modal);
 
-        document
-          .getElementById("formAporte")
-          .addEventListener("submit", async (e) => {
-            e.preventDefault();
+          document
+            .getElementById("formAporte")
+            .addEventListener("submit", async (e) => {
+              e.preventDefault();
 
-            const monto = parseFloat(
-              document.getElementById("montoAporte").value
-            );
-            const fecha = document.getElementById("fechaAporte").value;
-
-            if (!monto || !fecha) {
-              mostrarNotificacion(
-                "Por favor completa todos los campos",
-                "error"
+              const monto = parseFloat(
+                document.getElementById("montoAporte").value
               );
-              return;
-            }
+              const fecha = document.getElementById("fechaAporte").value;
 
-            if (monto <= 0) {
-              mostrarNotificacion("El monto debe ser mayor a 0", "error");
-              return;
-            }
-
-            try {
-              const response = await fetch(
-                `/api/metas/${metaActualDetalle.id}/aportes`,
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify({ monto, fecha }),
-                }
-              );
-
-              const data = await response.json();
-
-              if (data.success) {
-                modal.remove();
-                await cargarMetas();
-                metaActualDetalle = metas.find(
-                  (m) => m.id === metaActualDetalle.id
-                );
-                if (metaActualDetalle) {
-                  cargarDetalleCompleto(metaActualDetalle);
-                }
-                mostrarNotificacion("¡Aporte agregado exitosamente! 💰");
-              } else {
+              if (!monto || !fecha) {
                 mostrarNotificacion(
-                  data.message || "Error al agregar aporte",
+                  "Por favor completa todos los campos",
                   "error"
                 );
+                return;
               }
-            } catch (error) {
-              console.error("Error al agregar aporte:", error);
-              mostrarNotificacion("Error al agregar el aporte", "error");
-            }
-          });
-      }
 
-      // Función para marcar meta como completada
-      function marcarCompletada() {
-        if (!metaActualDetalle) return;
+              if (monto <= 0) {
+                mostrarNotificacion("El monto debe ser mayor a 0", "error");
+                return;
+              }
 
-        const montoActual = metaActualDetalle.monto_actual || 0;
-        const montoObjetivo = metaActualDetalle.monto_objetivo || 0;
+              try {
+                const response = await fetch(
+                  `/api/metas/${metaActualDetalle.id}/aportes`,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ monto, fecha }),
+                  }
+                );
 
-        if (montoActual < montoObjetivo) {
-          mostrarNotificacion(
-            "Aún no has alcanzado el objetivo de esta meta",
-            "error"
-          );
-          return;
+                const data = await response.json();
+
+                if (data.success) {
+                  modal.remove();
+                  await cargarMetas();
+                  metaActualDetalle = metas.find(
+                    (m) => m.id === metaActualDetalle.id
+                  );
+                  if (metaActualDetalle) {
+                    cargarDetalleCompleto(metaActualDetalle);
+                  }
+                  mostrarNotificacion("¡Aporte agregado exitosamente! 💰");
+                } else {
+                  mostrarNotificacion(
+                    data.message || "Error al agregar aporte",
+                    "error"
+                  );
+                }
+              } catch (error) {
+                console.error("Error al agregar aporte:", error);
+                mostrarNotificacion("Error al agregar el aporte", "error");
+              }
+            });
         }
 
-        const modal = document.createElement("div");
-        modal.style.cssText = `
+        // Función para marcar meta como completada
+        function marcarCompletada() {
+          if (!metaActualDetalle) return;
+
+          const montoActual = metaActualDetalle.monto_actual || 0;
+          const montoObjetivo = metaActualDetalle.monto_objetivo || 0;
+
+          if (montoActual < montoObjetivo) {
+            mostrarNotificacion(
+              "Aún no has alcanzado el objetivo de esta meta",
+              "error"
+            );
+            return;
+          }
+
+          const modal = document.createElement("div");
+          modal.style.cssText = `
     position: fixed;
     top: 0;
     left: 0;
@@ -2070,7 +1882,7 @@ function actualizarHistorialAportes(aportes) {
     animation: fadeIn 0.3s ease;
   `;
 
-        modal.innerHTML = `
+          modal.innerHTML = `
     <div style="background: white; border-radius: 30px; padding: 40px; max-width: 500px; width: 90%; box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3); text-align: center;">
       <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px;">
         <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
@@ -2092,51 +1904,51 @@ function actualizarHistorialAportes(aportes) {
     </div>
   `;
 
-        document.body.appendChild(modal);
-      }
-
-      // Función para confirmar y completar la meta
-      async function confirmarCompletada() {
-        if (!metaActualDetalle) return;
-
-        try {
-          const response = await fetch(
-            `/api/metas/${metaActualDetalle.id}/completar`,
-            {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-
-          const data = await response.json();
-
-          if (data.success) {
-            document.querySelector('[style*="position: fixed"]').remove();
-            await cargarMetas();
-            volverDashboard();
-            mostrarNotificacion(
-              "🎉 ¡Meta completada! ¡Felicitaciones por tu logro!"
-            );
-          } else {
-            mostrarNotificacion(
-              data.message || "Error al completar meta",
-              "error"
-            );
-          }
-        } catch (error) {
-          console.error("Error al completar meta:", error);
-          mostrarNotificacion("Error al completar la meta", "error");
+          document.body.appendChild(modal);
         }
-      }
-      // Función para mostrar notificaciones
-      function mostrarNotificacion(mensaje, tipo = "success") {
-        const notif = document.createElement("div");
-        const bgColor = tipo === "error" ? "#ef4444" : "white";
-        const textColor = tipo === "error" ? "white" : "#1a1a2e";
 
-        notif.style.cssText = `
+        // Función para confirmar y completar la meta
+        async function confirmarCompletada() {
+          if (!metaActualDetalle) return;
+
+          try {
+            const response = await fetch(
+              `/api/metas/${metaActualDetalle.id}/completar`,
+              {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+
+            const data = await response.json();
+
+            if (data.success) {
+              document.querySelector('[style*="position: fixed"]').remove();
+              await cargarMetas();
+              volverDashboard();
+              mostrarNotificacion(
+                "🎉 ¡Meta completada! ¡Felicitaciones por tu logro!"
+              );
+            } else {
+              mostrarNotificacion(
+                data.message || "Error al completar meta",
+                "error"
+              );
+            }
+          } catch (error) {
+            console.error("Error al completar meta:", error);
+            mostrarNotificacion("Error al completar la meta", "error");
+          }
+        }
+        // Función para mostrar notificaciones
+        function mostrarNotificacion(mensaje, tipo = "success") {
+          const notif = document.createElement("div");
+          const bgColor = tipo === "error" ? "#ef4444" : "white";
+          const textColor = tipo === "error" ? "white" : "#1a1a2e";
+
+          notif.style.cssText = `
           position: fixed;
           top: 30px;
           right: 30px;
@@ -2149,21 +1961,25 @@ function actualizarHistorialAportes(aportes) {
           font-weight: 600;
           color: ${textColor};
         `;
-        notif.textContent = mensaje;
-        document.body.appendChild(notif);
+          notif.textContent = mensaje;
+          document.body.appendChild(notif);
 
-        setTimeout(() => {
-          notif.style.animation = "slideOutRight 0.4s ease";
-          setTimeout(() => notif.remove(), 400);
-        }, 3000);
+          setTimeout(() => {
+            notif.style.animation = "slideOutRight 0.4s ease";
+            setTimeout(() => notif.remove(), 400);
+          }, 3000);
 
-        const style = document.createElement("style");
-        style.textContent = `
+          const style = document.createElement("style");
+          style.textContent = `
           @keyframes slideInRight { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
           @keyframes slideOutRight { from { transform: translateX(0); opacity: 1; } to { transform: translateX(400px); opacity: 0; } }
         `;
-        document.head.appendChild(style);
-      }
-    </script>
-  </body>
+          document.head.appendChild(style);
+        }
+        function backToMenu() {
+          window.location.href = "dashboard.html";
+        }
+      </script>
+</body>
+
 </html>
