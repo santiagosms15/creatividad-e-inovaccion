@@ -1,432 +1,1038 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recuperar Contraseña</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recuperar Contraseña | Plataforma Premium</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .container {
-      background: white;
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-      max-width: 450px;
-      width: 100%;
-    }
-
-    h1 {
-      color: #667eea;
-      text-align: center;
-      margin-bottom: 10px;
-      font-size: 28px;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #666;
-      margin-bottom: 30px;
-      font-size: 14px;
-    }
-
-    .step {
-      display: none;
-    }
-
-    .step.active {
-      display: block;
-      animation: fadeIn 0.3s ease-in;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .input-group {
-      margin-bottom: 20px;
-    }
-
-    input {
-      width: 100%;
-      padding: 15px;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
-      font-size: 16px;
-      transition: all 0.3s;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    .btn {
-      width: 100%;
-      padding: 15px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-    }
-
-    .btn:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .back-link {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .back-link a {
-      color: #667eea;
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .back-link a:hover {
-      text-decoration: underline;
-    }
-
-    .error {
-      color: #e74c3c;
-      font-size: 14px;
-      margin-top: 10px;
-      text-align: center;
-    }
-
-    .success {
-      color: #27ae60;
-      font-size: 14px;
-      margin-top: 10px;
-      text-align: center;
-    }
-
-    .code-inputs {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin: 20px 0;
-    }
-
-    .code-input {
-      width: 50px;
-      height: 60px;
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
-    }
-
-    .code-input:focus {
-      border-color: #667eea;
-      outline: none;
-    }
-
-    .timer {
-      text-align: center;
-      color: #666;
-      font-size: 14px;
-      margin-top: 10px;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Recuperar Contraseña</h1>
-    <p class="subtitle">Sigue los pasos para recuperar tu cuenta</p>
-
-    <!-- PASO 1: Ingresar Email -->
-    <div class="step active" id="step1">
-      <p style="text-align: center; margin-bottom: 20px; color: #666;">
-        Ingresa el correo electrónico de tu cuenta
-      </p>
-      <div class="input-group">
-        <input type="email" id="email" placeholder="correo@ejemplo.com" required>
-      </div>
-      <button class="btn" id="btnSolicitarCodigo">Enviar Código</button>
-      <div id="mensaje1" class="error"></div>
-    </div>
-
-    <!-- PASO 2: Verificar Código -->
-    <div class="step" id="step2">
-      <p style="text-align: center; margin-bottom: 20px; color: #666;">
-        Ingresa el código de 6 dígitos enviado a tu correo
-      </p>
-      <div class="code-inputs">
-        <input type="text" maxlength="1" class="code-input" data-index="0">
-        <input type="text" maxlength="1" class="code-input" data-index="1">
-        <input type="text" maxlength="1" class="code-input" data-index="2">
-        <input type="text" maxlength="1" class="code-input" data-index="3">
-        <input type="text" maxlength="1" class="code-input" data-index="4">
-        <input type="text" maxlength="1" class="code-input" data-index="5">
-      </div>
-      <div class="timer" id="timer"></div>
-      <button class="btn" id="btnVerificarCodigo">Verificar Código</button>
-      <div id="mensaje2" class="error"></div>
-      <p style="text-align: center; margin-top: 15px;">
-        <a href="#" id="reenviarCodigo" style="color: #667eea; font-size: 14px;">¿No recibiste el código? Reenviar</a>
-      </p>
-    </div>
-
-    <!-- PASO 3: Nueva Contraseña -->
-    <div class="step" id="step3">
-      <p style="text-align: center; margin-bottom: 20px; color: #666;">
-        Crea tu nueva contraseña
-      </p>
-      <div class="input-group">
-        <input type="password" id="nuevaContrasena" placeholder="Nueva Contraseña" required>
-      </div>
-      <div class="input-group">
-        <input type="password" id="confirmarContrasena" placeholder="Confirmar Contraseña" required>
-      </div>
-      <button class="btn" id="btnCambiarContrasena">Cambiar Contraseña</button>
-      <div id="mensaje3" class="error"></div>
-    </div>
-
-    <div class="back-link">
-      <a href="/inicio">← Volver a Iniciar Sesión</a>
-    </div>
-  </div>
-
-  <script>
-    let emailUsuario = '';
-    let codigoCompleto = '';
-    let tiempoRestante = 600; // 10 minutos en segundos
-    let intervalo;
-
-    // PASO 1: Solicitar código
-    document.getElementById('btnSolicitarCodigo').addEventListener('click', async () => {
-      const email = document.getElementById('email').value.trim();
-      const mensaje = document.getElementById('mensaje1');
-      const btn = document.getElementById('btnSolicitarCodigo');
-
-      if (!email) {
-        mensaje.textContent = 'Por favor ingresa tu correo';
-        mensaje.className = 'error';
-        return;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
-      btn.disabled = true;
-      btn.textContent = 'Enviando...';
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+        background: #0a0e27;
+        /* Coloca tu imagen en la misma carpeta que el HTML */
+        background-image: url("img/recuperar.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
 
-      try {
-        const response = await fetch('/api/solicitar-codigo', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email })
-        });
+      /* Overlay oscuro sobre la imagen de fondo */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(10, 14, 39, 0.8);
+        backdrop-filter: blur(3px);
+        z-index: 0;
+      }
 
-        const data = await response.json();
+      /* Animación de partículas flotantes */
+      .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 1;
+        pointer-events: none;
+      }
 
-        if (data.success) {
-          emailUsuario = email;
-          mensaje.textContent = data.message;
-          mensaje.className = 'success';
-          setTimeout(() => {
-            cambiarPaso(2);
-            iniciarTimer();
-          }, 1500);
-        } else {
-          mensaje.textContent = data.message;
-          mensaje.className = 'error';
-          btn.disabled = false;
-          btn.textContent = 'Enviar Código';
+      .particle {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        animation: float 15s infinite ease-in-out;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0) translateX(0);
+          opacity: 0;
         }
-      } catch (error) {
-        mensaje.textContent = 'Error al conectar con el servidor';
-        mensaje.className = 'error';
-        btn.disabled = false;
-        btn.textContent = 'Enviar Código';
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100vh) translateX(50px);
+          opacity: 0;
+        }
       }
-    });
 
-    // Manejo de inputs del código
-    const codeInputs = document.querySelectorAll('.code-input');
-    codeInputs.forEach((input, index) => {
-      input.addEventListener('input', (e) => {
-        if (e.target.value.length === 1) {
-          if (index < codeInputs.length - 1) {
-            codeInputs[index + 1].focus();
+      /* Contenedor principal */
+      .container {
+        position: relative;
+        z-index: 10;
+        background: rgba(15, 23, 42, 0.75);
+        backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+        padding: 48px 40px;
+        max-width: 480px;
+        width: 100%;
+        box-shadow:
+          0 25px 70px rgba(0, 0, 0, 0.6),
+          0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+        animation: slideUp 0.6s ease-out;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Header con icono */
+      .header {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+
+      .icon-container {
+        width: 72px;
+        height: 72px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 20px;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        50% {
+          transform: scale(1.05);
+          box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+      }
+
+      .icon-container::before {
+        content: "🔐";
+        font-size: 36px;
+      }
+
+      h1 {
+        color: #fff;
+        font-size: 26px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+      }
+
+      .subtitle {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.5;
+      }
+
+      /* Pasos */
+      .step {
+        display: none;
+      }
+
+      .step.active {
+        display: block;
+        animation: fadeIn 0.4s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .step-description {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+        margin-bottom: 24px;
+        line-height: 1.6;
+      }
+
+      /* Progress indicator */
+      .progress-container {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 32px;
+      }
+
+      .progress-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .progress-dot.active {
+        width: 24px;
+        border-radius: 4px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+      }
+
+      /* Input group */
+      .input-group {
+        margin-bottom: 20px;
+      }
+
+      .input-label {
+        display: block;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 8px;
+        padding-left: 4px;
+      }
+
+      input:not(.code-input) {
+        width: 100%;
+        padding: 14px 16px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1.5px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        color: #fff;
+        font-size: 15px;
+        font-family: "Inter", sans-serif;
+        outline: none;
+        transition: all 0.3s ease;
+      }
+
+      input:not(.code-input)::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+      }
+
+      input:not(.code-input):focus {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: #667eea;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      }
+
+      /* Code inputs */
+      .code-inputs {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin: 24px 0;
+      }
+
+      .code-input {
+        width: 52px;
+        height: 64px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1.5px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        color: #fff;
+        font-family: "Inter", sans-serif;
+        outline: none;
+        transition: all 0.3s ease;
+      }
+
+      .code-input:focus {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: #667eea;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        transform: scale(1.05);
+      }
+
+      /* Timer */
+      .timer {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 13px;
+        margin-top: 12px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .timer::before {
+        content: "⏱️";
+        font-size: 16px;
+      }
+
+      .timer.expired {
+        color: #ef4444;
+      }
+
+      .timer.expired::before {
+        content: "⚠️";
+      }
+
+      /* Botones */
+      .btn {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border: none;
+        border-radius: 12px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: "Inter", sans-serif;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+        margin-top: 8px;
+      }
+
+      .btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .btn:hover::before {
+        left: 100%;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5);
+      }
+
+      .btn:active {
+        transform: translateY(0);
+      }
+
+      .btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+        transform: none;
+      }
+
+      /* Enlaces */
+      .link-container {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .link {
+        color: #667eea;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        position: relative;
+        display: inline-block;
+      }
+
+      .link::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #667eea;
+        transition: width 0.3s ease;
+      }
+
+      .link:hover::after {
+        width: 100%;
+      }
+
+      .link:hover {
+        color: #7c8ff0;
+      }
+
+      .back-link {
+        margin-top: 24px;
+        text-align: center;
+      }
+
+      .back-link a {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .back-link a:hover {
+        color: #fff;
+        transform: translateX(-3px);
+      }
+
+      /* Mensajes */
+      .message {
+        font-size: 14px;
+        margin-top: 12px;
+        padding: 12px 16px;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 500;
+        display: none;
+        animation: slideIn 0.3s ease-out;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .message.show {
+        display: block;
+      }
+
+      .message.error {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+      }
+
+      .message.success {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10b981;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+      }
+
+      /* Loading spinner */
+      .btn.loading::after {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        top: 50%;
+        left: 50%;
+        margin-left: -8px;
+        margin-top: -8px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spinner 0.6s linear infinite;
+      }
+
+      @keyframes spinner {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .btn.loading span {
+        opacity: 0;
+      }
+
+      /* Responsive */
+      @media (max-width: 640px) {
+        .container {
+          padding: 40px 28px;
+          border-radius: 20px;
+        }
+
+        h1 {
+          font-size: 24px;
+        }
+
+        .code-input {
+          width: 46px;
+          height: 58px;
+          font-size: 22px;
+        }
+
+        .code-inputs {
+          gap: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Partículas animadas -->
+    <div class="particles">
+      <div class="particle" style="left: 10%; animation-delay: 0s"></div>
+      <div class="particle" style="left: 20%; animation-delay: 2s"></div>
+      <div class="particle" style="left: 30%; animation-delay: 4s"></div>
+      <div class="particle" style="left: 40%; animation-delay: 1s"></div>
+      <div class="particle" style="left: 50%; animation-delay: 3s"></div>
+      <div class="particle" style="left: 60%; animation-delay: 5s"></div>
+      <div class="particle" style="left: 70%; animation-delay: 2.5s"></div>
+      <div class="particle" style="left: 80%; animation-delay: 4.5s"></div>
+      <div class="particle" style="left: 90%; animation-delay: 1.5s"></div>
+    </div>
+
+    <div class="container">
+      <div class="header">
+        <div class="icon-container"></div>
+        <h1>Recuperar Contraseña</h1>
+        <p class="subtitle">
+          Sigue los pasos para recuperar el acceso a tu cuenta
+        </p>
+      </div>
+
+      <!-- Progress indicator -->
+      <div class="progress-container">
+        <div class="progress-dot active" id="progress1"></div>
+        <div class="progress-dot" id="progress2"></div>
+        <div class="progress-dot" id="progress3"></div>
+      </div>
+
+      <!-- PASO 1: Ingresar Email -->
+      <div class="step active" id="step1">
+        <p class="step-description">
+          Ingresa el correo electrónico asociado a tu cuenta y te enviaremos un
+          código de verificación
+        </p>
+        <div class="input-group">
+          <label class="input-label" for="email">Correo electrónico</label>
+          <input type="email" id="email" placeholder="tu@email.com" required />
+        </div>
+        <button class="btn" id="btnSolicitarCodigo">
+          <span>Enviar Código de Verificación</span>
+        </button>
+        <div id="mensaje1" class="message"></div>
+      </div>
+
+      <!-- PASO 2: Verificar Código -->
+      <div class="step" id="step2">
+        <p class="step-description">
+          Ingresa el código de 6 dígitos que hemos enviado a tu correo
+          electrónico
+        </p>
+        <div class="code-inputs">
+          <input
+            type="text"
+            maxlength="1"
+            class="code-input"
+            data-index="0"
+            inputmode="numeric"
+            pattern="[0-9]*"
+          />
+          <input
+            type="text"
+            maxlength="1"
+            class="code-input"
+            data-index="1"
+            inputmode="numeric"
+            pattern="[0-9]*"
+          />
+          <input
+            type="text"
+            maxlength="1"
+            class="code-input"
+            data-index="2"
+            inputmode="numeric"
+            pattern="[0-9]*"
+          />
+          <input
+            type="text"
+            maxlength="1"
+            class="code-input"
+            data-index="3"
+            inputmode="numeric"
+            pattern="[0-9]*"
+          />
+          <input
+            type="text"
+            maxlength="1"
+            class="code-input"
+            data-index="4"
+            inputmode="numeric"
+            pattern="[0-9]*"
+          />
+          <input
+            type="text"
+            maxlength="1"
+            class="code-input"
+            data-index="5"
+            inputmode="numeric"
+            pattern="[0-9]*"
+          />
+        </div>
+        <div class="timer" id="timer"></div>
+        <button class="btn" id="btnVerificarCodigo">
+          <span>Verificar Código</span>
+        </button>
+        <div id="mensaje2" class="message"></div>
+        <div class="link-container">
+          <a href="#" class="link" id="reenviarCodigo"
+            >¿No recibiste el código? Reenviar</a
+          >
+        </div>
+      </div>
+
+      <!-- PASO 3: Nueva Contraseña -->
+      <div class="step" id="step3">
+        <p class="step-description">
+          Crea una nueva contraseña segura para tu cuenta
+        </p>
+        <div class="input-group" style="position: relative">
+          <label class="input-label" for="nuevaContrasena"
+            >Nueva contraseña</label
+          >
+          <input
+            type="password"
+            id="nuevaContrasena"
+            placeholder="Mínimo 6 caracteres"
+            required
+            style="padding-right: 45px"
+          />
+          <button
+            type="button"
+            id="togglePassword1"
+            style="
+              position: absolute;
+              right: 12px;
+              top: 50%;
+              transform: translateY(-50%);
+              background: none;
+              border: none;
+              color: rgba(255, 255, 255, 0.5);
+              cursor: pointer;
+              font-size: 1.1rem;
+              padding: 5px;
+              transition: color 0.2s;
+            "
+          >
+            👁️
+          </button>
+        </div>
+        <div class="input-group" style="position: relative">
+          <label class="input-label" for="confirmarContrasena"
+            >Confirmar contraseña</label
+          >
+          <input
+            type="password"
+            id="confirmarContrasena"
+            placeholder="Repite tu contraseña"
+            required
+            style="padding-right: 45px"
+          />
+          <button
+            type="button"
+            id="togglePassword2"
+            style="
+              position: absolute;
+              right: 12px;
+              top: 50%;
+              transform: translateY(-50%);
+              background: none;
+              border: none;
+              color: rgba(255, 255, 255, 0.5);
+              cursor: pointer;
+              font-size: 1.1rem;
+              padding: 5px;
+              transition: color 0.2s;
+            "
+          >
+            👁️
+          </button>
+        </div>
+        <button class="btn" id="btnCambiarContrasena">
+          <span>Cambiar Contraseña</span>
+        </button>
+        <div id="mensaje3" class="message"></div>
+      </div>
+
+      <div class="back-link">
+        <a href="/inicio">← Volver a Iniciar Sesión</a>
+      </div>
+    </div>
+
+    <script>
+      let emailUsuario = "";
+      let codigoCompleto = "";
+      let tiempoRestante = 600;
+      let intervalo;
+
+      // Actualizar indicador de progreso
+      function actualizarProgreso(paso) {
+        for (let i = 1; i <= 3; i++) {
+          const dot = document.getElementById(`progress${i}`);
+          if (i === paso) {
+            dot.classList.add("active");
+          } else {
+            dot.classList.remove("active");
           }
         }
-      });
-
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Backspace' && !e.target.value && index > 0) {
-          codeInputs[index - 1].focus();
-        }
-      });
-
-      input.addEventListener('paste', (e) => {
-        e.preventDefault();
-        const pastedData = e.clipboardData.getData('text').slice(0, 6);
-        pastedData.split('').forEach((char, i) => {
-          if (codeInputs[i]) codeInputs[i].value = char;
-        });
-        if (codeInputs[5]) codeInputs[5].focus();
-      });
-    });
-
-    // PASO 2: Verificar código
-    document.getElementById('btnVerificarCodigo').addEventListener('click', async () => {
-      codigoCompleto = Array.from(codeInputs).map(input => input.value).join('');
-      const mensaje = document.getElementById('mensaje2');
-      const btn = document.getElementById('btnVerificarCodigo');
-
-      if (codigoCompleto.length !== 6) {
-        mensaje.textContent = 'Por favor ingresa el código completo';
-        mensaje.className = 'error';
-        return;
       }
 
-      btn.disabled = true;
-      btn.textContent = 'Verificando...';
+      // PASO 1: Solicitar código
+      document
+        .getElementById("btnSolicitarCodigo")
+        .addEventListener("click", async () => {
+          const email = document.getElementById("email").value.trim();
+          const mensaje = document.getElementById("mensaje1");
+          const btn = document.getElementById("btnSolicitarCodigo");
 
-      try {
-        const response = await fetch('/api/verificar-codigo', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: emailUsuario, codigo: codigoCompleto })
+          if (!email) {
+            mostrarMensaje(
+              "mensaje1",
+              "Por favor ingresa tu correo electrónico",
+              "error"
+            );
+            return;
+          }
+
+          if (!validarEmail(email)) {
+            mostrarMensaje(
+              "mensaje1",
+              "Por favor ingresa un correo válido",
+              "error"
+            );
+            return;
+          }
+
+          btn.disabled = true;
+          btn.classList.add("loading");
+
+          try {
+            const response = await fetch("/api/solicitar-codigo", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+              emailUsuario = email;
+              mostrarMensaje("mensaje1", data.message, "success");
+              setTimeout(() => {
+                cambiarPaso(2);
+                iniciarTimer();
+              }, 1500);
+            } else {
+              mostrarMensaje("mensaje1", data.message, "error");
+              btn.disabled = false;
+              btn.classList.remove("loading");
+            }
+          } catch (error) {
+            mostrarMensaje(
+              "mensaje1",
+              "Error al conectar con el servidor. Intenta nuevamente.",
+              "error"
+            );
+            btn.disabled = false;
+            btn.classList.remove("loading");
+          }
         });
 
-        const data = await response.json();
+      // Validar email
+      function validarEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      }
 
-        if (data.success) {
+      // Manejo de inputs del código
+      const codeInputs = document.querySelectorAll(".code-input");
+      codeInputs.forEach((input, index) => {
+        // Auto-focus siguiente input
+        input.addEventListener("input", (e) => {
+          const value = e.target.value;
+          if (value.length === 1 && index < codeInputs.length - 1) {
+            codeInputs[index + 1].focus();
+          }
+        });
+
+        // Retroceso
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Backspace" && !e.target.value && index > 0) {
+            codeInputs[index - 1].focus();
+          }
+        });
+
+        // Pegar código completo
+        input.addEventListener("paste", (e) => {
+          e.preventDefault();
+          const pastedData = e.clipboardData
+            .getData("text")
+            .replace(/\D/g, "")
+            .slice(0, 6);
+          pastedData.split("").forEach((char, i) => {
+            if (codeInputs[i]) {
+              codeInputs[i].value = char;
+            }
+          });
+          if (pastedData.length === 6) {
+            codeInputs[5].focus();
+          }
+        });
+
+        // Solo números
+        input.addEventListener("input", (e) => {
+          e.target.value = e.target.value.replace(/\D/g, "");
+        });
+      });
+
+      // PASO 2: Verificar código
+      document
+        .getElementById("btnVerificarCodigo")
+        .addEventListener("click", async () => {
+          codigoCompleto = Array.from(codeInputs)
+            .map((input) => input.value)
+            .join("");
+          const btn = document.getElementById("btnVerificarCodigo");
+
+          if (codigoCompleto.length !== 6) {
+            mostrarMensaje(
+              "mensaje2",
+              "Por favor ingresa el código completo de 6 dígitos",
+              "error"
+            );
+            return;
+          }
+
+          btn.disabled = true;
+          btn.classList.add("loading");
+
+          try {
+            const response = await fetch("/api/verificar-codigo", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: emailUsuario,
+                codigo: codigoCompleto,
+              }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+              clearInterval(intervalo);
+              mostrarMensaje(
+                "mensaje2",
+                "¡Código verificado correctamente!",
+                "success"
+              );
+              setTimeout(() => cambiarPaso(3), 1200);
+            } else {
+              mostrarMensaje("mensaje2", data.message, "error");
+              btn.disabled = false;
+              btn.classList.remove("loading");
+            }
+          } catch (error) {
+            mostrarMensaje(
+              "mensaje2",
+              "Error al verificar el código. Intenta nuevamente.",
+              "error"
+            );
+            btn.disabled = false;
+            btn.classList.remove("loading");
+          }
+        });
+
+      // PASO 3: Cambiar contraseña
+      document
+        .getElementById("btnCambiarContrasena")
+        .addEventListener("click", async () => {
+          const nuevaContrasena =
+            document.getElementById("nuevaContrasena").value;
+          const confirmarContrasena = document.getElementById(
+            "confirmarContrasena"
+          ).value;
+          const btn = document.getElementById("btnCambiarContrasena");
+
+          if (nuevaContrasena.length < 6) {
+            mostrarMensaje(
+              "mensaje3",
+              "La contraseña debe tener al menos 6 caracteres",
+              "error"
+            );
+            return;
+          }
+
+          if (nuevaContrasena !== confirmarContrasena) {
+            mostrarMensaje("mensaje3", "Las contraseñas no coinciden", "error");
+            return;
+          }
+
+          btn.disabled = true;
+          btn.classList.add("loading");
+
+          try {
+            const response = await fetch("/api/restablecer-contrasena", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: emailUsuario,
+                codigo: codigoCompleto,
+                nuevaContrasena,
+              }),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+              mostrarMensaje(
+                "mensaje3",
+                "¡Contraseña actualizada con éxito! Redirigiendo...",
+                "success"
+              );
+              setTimeout(() => {
+                window.location.href = "/inicio";
+              }, 2000);
+            } else {
+              mostrarMensaje("mensaje3", data.message, "error");
+              btn.disabled = false;
+              btn.classList.remove("loading");
+            }
+          } catch (error) {
+            mostrarMensaje(
+              "mensaje3",
+              "Error al actualizar la contraseña. Intenta nuevamente.",
+              "error"
+            );
+            btn.disabled = false;
+            btn.classList.remove("loading");
+          }
+        });
+
+      // Reenviar código
+      document
+        .getElementById("reenviarCodigo")
+        .addEventListener("click", async (e) => {
+          e.preventDefault();
           clearInterval(intervalo);
-          mensaje.textContent = '¡Código verificado!';
-          mensaje.className = 'success';
-          setTimeout(() => cambiarPaso(3), 1000);
-        } else {
-          mensaje.textContent = data.message;
-          mensaje.className = 'error';
-          btn.disabled = false;
-          btn.textContent = 'Verificar Código';
-        }
-      } catch (error) {
-        mensaje.textContent = 'Error al verificar';
-        mensaje.className = 'error';
-        btn.disabled = false;
-        btn.textContent = 'Verificar Código';
-      }
-    });
-
-    // PASO 3: Cambiar contraseña
-    document.getElementById('btnCambiarContrasena').addEventListener('click', async () => {
-      const nuevaContrasena = document.getElementById('nuevaContrasena').value;
-      const confirmarContrasena = document.getElementById('confirmarContrasena').value;
-      const mensaje = document.getElementById('mensaje3');
-      const btn = document.getElementById('btnCambiarContrasena');
-
-      if (nuevaContrasena.length < 6) {
-        mensaje.textContent = 'La contraseña debe tener al menos 6 caracteres';
-        mensaje.className = 'error';
-        return;
-      }
-
-      if (nuevaContrasena !== confirmarContrasena) {
-        mensaje.textContent = 'Las contraseñas no coinciden';
-        mensaje.className = 'error';
-        return;
-      }
-
-      btn.disabled = true;
-      btn.textContent = 'Actualizando...';
-
-      try {
-        const response = await fetch('/api/restablecer-contrasena', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            email: emailUsuario, 
-            codigo: codigoCompleto,
-            nuevaContrasena 
-          })
+          codeInputs.forEach((input) => (input.value = ""));
+          document.getElementById("mensaje2").classList.remove("show");
+          cambiarPaso(1);
         });
 
-        const data = await response.json();
+      // Funciones auxiliares
+      function cambiarPaso(numero) {
+        document
+          .querySelectorAll(".step")
+          .forEach((step) => step.classList.remove("active"));
+        document.getElementById(`step${numero}`).classList.add("active");
+        actualizarProgreso(numero);
 
-        if (data.success) {
-          mensaje.textContent = '¡Contraseña actualizada con éxito!';
-          mensaje.className = 'success';
-          setTimeout(() => {
-            window.location.href = '/inicio';
-          }, 2000);
-        } else {
-          mensaje.textContent = data.message;
-          mensaje.className = 'error';
-          btn.disabled = false;
-          btn.textContent = 'Cambiar Contraseña';
-        }
-      } catch (error) {
-        mensaje.textContent = 'Error al actualizar';
-        mensaje.className = 'error';
-        btn.disabled = false;
-        btn.textContent = 'Cambiar Contraseña';
+        // Limpiar mensajes
+        document
+          .querySelectorAll(".message")
+          .forEach((msg) => msg.classList.remove("show"));
       }
-    });
 
-    // Reenviar código
-    document.getElementById('reenviarCodigo').addEventListener('click', async (e) => {
-      e.preventDefault();
-      document.getElementById('step2').classList.remove('active');
-      document.getElementById('step1').classList.add('active');
-      clearInterval(intervalo);
-      codeInputs.forEach(input => input.value = '');
-    });
+      function mostrarMensaje(id, texto, tipo) {
+        const mensaje = document.getElementById(id);
+        mensaje.textContent = texto;
+        mensaje.className = `message ${tipo} show`;
+      }
 
-    // Funciones auxiliares
-    function cambiarPaso(numero) {
-      document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
-      document.getElementById(`step${numero}`).classList.add('active');
-    }
+      function iniciarTimer() {
+        tiempoRestante = 600;
+        const timerElement = document.getElementById("timer");
+        timerElement.classList.remove("expired");
 
-    function iniciarTimer() {
-      tiempoRestante = 600;
-      const timerElement = document.getElementById('timer');
-      
-      intervalo = setInterval(() => {
-        tiempoRestante--;
-        const minutos = Math.floor(tiempoRestante / 60);
-        const segundos = tiempoRestante % 60;
-        timerElement.textContent = `Código válido por: ${minutos}:${segundos.toString().padStart(2, '0')}`;
+        intervalo = setInterval(() => {
+          tiempoRestante--;
+          const minutos = Math.floor(tiempoRestante / 60);
+          const segundos = tiempoRestante % 60;
+          timerElement.textContent = `Código válido por ${minutos}:${segundos.toString().padStart(2, "0")}`;
 
-        if (tiempoRestante <= 0) {
-          clearInterval(intervalo);
-          timerElement.textContent = 'El código ha expirado';
-          timerElement.style.color = '#e74c3c';
-        }
-      }, 1000);
-    }
-  </script>
-</body>
+          if (tiempoRestante <= 0) {
+            clearInterval(intervalo);
+            timerElement.textContent =
+              "El código ha expirado. Solicita uno nuevo.";
+            timerElement.classList.add("expired");
+          }
+        }, 1000);
+      }
+
+      // Auto-focus en el primer input al cargar
+      window.addEventListener("load", () => {
+        document.getElementById("email").focus();
+      });
+      // Toggle password visibility
+      const togglePassword1 = document.getElementById("togglePassword1");
+      const togglePassword2 = document.getElementById("togglePassword2");
+      const nuevaContrasenaInput = document.getElementById("nuevaContrasena");
+      const confirmarContrasenaInput = document.getElementById(
+        "confirmarContrasena"
+      );
+
+      togglePassword1.addEventListener("click", function () {
+        const type =
+          nuevaContrasenaInput.type === "password" ? "text" : "password";
+        nuevaContrasenaInput.type = type;
+        this.textContent = type === "password" ? "👁️" : "🙈";
+        this.style.color =
+          type === "password"
+            ? "rgba(255,255,255,0.5)"
+            : "rgba(255,255,255,0.8)";
+      });
+
+      togglePassword2.addEventListener("click", function () {
+        const type =
+          confirmarContrasenaInput.type === "password" ? "text" : "password";
+        confirmarContrasenaInput.type = type;
+        this.textContent = type === "password" ? "👁️" : "🙈";
+        this.style.color =
+          type === "password"
+            ? "rgba(255,255,255,0.5)"
+            : "rgba(255,255,255,0.8)";
+      });
+    </script>
+  </body>
 </html>
