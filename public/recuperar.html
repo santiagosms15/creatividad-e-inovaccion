@@ -1,10 +1,8 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Recuperar Contraseña</title>
   <style>
     * {
@@ -14,241 +12,421 @@
     }
 
     body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      height: 100vh;
-      overflow: hidden;
-      background: linear-gradient(135deg,
-          #2c5f5d 0%,
-          #1a3d3b 50%,
-          #0d2726 100%);
-      position: relative;
-    }
-
-    .background-shapes {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
-
-    .shape {
-      position: absolute;
-      border-radius: 50%;
-      opacity: 0.15;
-      animation: float 15s ease-in-out infinite;
-    }
-
-    .shape1 {
-      width: 600px;
-      height: 600px;
-      background: #4a8886;
-      bottom: -200px;
-      left: -100px;
-      border-radius: 40% 60% 50% 50%;
-    }
-
-    .shape2 {
-      width: 400px;
-      height: 400px;
-      background: #5a9896;
-      top: -100px;
-      right: -50px;
-      border-radius: 50% 50% 40% 60%;
-      animation-duration: 12s;
-      animation-direction: reverse;
-    }
-
-    .container {
-      position: relative;
-      z-index: 10;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
-      height: 100vh;
+      align-items: center;
       padding: 20px;
     }
 
-    h1 {
-      color: #fff;
-      font-size: 2.5rem;
-      margin-bottom: 40px;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      font-weight: 300;
-      text-align: center;
-    }
-
-    p.instructions {
-      color: rgba(255, 255, 255, 0.8);
-      margin-bottom: 40px;
-      max-width: 400px;
-      text-align: center;
-      line-height: 1.6;
-    }
-
-    .form-container {
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 450px;
       width: 100%;
-      max-width: 400px;
+    }
+
+    h1 {
+      color: #667eea;
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+
+    .step {
+      display: none;
+    }
+
+    .step.active {
+      display: block;
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .input-group {
-      margin-bottom: 25px;
-      position: relative;
+      margin-bottom: 20px;
     }
 
     input {
       width: 100%;
-      padding: 18px 25px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50px;
-      color: #fff;
-      font-size: 1rem;
-      outline: none;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-    }
-
-    input::placeholder {
-      color: rgba(255, 255, 255, 0.6);
-      text-transform: uppercase;
-      font-size: 0.9rem;
-      letter-spacing: 1px;
+      padding: 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: all 0.3s;
     }
 
     input:focus {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: rgba(255, 255, 255, 0.5);
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
 
-    .btn-submit {
+    .btn {
       width: 100%;
-      padding: 18px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 2px solid rgba(255, 255, 255, 0.4);
-      border-radius: 50px;
-      color: #fff;
-      font-size: 1.1rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
+      padding: 15px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
-      transition: all 0.3s ease;
-      margin-top: 20px;
-      backdrop-filter: blur(10px);
-      font-weight: 300;
+      transition: transform 0.2s;
     }
 
-    .btn-submit:hover {
-      background: rgba(255, 255, 255, 0.2);
-      border-color: rgba(255, 255, 255, 0.6);
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
     }
 
-    .btn-submit:disabled {
+    .btn:disabled {
+      background: #ccc;
       cursor: not-allowed;
-      opacity: 0.6;
-      transform: translateY(0);
+      transform: none;
     }
 
     .back-link {
       text-align: center;
-      color: rgba(255, 255, 255, 0.7);
-      margin-top: 30px;
-      font-size: 0.95rem;
+      margin-top: 20px;
     }
 
     .back-link a {
-      color: #fff;
+      color: #667eea;
       text-decoration: none;
       font-weight: 500;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-      transition: all 0.3s ease;
     }
 
     .back-link a:hover {
-      color: #a8d5d3;
-      border-bottom-color: #a8d5d3;
+      text-decoration: underline;
     }
 
-    @keyframes float {
-
-      0%,
-      100% {
-        transform: translateY(0px);
-      }
-
-      50% {
-        transform: translateY(-20px);
-      }
+    .error {
+      color: #e74c3c;
+      font-size: 14px;
+      margin-top: 10px;
+      text-align: center;
     }
 
-    .visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+    .success {
+      color: #27ae60;
+      font-size: 14px;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .code-inputs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .code-input {
+      width: 50px;
+      height: 60px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+    }
+
+    .code-input:focus {
+      border-color: #667eea;
+      outline: none;
+    }
+
+    .timer {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-top: 10px;
+    }
   </style>
 </head>
-
 <body>
-  <div class="background-shapes">
-    <div class="shape shape1"></div>
-    <div class="shape shape2"></div>
-  </div>
-
   <div class="container">
     <h1>Recuperar Contraseña</h1>
-    <p class="instructions">
-      Ingresa tu nombre de usuario para continuar con el proceso de
-      recuperación de contraseña.
-    </p>
+    <p class="subtitle">Sigue los pasos para recuperar tu cuenta</p>
 
-    <div class="form-container">
-      <form id="recoverForm" novalidate>
-        <div class="input-group">
-          <label for="usuario" class="visually-hidden">Nombre de Usuario</label>
-          <input type="text" id="usuario" placeholder="Nombre de Usuario" required autocomplete="username" />
-        </div>
-        <button type="submit" class="btn-submit" id="submitButton">Verificar Usuario</button>
-      </form>
-
-      <p class="back-link">
-        <a href="/inicio.html">Volver a Iniciar Sesión</a>
+    <!-- PASO 1: Ingresar Email -->
+    <div class="step active" id="step1">
+      <p style="text-align: center; margin-bottom: 20px; color: #666;">
+        Ingresa el correo electrónico de tu cuenta
       </p>
+      <div class="input-group">
+        <input type="email" id="email" placeholder="correo@ejemplo.com" required>
+      </div>
+      <button class="btn" id="btnSolicitarCodigo">Enviar Código</button>
+      <div id="mensaje1" class="error"></div>
+    </div>
+
+    <!-- PASO 2: Verificar Código -->
+    <div class="step" id="step2">
+      <p style="text-align: center; margin-bottom: 20px; color: #666;">
+        Ingresa el código de 6 dígitos enviado a tu correo
+      </p>
+      <div class="code-inputs">
+        <input type="text" maxlength="1" class="code-input" data-index="0">
+        <input type="text" maxlength="1" class="code-input" data-index="1">
+        <input type="text" maxlength="1" class="code-input" data-index="2">
+        <input type="text" maxlength="1" class="code-input" data-index="3">
+        <input type="text" maxlength="1" class="code-input" data-index="4">
+        <input type="text" maxlength="1" class="code-input" data-index="5">
+      </div>
+      <div class="timer" id="timer"></div>
+      <button class="btn" id="btnVerificarCodigo">Verificar Código</button>
+      <div id="mensaje2" class="error"></div>
+      <p style="text-align: center; margin-top: 15px;">
+        <a href="#" id="reenviarCodigo" style="color: #667eea; font-size: 14px;">¿No recibiste el código? Reenviar</a>
+      </p>
+    </div>
+
+    <!-- PASO 3: Nueva Contraseña -->
+    <div class="step" id="step3">
+      <p style="text-align: center; margin-bottom: 20px; color: #666;">
+        Crea tu nueva contraseña
+      </p>
+      <div class="input-group">
+        <input type="password" id="nuevaContrasena" placeholder="Nueva Contraseña" required>
+      </div>
+      <div class="input-group">
+        <input type="password" id="confirmarContrasena" placeholder="Confirmar Contraseña" required>
+      </div>
+      <button class="btn" id="btnCambiarContrasena">Cambiar Contraseña</button>
+      <div id="mensaje3" class="error"></div>
+    </div>
+
+    <div class="back-link">
+      <a href="/inicio">← Volver a Iniciar Sesión</a>
     </div>
   </div>
 
   <script>
-    document.getElementById('recoverForm').addEventListener('submit', async function (e) {
-      e.preventDefault();
-      const submitButton = document.getElementById('submitButton');
-      const usuario = document.getElementById('usuario').value.trim();
+    let emailUsuario = '';
+    let codigoCompleto = '';
+    let tiempoRestante = 600; // 10 minutos en segundos
+    let intervalo;
 
-      if (!usuario) {
-        alert('Por favor, ingresa tu nombre de usuario.');
+    // PASO 1: Solicitar código
+    document.getElementById('btnSolicitarCodigo').addEventListener('click', async () => {
+      const email = document.getElementById('email').value.trim();
+      const mensaje = document.getElementById('mensaje1');
+      const btn = document.getElementById('btnSolicitarCodigo');
+
+      if (!email) {
+        mensaje.textContent = 'Por favor ingresa tu correo';
+        mensaje.className = 'error';
         return;
       }
 
-      submitButton.disabled = true;
-      submitButton.textContent = 'Verificando...';
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
 
       try {
-        const response = await fetch('/api/verificar-usuario', {
+        const response = await fetch('/api/solicitar-codigo', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ usuario }),
+          body: JSON.stringify({ email })
         });
+
         const data = await response.json();
 
         if (data.success) {
-          window.location.href = `/restablecer.html?usuario=${encodeURIComponent(usuario)}`;
+          emailUsuario = email;
+          mensaje.textContent = data.message;
+          mensaje.className = 'success';
+          setTimeout(() => {
+            cambiarPaso(2);
+            iniciarTimer();
+          }, 1500);
         } else {
-          alert(data.message);
+          mensaje.textContent = data.message;
+          mensaje.className = 'error';
+          btn.disabled = false;
+          btn.textContent = 'Enviar Código';
         }
       } catch (error) {
-        alert('Error al conectar con el servidor. Inténtalo de nuevo.');
-      } finally {
-        submitButton.disabled = false;
-        submitButton.textContent = 'Verificar Usuario';
+        mensaje.textContent = 'Error al conectar con el servidor';
+        mensaje.className = 'error';
+        btn.disabled = false;
+        btn.textContent = 'Enviar Código';
       }
     });
+
+    // Manejo de inputs del código
+    const codeInputs = document.querySelectorAll('.code-input');
+    codeInputs.forEach((input, index) => {
+      input.addEventListener('input', (e) => {
+        if (e.target.value.length === 1) {
+          if (index < codeInputs.length - 1) {
+            codeInputs[index + 1].focus();
+          }
+        }
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !e.target.value && index > 0) {
+          codeInputs[index - 1].focus();
+        }
+      });
+
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pastedData = e.clipboardData.getData('text').slice(0, 6);
+        pastedData.split('').forEach((char, i) => {
+          if (codeInputs[i]) codeInputs[i].value = char;
+        });
+        if (codeInputs[5]) codeInputs[5].focus();
+      });
+    });
+
+    // PASO 2: Verificar código
+    document.getElementById('btnVerificarCodigo').addEventListener('click', async () => {
+      codigoCompleto = Array.from(codeInputs).map(input => input.value).join('');
+      const mensaje = document.getElementById('mensaje2');
+      const btn = document.getElementById('btnVerificarCodigo');
+
+      if (codigoCompleto.length !== 6) {
+        mensaje.textContent = 'Por favor ingresa el código completo';
+        mensaje.className = 'error';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Verificando...';
+
+      try {
+        const response = await fetch('/api/verificar-codigo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: emailUsuario, codigo: codigoCompleto })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          clearInterval(intervalo);
+          mensaje.textContent = '¡Código verificado!';
+          mensaje.className = 'success';
+          setTimeout(() => cambiarPaso(3), 1000);
+        } else {
+          mensaje.textContent = data.message;
+          mensaje.className = 'error';
+          btn.disabled = false;
+          btn.textContent = 'Verificar Código';
+        }
+      } catch (error) {
+        mensaje.textContent = 'Error al verificar';
+        mensaje.className = 'error';
+        btn.disabled = false;
+        btn.textContent = 'Verificar Código';
+      }
+    });
+
+    // PASO 3: Cambiar contraseña
+    document.getElementById('btnCambiarContrasena').addEventListener('click', async () => {
+      const nuevaContrasena = document.getElementById('nuevaContrasena').value;
+      const confirmarContrasena = document.getElementById('confirmarContrasena').value;
+      const mensaje = document.getElementById('mensaje3');
+      const btn = document.getElementById('btnCambiarContrasena');
+
+      if (nuevaContrasena.length < 6) {
+        mensaje.textContent = 'La contraseña debe tener al menos 6 caracteres';
+        mensaje.className = 'error';
+        return;
+      }
+
+      if (nuevaContrasena !== confirmarContrasena) {
+        mensaje.textContent = 'Las contraseñas no coinciden';
+        mensaje.className = 'error';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Actualizando...';
+
+      try {
+        const response = await fetch('/api/restablecer-contrasena', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            email: emailUsuario, 
+            codigo: codigoCompleto,
+            nuevaContrasena 
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          mensaje.textContent = '¡Contraseña actualizada con éxito!';
+          mensaje.className = 'success';
+          setTimeout(() => {
+            window.location.href = '/inicio';
+          }, 2000);
+        } else {
+          mensaje.textContent = data.message;
+          mensaje.className = 'error';
+          btn.disabled = false;
+          btn.textContent = 'Cambiar Contraseña';
+        }
+      } catch (error) {
+        mensaje.textContent = 'Error al actualizar';
+        mensaje.className = 'error';
+        btn.disabled = false;
+        btn.textContent = 'Cambiar Contraseña';
+      }
+    });
+
+    // Reenviar código
+    document.getElementById('reenviarCodigo').addEventListener('click', async (e) => {
+      e.preventDefault();
+      document.getElementById('step2').classList.remove('active');
+      document.getElementById('step1').classList.add('active');
+      clearInterval(intervalo);
+      codeInputs.forEach(input => input.value = '');
+    });
+
+    // Funciones auxiliares
+    function cambiarPaso(numero) {
+      document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+      document.getElementById(`step${numero}`).classList.add('active');
+    }
+
+    function iniciarTimer() {
+      tiempoRestante = 600;
+      const timerElement = document.getElementById('timer');
+      
+      intervalo = setInterval(() => {
+        tiempoRestante--;
+        const minutos = Math.floor(tiempoRestante / 60);
+        const segundos = tiempoRestante % 60;
+        timerElement.textContent = `Código válido por: ${minutos}:${segundos.toString().padStart(2, '0')}`;
+
+        if (tiempoRestante <= 0) {
+          clearInterval(intervalo);
+          timerElement.textContent = 'El código ha expirado';
+          timerElement.style.color = '#e74c3c';
+        }
+      }, 1000);
+    }
   </script>
 </body>
-
 </html>

@@ -266,33 +266,33 @@
       <form id="registerForm">
         <div class="input-group" id="nombreGroup">
           <input type="text" id="nombre" placeholder="Nombre Completo" required />
-          <div class="error-message">
+          <div class="error-message" id="nombreError">
             Por favor ingresa tu nombre completo
           </div>
         </div>
 
         <div class="input-group" id="emailGroup">
           <input type="email" id="email" placeholder="Correo Electrónico" required />
-          <div class="error-message">Por favor ingresa un correo válido</div>
+          <div class="error-message" id="emailError">Por favor ingresa un correo válido</div>
         </div>
 
         <div class="input-group" id="usuarioGroup">
           <input type="text" id="usuario" placeholder="Usuario" required />
-          <div class="error-message">
+          <div class="error-message" id="usuarioError">
             El usuario debe tener al menos 4 caracteres
           </div>
         </div>
 
         <div class="input-group" id="contrasenaGroup">
           <input type="password" id="contrasena" placeholder="Contraseña" required />
-          <div class="error-message">
+          <div class="error-message" id="contrasenaError">
             La contraseña debe tener al menos 6 caracteres
           </div>
         </div>
 
         <div class="input-group" id="confirmarGroup">
           <input type="password" id="confirmarContrasena" placeholder="Confirmar Contraseña" required />
-          <div class="error-message">Las contraseñas no coinciden</div>
+          <div class="error-message" id="confirmarError">Las contraseñas no coinciden</div>
         </div>
 
         <button type="submit" class="btn-submit">Registrarme</button>
@@ -314,7 +314,7 @@
     const usuarioInput = document.getElementById("usuario");
     const contrasenaInput = document.getElementById("contrasena");
     const confirmarInput = document.getElementById("confirmarContrasena");
-    const submitButton = document.getElementById("submitButton");
+    const submitButton = document.querySelector(".btn-submit");
 
     // Función para validar email
     function validarEmail(email) {
@@ -389,7 +389,7 @@
       };
 
       // Hacer petición al servidor
-      fetch("http://localhost:3000/api/registro", {
+      fetch("/api/registro", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

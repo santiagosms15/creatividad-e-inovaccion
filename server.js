@@ -5,9 +5,22 @@ const cors = require("cors");
 const path = require("path");
 require("dotenv").config();
 const Groq = require("groq-sdk");
+const nodemailer = require("nodemailer");
 
 const app = express();
 const PORT = 3000;
+
+// ========== CONFIGURACIÓN DE EMAIL ==========
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
+
+// Almacenamiento temporal de códigos (en producción usar Redis)
+const codigosVerificacion = new Map();
 
 // Middleware global
 app.use(cors());
@@ -514,40 +527,140 @@ app.post("/api/login", (req, res) => {
   });
 });
 
-// ========== API RECUPERAR CONTRASEÑA ==========
+// ========== API RECUPERAR CONTRASEÑA CON EMAIL ==========
 
-// 1. Verificar si el usuario existe
-app.post("/api/verificar-usuario", (req, res) => {
-  const { usuario } = req.body;
+// 1. Solicitar código de verificación por email
+app.post("/api/solicitar-codigo", async (req, res) => {
+  const { email } = req.body;
 
-  if (!usuario) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Falta el nombre de usuario" });
+  if (!email) {
+    return res.status(400).json({ 
+      success: false, 
+      message: "Por favor ingresa tu correo electrónico" 
+    });
   }
 
-  const sql = `SELECT id FROM usuarios WHERE usuario = ?`;
-  db.get(sql, [usuario], (err, row) => {
+  // Verificar si el email existe
+  const sql = `SELECT id, nombre, usuario FROM usuarios WHERE email = ?`;
+  
+  db.get(sql, [email], async (err, usuario) => {
     if (err) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Error en el servidor" });
+      return res.status(500).json({ 
+        success: false, 
+        message: "Error en el servidor" 
+      });
     }
-    if (!row) {
-      return res
-        .status(404)
-        .json({ success: false, message: "El usuario no fue encontrado" });
+    
+    if (!usuario) {
+      return res.status(404).json({ 
+        success: false, 
+        message: "No existe una cuenta con ese correo electrónico" 
+      });
     }
-    res.json({ success: true });
+
+    // Generar código de 6 dígitos
+    const codigo = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // Guardar código con expiración de 10 minutos
+    codigosVerificacion.set(email, {
+      codigo: codigo,
+      expira: Date.now() + 10 * 60 * 1000, // 10 minutos
+      usuario: usuario.usuario
+    });
+
+    // Configurar email
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: '🔐 Código de Recuperación de Contraseña',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4;">
+          <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h1 style="color: #4CAF50; text-align: center;">Recuperación de Contraseña</h1>
+            <p style="font-size: 16px; color: #333;">Hola <strong>${usuario.nombre}</strong>,</p>
+            <p style="font-size: 16px; color: #333;">Recibimos una solicitud para restablecer tu contraseña.</p>
+            <p style="font-size: 16px; color: #333;">Tu código de verificación es:</p>
+            <div style="background-color: #f0f0f0; padding: 20px; text-align: center; border-radius: 5px; margin: 20px 0;">
+              <h2 style="color: #4CAF50; font-size: 36px; margin: 0; letter-spacing: 5px;">${codigo}</h2>
+            </div>
+            <p style="font-size: 14px; color: #666;">Este código expirará en <strong>10 minutos</strong>.</p>
+            <p style="font-size: 14px; color: #666;">Si no solicitaste este cambio, ignora este correo.</p>
+            <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
+            <p style="font-size: 12px; color: #999; text-align: center;">Este es un correo automático, por favor no respondas.</p>
+          </div>
+        </div>
+      `
+    };
+
+    // Enviar email
+    try {
+      await transporter.sendMail(mailOptions);
+      res.json({ 
+        success: true, 
+        message: "Código de verificación enviado a tu correo" 
+      });
+    } catch (error) {
+      console.error("Error al enviar email:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Error al enviar el correo. Verifica tu configuración." 
+      });
+    }
   });
 });
 
-// 2. Restablecer la contraseña
-app.post("/api/restablecer-contrasena", async (req, res) => {
-  const { usuario, nuevaContrasena } = req.body;
+// 2. Verificar código
+app.post("/api/verificar-codigo", (req, res) => {
+  const { email, codigo } = req.body;
 
-  if (!usuario || !nuevaContrasena) {
-    return res.status(400).json({ success: false, message: "Faltan datos" });
+  if (!email || !codigo) {
+    return res.status(400).json({ 
+      success: false, 
+      message: "Faltan datos" 
+    });
+  }
+
+  const datosVerificacion = codigosVerificacion.get(email);
+
+  if (!datosVerificacion) {
+    return res.status(404).json({ 
+      success: false, 
+      message: "No se encontró un código para este correo" 
+    });
+  }
+
+  // Verificar si expiró
+  if (Date.now() > datosVerificacion.expira) {
+    codigosVerificacion.delete(email);
+    return res.status(400).json({ 
+      success: false, 
+      message: "El código ha expirado. Solicita uno nuevo." 
+    });
+  }
+
+  // Verificar si el código coincide
+  if (datosVerificacion.codigo !== codigo) {
+    return res.status(400).json({ 
+      success: false, 
+      message: "Código incorrecto" 
+    });
+  }
+
+  res.json({ 
+    success: true, 
+    usuario: datosVerificacion.usuario 
+  });
+});
+
+// 3. Restablecer contraseña
+app.post("/api/restablecer-contrasena", async (req, res) => {
+  const { email, codigo, nuevaContrasena } = req.body;
+
+  if (!email || !codigo || !nuevaContrasena) {
+    return res.status(400).json({ 
+      success: false, 
+      message: "Faltan datos" 
+    });
   }
 
   if (nuevaContrasena.length < 6) {
@@ -557,27 +670,40 @@ app.post("/api/restablecer-contrasena", async (req, res) => {
     });
   }
 
+  const datosVerificacion = codigosVerificacion.get(email);
+
+  if (!datosVerificacion || datosVerificacion.codigo !== codigo) {
+    return res.status(400).json({ 
+      success: false, 
+      message: "Código inválido o expirado" 
+    });
+  }
+
   try {
     const hash = await bcrypt.hash(nuevaContrasena, 10);
-    const sql = `UPDATE usuarios SET contrasena = ? WHERE usuario = ?`;
+    const sql = `UPDATE usuarios SET contrasena = ? WHERE email = ?`;
 
-    db.run(sql, [hash, usuario], function (err) {
+    db.run(sql, [hash, email], function (err) {
       if (err) {
         return res.status(500).json({
           success: false,
           message: "Error al actualizar la contraseña",
         });
       }
-      if (this.changes === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "Usuario no encontrado para actualizar",
-        });
-      }
-      res.json({ success: true, message: "Contraseña actualizada con éxito" });
+      
+      // Eliminar el código usado
+      codigosVerificacion.delete(email);
+      
+      res.json({ 
+        success: true, 
+        message: "Contraseña actualizada con éxito" 
+      });
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Error en el servidor" });
+    res.status(500).json({ 
+      success: false, 
+      message: "Error en el servidor" 
+    });
   }
 });
 
@@ -842,7 +968,7 @@ app.get("/inicio", (req, res) => sendPage(res, "inicio.html"));
 app.get("/dashboard", (req, res) => sendPage(res, "dashboard.html"));
 app.get("/registro", (req, res) => sendPage(res, "registro.html"));
 app.get("/metas", (req, res) => sendPage(res, "metas.html"));
-app.get("/restablecer.html", (req, res) => sendPage(res, "restablecer.html"));
+app.get("/recuperar", (req, res) => sendPage(res, "recuperar.html"));
 app.get("/administrar", (req, res) => sendPage(res, "administrar.html"));
 app.get("/asistente", (req, res) => sendPage(res, "asistente.html"));
 app.get("/calculadora", (req, res) => sendPage(res, "calculadora.html"));

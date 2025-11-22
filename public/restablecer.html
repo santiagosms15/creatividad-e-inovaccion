@@ -237,7 +237,7 @@
       submitButton.textContent = 'Actualizando...';
 
       try {
-        const response = await fetch('/api/restablecer-contrasena', {
+        const response = await fetch('/api/restablecer-contrasena-final', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ usuario, nuevaContrasena }),
