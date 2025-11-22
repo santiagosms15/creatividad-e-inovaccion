@@ -396,8 +396,14 @@
             return res.json();
           })
           .then((data) => {
-            // El backend debería devolver el nombre en la respuesta
+            // ✅ LIMPIAR TODO ANTES DE GUARDAR EL NUEVO USUARIO
+            localStorage.clear();
+            sessionStorage.clear();
+
+            // Ahora SÍ guardar el nuevo usuario
             sessionStorage.setItem("usuario", JSON.stringify(data.usuario));
+
+            // Redirigir al dashboard
             window.location.href = "/dashboard";
           })
           .catch((err) => {

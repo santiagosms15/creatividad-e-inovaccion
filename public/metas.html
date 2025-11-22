@@ -1273,9 +1273,31 @@
               </div>
 
               <div>
-                <label style="display: block; color: #1a1a2e; font-weight: 600; margin-bottom: 8px;">Emoji (opcional)</label>
-                <input type="text" id="emojiMeta" maxlength="2" placeholder="🎯" style="width: 100%; padding: 14px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 1.5rem; transition: all 0.3s;" onfocus="this.style.borderColor='#667eea'" onblur="this.style.borderColor='#e5e7eb'">
-              </div>
+  <div>
+  <label style="display: block; color: #1a1a2e; font-weight: 600; margin-bottom: 8px;">Emoji (opcional)</label>
+  <div style="position: relative;">
+    <input type="text" id="emojiMeta" readonly maxlength="2" placeholder="🎯" onclick="toggleEmojiPicker()" style="width: 100%; padding: 14px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 1.5rem; transition: all 0.3s; cursor: pointer;" onfocus="this.style.borderColor='#667eea'" onblur="setTimeout(() => this.style.borderColor='#e5e7eb', 200)">
+    <div id="emojiPicker" style="display: none; position: absolute; top: 100%; left: 0; right: 0; margin-top: 8px; background: white; border: 2px solid #e5e7eb; border-radius: 12px; padding: 15px; max-height: 250px; overflow-y: auto; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+      <div style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px;">
+        ${[
+          '🎯', '💰', '🏠', '🚗', '✈️', '🎓', '💻', '📱',
+          '⌚', '👕', '🍔', '🎮', '📚', '💊', '🏋️', '🎨',
+          '🎵', '🎬', '📷', '🌟', '💎', '🏆', '🎁', '💳',
+          '🔑', '🛒', '🎊', '🌈', '☀️', '🌙', '⭐', '❤️',
+          '🔥', '💡', '🚀', '🎈', '🎂', '☕', '🍕', '🌮',
+          '🍎', '🌻', '🌺', '🌸', '🌷', '🦋', '🐶', '🐱'
+        ].map(emoji => `
+          <button type="button" onclick="selectEmoji('${emoji}')" style="font-size: 2rem; padding: 8px; border: 2px solid transparent; border-radius: 8px; background: #f9fafb; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#e5e7eb'; this.style.borderColor='#667eea'" onmouseout="this.style.background='#f9fafb'; this.style.borderColor='transparent'">
+            ${emoji}
+          </button>
+        `).join('')}
+      </div>
+      <button type="button" onclick="clearEmoji()" style="width: 100%; margin-top: 10px; padding: 10px; background: #f3f4f6; border: none; border-radius: 8px; color: #6b7280; font-weight: 600; cursor: pointer;" onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">
+        Limpiar emoji
+      </button>
+    </div>
+  </div>
+</div>
 
               <div>
                 <label style="display: block; color: #1a1a2e; font-weight: 600; margin-bottom: 8px;">Categoría</label>
@@ -1338,7 +1360,33 @@
           @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         `;
           document.head.appendChild(style);
+          // Funciones para el selector de emojis
+window.toggleEmojiPicker = function() {
+  const picker = document.getElementById('emojiPicker');
+  picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
+};
 
+window.selectEmoji = function(emoji) {
+  document.getElementById('emojiMeta').value = emoji;
+  document.getElementById('emojiPicker').style.display = 'none';
+};
+
+window.clearEmoji = function() {
+  document.getElementById('emojiMeta').value = '';
+  document.getElementById('emojiPicker').style.display = 'none';
+};
+
+// Cerrar el picker al hacer clic fuera
+document.addEventListener('click', function(e) {
+  const picker = document.getElementById('emojiPicker');
+  const input = document.getElementById('emojiMeta');
+  if (picker && input && !picker.contains(e.target) && e.target !== input) {
+    picker.style.display = 'none';
+  }
+});
+
+          
+          
           // Manejar envío del formulario
           // Manejar envío del formulario
           document.getElementById("formNuevaMeta");
@@ -1907,41 +1955,76 @@
           document.body.appendChild(modal);
         }
 
-        // Función para confirmar y completar la meta
-        async function confirmarCompletada() {
-          if (!metaActualDetalle) return;
+       // Función para confirmar y completar la meta
+async function confirmarCompletada() {
+  if (!metaActualDetalle) return;
 
-          try {
-            const response = await fetch(
-              `/api/metas/${metaActualDetalle.id}/completar`,
-              {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              }
-            );
+  try {
+    // ✅ PASO 1: Crear el logro ANTES de eliminar la meta
+    const fechaCumplida = new Date().toISOString().split("T")[0];
+    const fechaInicio = metaActualDetalle.fecha_creacion || fechaCumplida;
+    
+    const tiempoMeses = calcularMeses(fechaInicio, fechaCumplida);
 
-            const data = await response.json();
+    const logro = {
+      usuarioId: usuarioActual.id,
+      objetivoId: metaActualDetalle.id,
+      nombre: metaActualDetalle.nombre,
+      monto: metaActualDetalle.monto_objetivo,
+      fechaInicio: fechaInicio,
+      fechaCumplida: fechaCumplida,
+      prioridad: metaActualDetalle.prioridad,
+      nota: `Meta completada: ${metaActualDetalle.nombre}`,
+      tiempoMeses: tiempoMeses,
+    };
 
-            if (data.success) {
-              document.querySelector('[style*="position: fixed"]').remove();
-              await cargarMetas();
-              volverDashboard();
-              mostrarNotificacion(
-                "🎉 ¡Meta completada! ¡Felicitaciones por tu logro!"
-              );
-            } else {
-              mostrarNotificacion(
-                data.message || "Error al completar meta",
-                "error"
-              );
-            }
-          } catch (error) {
-            console.error("Error al completar meta:", error);
-            mostrarNotificacion("Error al completar la meta", "error");
-          }
-        }
+    // Guardar el logro
+    const resLogro = await fetch("/api/logros", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(logro),
+    });
+
+    const dataLogro = await resLogro.json();
+
+    if (!dataLogro.success) {
+      mostrarNotificacion("Error al guardar el logro: " + dataLogro.message, "error");
+      return;
+    }
+
+    // ✅ PASO 2: Marcar la meta como completada (o eliminarla si prefieres)
+    const response = await fetch(`/api/metas/${metaActualDetalle.id}/completar`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      document.querySelector('[style*="position: fixed"]').remove();
+      await cargarMetas();
+      volverDashboard();
+      mostrarNotificacion("🎉 ¡Meta completada! Tu logro ha sido guardado.");
+    } else {
+      mostrarNotificacion(data.message || "Error al completar meta", "error");
+    }
+  } catch (error) {
+    console.error("Error al completar meta:", error);
+    mostrarNotificacion("Error al completar la meta", "error");
+  }
+}
+
+// Función auxiliar para calcular meses entre dos fechas
+function calcularMeses(fechaInicio, fechaFin) {
+  const inicio = new Date(fechaInicio);
+  const fin = new Date(fechaFin);
+  const meses =
+    (fin.getFullYear() - inicio.getFullYear()) * 12 +
+    (fin.getMonth() - inicio.getMonth());
+  return Math.max(0.5, meses || 0.5);
+}
         // Función para mostrar notificaciones
         function mostrarNotificacion(mensaje, tipo = "success") {
           const notif = document.createElement("div");
