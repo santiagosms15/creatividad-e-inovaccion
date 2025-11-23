@@ -1,275 +1,399 @@
 <!doctype html>
 <html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <title>Asistentes Virtuales</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/x-icon" href="favicon.ico" />
-  <title>Asistentes Virtuales</title>
-  <style>
-    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
-
-    :root {
-      --primary: #0f172a;
-      --secondary: #1e293b;
-      --accent: #3b82f6;
-      --text-primary: #f8fafc;
-      --text-secondary: #cbd5e1;
-      --border: #334155;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: "Inter", sans-serif;
-      background-image: url("img/fondo4.jpg");
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-      min-height: 100vh;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .container {
-      max-width: 800px;
-      width: 100%;
-      margin: 0 auto;
-    }
-
-    .card {
-      background: rgba(30, 41, 59, 0.85);
-      backdrop-filter: blur(12px);
-      padding: 32px;
-      border-radius: 20px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--border);
-    }
-
-    .card h1 {
-      color: var(--text-primary);
-      margin-bottom: 24px;
-      font-size: 2em;
-      font-weight: 700;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-    }
-
-    .chat-window {
-      height: 50vh;
-      min-height: 400px;
-      background-color: var(--primary);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-      overflow-y: auto;
-      margin-bottom: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .chat-message {
-      padding: 12px 18px;
-      border-radius: 18px;
-      max-width: 80%;
-      line-height: 1.5;
-      animation: fadeIn 0.3s ease;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(5px);
+      :root {
+        --primary: #0f172a;
+        --secondary: #1e293b;
+        --accent: #3b82f6;
+        --text-primary: #f8fafc;
+        --text-secondary: #cbd5e1;
+        --border: #334155;
       }
 
-      to {
-        opacity: 1;
-        transform: translateY(0);
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
-    }
 
-    .user-message {
-      background-color: var(--accent);
-      color: white;
-      align-self: flex-end;
-      border-bottom-right-radius: 4px;
-    }
+      body {
+        font-family: "Inter", sans-serif;
+        background-image: url("img/fondo4.jpg");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+      }
 
-    .ai-message {
-      background-color: var(--secondary);
-      color: var(--text-secondary);
-      align-self: flex-start;
-      border-bottom-left-radius: 4px;
-    }
+      .container {
+        max-width: 800px;
+        width: 100%;
+        margin: 0 auto;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
 
-    .chat-input-area {
-      display: flex;
-      gap: 10px;
-    }
+      .card {
+        background: rgba(30, 41, 59, 0.95);
+        backdrop-filter: blur(12px);
+        padding: 16px;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        border: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 24px);
+        max-height: 900px;
+      }
 
-    #chatInput {
-      flex-grow: 1;
-      background: var(--primary);
-      border: 2px solid var(--border);
-      border-radius: 10px;
-      padding: 14px 16px;
-      color: var(--text-primary);
-      font-size: 1em;
-    }
+      .card h1 {
+        color: var(--text-primary);
+        margin-bottom: 16px;
+        font-size: 1.3em;
+        font-weight: 700;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        line-height: 1.2;
+      }
 
-    #chatInput:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
+      .back-btn {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background-color: var(--secondary);
+        color: var(--text-secondary);
+        font-size: 0.9em;
+        font-weight: 500;
+        cursor: pointer;
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease;
+        text-decoration: none;
+        margin-bottom: 16px;
+        text-align: center;
+      }
 
-    .btn {
-      padding: 14px 32px;
-      background: linear-gradient(135deg, var(--accent), #2563eb);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 1em;
-      font-weight: 600;
-      cursor: pointer;
-    }
+      .back-btn:hover {
+        background-color: var(--accent);
+        color: var(--text-primary);
+      }
 
-    .back-btn {
-      display: inline-block;
-      padding: 10px 20px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background-color: var(--secondary);
-      color: var(--text-secondary);
-      font-size: 1em;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background-color 0.2s ease, color 0.2s ease;
-      text-decoration: none;
-      margin-bottom: 25px;
-    }
+      .chat-window {
+        flex: 1;
+        min-height: 0;
+        background-color: var(--primary);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        overflow-y: auto;
+        margin-bottom: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        -webkit-overflow-scrolling: touch;
+      }
 
-    .back-btn:hover {
-      background-color: var(--accent);
-      color: var(--text-primary);
-    }
-  </style>
-</head>
+      .chat-message {
+        padding: 10px 14px;
+        border-radius: 16px;
+        max-width: 85%;
+        line-height: 1.5;
+        animation: fadeIn 0.3s ease;
+        font-size: 0.95em;
+        word-wrap: break-word;
+      }
 
-<body>
-  <div class="container">
-    <div class="card">
-      <h1>Asistente Financiero Virtual</h1>
-      <button class="btn back-btn" onclick="backToMenu()">
-        ← Volver al Menú
-      </button>
-      <div class="chat-window" id="chatWindow">
-        <div class="chat-message ai-message">
-          ¡Hola! Soy tu asistente financiero. Estoy analizando tus datos para
-          ayudarte mejor. ¿En qué puedo asistirte hoy?
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(5px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .user-message {
+        background-color: var(--accent);
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 4px;
+      }
+
+      .ai-message {
+        background-color: var(--secondary);
+        color: var(--text-secondary);
+        align-self: flex-start;
+        border-bottom-left-radius: 4px;
+      }
+
+      .chat-input-area {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+
+      #chatInput {
+        flex-grow: 1;
+        background: var(--primary);
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        padding: 12px 14px;
+        color: var(--text-primary);
+        font-size: 1em;
+        min-height: 44px;
+      }
+
+      #chatInput:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+
+      .btn {
+        padding: 12px 20px;
+        background: linear-gradient(135deg, var(--accent), #2563eb);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.95em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        white-space: nowrap;
+        min-height: 44px;
+      }
+
+      .btn:active {
+        transform: scale(0.98);
+      }
+
+      /* Scrollbar personalizado */
+      .chat-window::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .chat-window::-webkit-scrollbar-track {
+        background: var(--primary);
+      }
+
+      .chat-window::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 3px;
+      }
+
+      .chat-window::-webkit-scrollbar-thumb:hover {
+        background: var(--accent);
+      }
+
+      /* Tablet */
+      @media (min-width: 600px) {
+        body {
+          padding: 20px;
+        }
+
+        .card {
+          padding: 24px;
+          border-radius: 20px;
+          height: auto;
+          max-height: none;
+        }
+
+        .card h1 {
+          font-size: 1.8em;
+          margin-bottom: 20px;
+        }
+
+        .back-btn {
+          padding: 10px 20px;
+          font-size: 1em;
+          margin-bottom: 20px;
+        }
+
+        .chat-window {
+          height: 50vh;
+          min-height: 400px;
+          padding: 20px;
+          margin-bottom: 20px;
+          gap: 15px;
+        }
+
+        .chat-message {
+          padding: 12px 18px;
+          max-width: 80%;
+          font-size: 1em;
+        }
+
+        .chat-input-area {
+          gap: 10px;
+        }
+
+        #chatInput {
+          padding: 14px 16px;
+        }
+
+        .btn {
+          padding: 14px 32px;
+          font-size: 1em;
+        }
+      }
+
+      /* Desktop */
+      @media (min-width: 900px) {
+        .card {
+          padding: 32px;
+        }
+
+        .card h1 {
+          font-size: 2em;
+          margin-bottom: 24px;
+        }
+
+        .back-btn {
+          margin-bottom: 25px;
+        }
+      }
+
+      /* Landscape mobile fix */
+      @media (max-height: 500px) and (orientation: landscape) {
+        .card {
+          height: auto;
+          max-height: none;
+        }
+
+        .chat-window {
+          height: 35vh;
+          min-height: 200px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="card">
+        <h1>💬 Asistente Financiero Virtual</h1>
+        <button class="btn back-btn" onclick="backToMenu()">
+          ← Volver al Menú
+        </button>
+        <div class="chat-window" id="chatWindow">
+          <div class="chat-message ai-message">
+            ¡Hola! Soy tu asistente financiero. Estoy analizando tus datos para
+            ayudarte mejor. ¿En qué puedo asistirte hoy?
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <input
+            type="text"
+            id="chatInput"
+            placeholder="Escribe tu mensaje..."
+            onkeydown="if(event.key === 'Enter') enviarMensajeIA()"
+          />
+          <button class="btn" onclick="enviarMensajeIA()">Enviar</button>
         </div>
       </div>
-      <div class="chat-input-area">
-        <input type="text" id="chatInput" placeholder="Escribe tu mensaje..."
-          onkeydown="if(event.key === 'Enter') enviarMensajeIA()" />
-        <button class="btn" onclick="enviarMensajeIA()">Enviar</button>
-      </div>
     </div>
-  </div>
 
-  <script>
-    let gastos = [];
-    let objetivos = [];
-    let usuario = null;
+    <script>
+      let gastos = [];
+      let objetivos = [];
+      let usuario = null;
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const usuarioGuardado = sessionStorage.getItem("usuario");
-      if (!usuarioGuardado) {
-        alert("No has iniciado sesión. Serás redirigido.");
-        window.location.href = "/inicio";
-        return;
-      }
-      usuario = JSON.parse(usuarioGuardado);
-      cargarContextoFinanciero();
-    });
-
-    async function cargarContextoFinanciero() {
-      if (!usuario) return;
-      try {
-        // NOTA: Estas rutas de API deben existir y funcionar
-        const [gastosRes, objetivosRes] = await Promise.all([
-          fetch(`/api/transacciones?usuarioId=${usuario.id}`),
-          fetch(`/api/objetivos?usuarioId=${usuario.id}`),
-        ]);
-
-        const gastosData = await gastosRes.json();
-        const objetivosData = await objetivosRes.json();
-
-        if (gastosData.success) gastos = gastosData.gastos;
-        if (objetivosData.success) objetivos = objetivosData.objetivos;
-
-      } catch (error) {
-        console.error("Error al cargar el contexto financiero:", error);
-      }
-    }
-
-    function backToMenu() {
-      window.location.href = "dashboard.html";
-    }
-
-    async function enviarMensajeIA() {
-      const input = document.getElementById("chatInput");
-      const message = input.value.trim();
-      if (!message) return;
-
-      const chatWindow = document.getElementById("chatWindow");
-
-      const userMessageDiv = document.createElement("div");
-      userMessageDiv.className = "chat-message user-message";
-      userMessageDiv.textContent = message;
-      chatWindow.appendChild(userMessageDiv);
-
-      input.value = "";
-      chatWindow.scrollTop = chatWindow.scrollHeight;
-
-      const thinkingDiv = document.createElement("div");
-      thinkingDiv.className = "chat-message ai-message";
-      thinkingDiv.textContent = "Pensando...";
-      chatWindow.appendChild(thinkingDiv);
-      chatWindow.scrollTop = chatWindow.scrollHeight;
-
-      try {
-        const response = await fetch("/api/chat-ia", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message, gastos, objetivos }),
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-          thinkingDiv.textContent = data.reply;
-        } else {
-          thinkingDiv.textContent = "Lo siento, hubo un error.";
+      document.addEventListener("DOMContentLoaded", () => {
+        const usuarioGuardado = sessionStorage.getItem("usuario");
+        if (!usuarioGuardado) {
+          alert("No has iniciado sesión. Serás redirigido.");
+          window.location.href = "/inicio";
+          return;
         }
-      } catch (error) {
-        console.error("Error al contactar al asistente IA:", error);
-        thinkingDiv.textContent = "No pude conectarme. Revisa tu conexión.";
-      } finally {
-        chatWindow.scrollTop = chatWindow.scrollHeight;
-      }
-    }
-  </script>
-</body>
+        usuario = JSON.parse(usuarioGuardado);
+        cargarContextoFinanciero();
+      });
 
+      async function cargarContextoFinanciero() {
+        if (!usuario) return;
+        try {
+          // NOTA: Estas rutas de API deben existir y funcionar
+          const [gastosRes, objetivosRes] = await Promise.all([
+            fetch(`/api/transacciones?usuarioId=${usuario.id}`),
+            fetch(`/api/objetivos?usuarioId=${usuario.id}`),
+          ]);
+
+          const gastosData = await gastosRes.json();
+          const objetivosData = await objetivosRes.json();
+
+          if (gastosData.success) gastos = gastosData.gastos;
+          if (objetivosData.success) objetivos = objetivosData.objetivos;
+        } catch (error) {
+          console.error("Error al cargar el contexto financiero:", error);
+        }
+      }
+
+      function backToMenu() {
+        window.location.href = "dashboard.html";
+      }
+
+      async function enviarMensajeIA() {
+        const input = document.getElementById("chatInput");
+        const message = input.value.trim();
+        if (!message) return;
+
+        const chatWindow = document.getElementById("chatWindow");
+
+        const userMessageDiv = document.createElement("div");
+        userMessageDiv.className = "chat-message user-message";
+        userMessageDiv.textContent = message;
+        chatWindow.appendChild(userMessageDiv);
+
+        input.value = "";
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        const thinkingDiv = document.createElement("div");
+        thinkingDiv.className = "chat-message ai-message";
+        thinkingDiv.textContent = "Pensando...";
+        chatWindow.appendChild(thinkingDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        try {
+          const response = await fetch("/api/chat-ia", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message, gastos, objetivos }),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            thinkingDiv.textContent = data.reply;
+          } else {
+            thinkingDiv.textContent = "Lo siento, hubo un error.";
+          }
+        } catch (error) {
+          console.error("Error al contactar al asistente IA:", error);
+          thinkingDiv.textContent = "No pude conectarme. Revisa tu conexión.";
+        } finally {
+          chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+      }
+    </script>
+  </body>
 </html>
