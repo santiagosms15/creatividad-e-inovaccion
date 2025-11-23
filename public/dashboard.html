@@ -3,11 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <title>Menú Principal</title>
 
-    <!-- Fuente Profesional -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -28,6 +26,7 @@
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
+        background-attachment: fixed;
         min-height: 100vh;
       }
 
@@ -36,7 +35,6 @@
         position: fixed;
         inset: 0;
         background: rgba(255, 255, 255, 0.6);
-        /* aclarar */
         backdrop-filter: blur(2px);
         z-index: -1;
       }
@@ -51,11 +49,14 @@
         align-items: center;
         color: white;
         box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+        flex-wrap: wrap;
+        gap: 10px;
       }
 
       .logo {
-        font-size: 1.8rem;
+        font-size: clamp(1.3rem, 4vw, 1.8rem);
         font-weight: 700;
+        white-space: nowrap;
       }
 
       .logo span {
@@ -63,18 +64,28 @@
       }
 
       .welcome-text {
-        font-size: 1.1rem;
+        font-size: clamp(0.9rem, 3vw, 1.1rem);
         font-weight: 400;
+        text-align: center;
+        flex: 1;
+        min-width: 150px;
+      }
+
+      .welcome-text span {
+        font-weight: 600;
       }
 
       .logout-btn {
         background: #ffc600;
-        padding: 10px 25px;
+        padding: 10px 20px;
         border-radius: 30px;
         font-weight: 600;
+        font-size: clamp(0.85rem, 2.5vw, 1rem);
         color: #0033a0;
         text-decoration: none;
         transition: 0.3s;
+        white-space: nowrap;
+        touch-action: manipulation;
       }
 
       .logout-btn:hover {
@@ -82,32 +93,36 @@
         transform: translateY(-2px);
       }
 
+      .logout-btn:active {
+        transform: translateY(0);
+      }
+
       /* Contenido */
       .main-container {
-        padding: 50px 40px;
+        padding: 40px 20px;
         max-width: 1200px;
         margin: auto;
       }
 
       .page-title {
         text-align: center;
-        font-size: 2.3rem;
+        font-size: clamp(1.6rem, 5vw, 2.3rem);
         color: #0033a0;
         font-weight: 700;
-        margin-bottom: 40px;
+        margin-bottom: 35px;
       }
 
-      /* Tarjetas estilo app Bancolombia */
+      /* Tarjetas estilo app */
       .cards-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: 30px;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
       }
 
       .card {
         background: white;
         border-radius: 20px;
-        padding: 0 0 25px 0;
+        padding: 0;
         text-decoration: none;
         color: black;
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
@@ -115,6 +130,8 @@
         border: 2px solid transparent;
         display: flex;
         flex-direction: column;
+        overflow: hidden;
+        touch-action: manipulation;
       }
 
       .card:hover {
@@ -123,20 +140,25 @@
         box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
       }
 
+      .card:active {
+        transform: translateY(-4px);
+      }
+
       .card-img {
         width: 100%;
         height: 180px;
         object-fit: cover;
-        border-top-left-radius: 20px;
-        border-top-right-radius: 20px;
       }
 
       .card-content {
-        padding: 25px;
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
       }
 
       .card-title {
-        font-size: 1.4rem;
+        font-size: clamp(1.1rem, 3vw, 1.4rem);
         font-weight: 600;
         color: #0033a0;
         margin-bottom: 10px;
@@ -144,50 +166,157 @@
 
       .card-description {
         color: #555;
-        font-size: 0.95rem;
+        font-size: clamp(0.85rem, 2.5vw, 0.95rem);
         line-height: 1.5;
       }
 
+      /* 📱 RESPONSIVE PARA TABLETS */
       @media (max-width: 768px) {
+        body {
+          background-attachment: scroll;
+        }
+
         .header {
+          padding: 12px 20px;
+        }
+
+        .main-container {
+          padding: 30px 15px;
+        }
+
+        .page-title {
+          margin-bottom: 25px;
+        }
+
+        .cards-grid {
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 20px;
+        }
+
+        .card-img {
+          height: 160px;
+        }
+
+        .card-content {
+          padding: 18px;
+        }
+      }
+
+      /* 📱 RESPONSIVE PARA MÓVILES */
+      @media (max-width: 480px) {
+        .header {
+          padding: 12px 15px;
+          text-align: center;
           flex-direction: column;
-          gap: 10px;
+          gap: 12px;
+        }
+
+        .logo {
+          order: 1;
+        }
+
+        .welcome-text {
+          order: 2;
+          width: 100%;
+        }
+
+        .logout-btn {
+          order: 3;
+          width: 100%;
+          max-width: 200px;
           text-align: center;
         }
 
         .main-container {
-          padding: 30px;
+          padding: 25px 12px;
         }
 
         .page-title {
-          font-size: 1.9rem;
+          margin-bottom: 20px;
         }
 
-        .btn-games {
-          width: 100%;
-          background: white;
-          border-radius: 20px;
-          border: 2px solid transparent;
-          padding: 25px;
-          margin-top: 40px;
-          color: #0033a0;
-          font-size: 1.3rem;
-          font-weight: 600;
-          text-decoration: none;
-          text-align: center;
-          cursor: pointer;
-          display: block;
-
-          /* SOMBRA igual a card */
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-
-          transition: 0.25s ease;
+        .cards-grid {
+          grid-template-columns: 1fr;
+          gap: 18px;
         }
 
-        .btn-games:hover {
-          transform: translateY(-8px);
-          border-color: #ffc600;
-          box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        .card {
+          max-width: 100%;
+        }
+
+        .card-img {
+          height: 150px;
+        }
+
+        .card-content {
+          padding: 16px;
+        }
+
+        .card-title {
+          margin-bottom: 8px;
+        }
+      }
+
+      /* Para pantallas MUY pequeñas */
+      @media (max-width: 360px) {
+        .header {
+          padding: 10px;
+        }
+
+        .main-container {
+          padding: 20px 10px;
+        }
+
+        .cards-grid {
+          gap: 15px;
+        }
+
+        .card-img {
+          height: 130px;
+        }
+
+        .card-content {
+          padding: 14px;
+        }
+      }
+
+      /* Mejoras para landscape en móvil */
+      @media (max-height: 600px) and (orientation: landscape) {
+        .header {
+          padding: 8px 15px;
+        }
+
+        .main-container {
+          padding: 20px 15px;
+        }
+
+        .page-title {
+          font-size: 1.4rem;
+          margin-bottom: 15px;
+        }
+
+        .cards-grid {
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 15px;
+        }
+
+        .card-img {
+          height: 120px;
+        }
+
+        .card-content {
+          padding: 12px;
+        }
+      }
+
+      /* Optimización táctil */
+      @media (hover: none) and (pointer: coarse) {
+        .card:hover {
+          transform: none;
+        }
+
+        .logout-btn:hover {
+          transform: none;
         }
       }
     </style>
@@ -197,9 +326,7 @@
     <!-- Header -->
     <header class="header">
       <div class="logo">Finan<span>Sys</span></div>
-
       <div class="welcome-text">Hola, <span id="userName">Usuario</span></div>
-
       <a href="/inicio" class="logout-btn" id="logoutBtn">Cerrar sesión</a>
     </header>
 
@@ -245,6 +372,7 @@
             </div>
           </div>
         </a>
+
         <a href="juegos.html" class="card">
           <img src="img/juegos.jpg" class="card-img" alt="Minijuegos" />
           <div class="card-content">
@@ -285,6 +413,7 @@
             </div>
           </div>
         </a>
+
         <a href="/quienes-somos" class="card">
           <img
             src="img/quienes-somos.jpg"
@@ -314,11 +443,8 @@
         .getElementById("logoutBtn")
         .addEventListener("click", function (e) {
           e.preventDefault();
-
-          // ✅ LIMPIAR TODO al cerrar sesión
           localStorage.clear();
           sessionStorage.clear();
-
           window.location.href = "/inicio";
         });
     </script>
