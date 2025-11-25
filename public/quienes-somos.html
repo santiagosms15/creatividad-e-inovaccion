@@ -1,126 +1,152 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <title>Quiénes Somos</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        :root {
-            --primary: #0f172a;
-            --secondary: #1e293b;
-            --accent: #3b82f6;
-            --success: #10b981;
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --card-bg: #1e293b;
-            --border: #334155;
-            --shadow: rgba(0, 0, 0, 0.3);
-        }
+      :root {
+        --primary: #0f172a;
+        --secondary: #1e293b;
+        --accent: #3b82f6;
+        --success: #10b981;
+        --text-primary: #f8fafc;
+        --text-secondary: #cbd5e1;
+        --card-bg: #1e293b;
+        --border: #334155;
+        --shadow: rgba(0, 0, 0, 0.3);
+      }
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: url("img/fondoAD.jpg") no-repeat center center fixed;
-            background-size: cover;
-            min-height: 100vh;
-            padding: 40px 20px;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+      body {
+        font-family:
+          "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: url("img/fondoAD.jpg") no-repeat center center fixed;
+        background-size: cover;
+        min-height: 100vh;
+        padding: 40px 20px;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-        .container {
-            max-width: 800px;
-            width: 100%;
-            margin: 0 auto;
-        }
+      .container {
+        max-width: 800px;
+        width: 100%;
+        margin: 0 auto;
+      }
 
-        .card {
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px var(--shadow);
-            border: 1px solid var(--border);
-        }
+      .card {
+        background: var(--card-bg);
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 8px 32px var(--shadow);
+        border: 1px solid var(--border);
+      }
 
-        h1 {
-            color: var(--text-primary);
-            margin-bottom: 32px;
-            font-size: 2em;
-            font-weight: 700;
-            text-align: center;
-        }
+      h1 {
+        color: var(--text-primary);
+        margin-bottom: 32px;
+        font-size: 2em;
+        font-weight: 700;
+        text-align: center;
+      }
 
-        h2 {
-            color: var(--text-primary);
-            margin-top: 30px;
-            margin-bottom: 15px;
-            font-size: 1.5em;
-            font-weight: 600;
-        }
+      h2 {
+        color: var(--text-primary);
+        margin-top: 30px;
+        margin-bottom: 15px;
+        font-size: 1.5em;
+        font-weight: 600;
+      }
 
-        p {
-            color: var(--text-secondary);
-            font-size: 1.1em;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
+      p {
+        color: var(--text-secondary);
+        font-size: 1.1em;
+        line-height: 1.6;
+        margin-bottom: 20px;
+      }
 
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background-color: var(--secondary);
-            color: var(--text-secondary);
-            font-size: 1em;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s ease, color 0.2s ease;
-            text-decoration: none;
-            margin-bottom: 25px;
-        }
+      .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background-color: var(--secondary);
+        color: var(--text-secondary);
+        font-size: 1em;
+        font-weight: 500;
+        cursor: pointer;
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease;
+        text-decoration: none;
+        margin-bottom: 25px;
+      }
 
-        .btn:hover {
-            background-color: var(--accent);
-            color: var(--text-primary);
-            border-color: var(--accent);
-        }
+      .btn:hover {
+        background-color: var(--accent);
+        color: var(--text-primary);
+        border-color: var(--accent);
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="container">
-        <div class="card">
-            <h1>Acerca de FinanSYS</h1>
-            <button class="btn back-btn" onclick="backToMenu()">
-                ← Volver al Menú
-            </button>
+      <div class="card">
+        <h1>Acerca de FinanSYS</h1>
+        <button class="btn back-btn" onclick="backToMenu()">
+          ← Volver al Menú
+        </button>
 
-            <h2>Nuestra Misión</h2>
-            <p>Empoderar a nuestros usuarios con herramientas financieras intuitivas y accesibles para tomar el control
-                de su futuro económico.</p>
+        <h2>Nuestra Misión</h2>
+        <p>
+          Empoderar a nuestros usuarios con herramientas financieras intuitivas
+          y accesibles para tomar el control de su futuro económico.
+        </p>
 
-            <h2>Nuestra Visión</h2>
-            <p>Ser la plataforma líder en gestión financiera personal, reconocida por su innovación, confiabilidad y
-                compromiso con el éxito de nuestros usuarios.</p>
+        <h2>Nuestra Visión</h2>
+        <p>
+          Ser la plataforma líder en gestión financiera personal, reconocida por
+          su innovación, confiabilidad y compromiso con el éxito de nuestros
+          usuarios.
+        </p>
 
-            <h2>Lo Que Hacemos</h2>
-            <p>Ofrecemos una solución integral para la gestión de finanzas personales, incluyendo seguimiento de gastos,
-                planificación de presupuestos, establecimiento de metas financieras y herramientas de análisis para la
-                toma de decisiones informadas.</p>
+        <h2>Lo Que Hacemos</h2>
+        <p>
+          Ofrecemos una solución integral para la gestión de finanzas
+          personales, incluyendo seguimiento de gastos, planificación de
+          presupuestos, establecimiento de metas financieras y herramientas de
+          análisis para la toma de decisiones informadas.
+        </p>
+
+        <h2>Nuestro Pitch</h2>
+        <div class="video-container">
+          <video
+            controls
+            style="width: 100%; border-radius: 8px; margin-top: 15px"
+          >
+            <source src="video/pitch.mp4" type="video/mp4" />
+            Tu navegador no soporta el elemento de video.
+          </video>
         </div>
+      </div>
     </div>
     <script>
-        function backToMenu() {
-            window.location.href = "dashboard.html";
-        }
+      function backToMenu() {
+        window.location.href = "dashboard.html";
+      }
     </script>
-</body>
-
+  </body>
 </html>
